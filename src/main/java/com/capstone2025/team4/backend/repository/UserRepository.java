@@ -1,6 +1,6 @@
-package cau.capstone2025.team4.repository;
+package com.capstone2025.team4.backend.repository;
 
-import cau.capstone2025.team4.domain.User;
+import com.capstone2025.team4.backend.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

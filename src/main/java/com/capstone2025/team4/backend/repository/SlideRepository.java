@@ -1,6 +1,6 @@
-package cau.capstone2025.team4.repository;
+package com.capstone2025.team4.backend.repository;
 
-import cau.capstone2025.team4.domain.design.Slide;
+import com.capstone2025.team4.backend.domain.design.Slide;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SlideRepository extends JpaRepository<Slide, Long> {
