@@ -23,9 +23,9 @@ public class SlideElement {
     @JoinColumn(name = "element_id")
     private Element element;
 
-    private Float x;
+    private Long x;
 
-    private Float y;
+    private Long y;
 
     private Long width;
 
@@ -34,7 +34,7 @@ public class SlideElement {
     private Double angle;
 
     @Builder
-    private SlideElement(Slide slide, Element element, Float x, Float y, Long width, Long height, Double angle) {
+    private SlideElement(Slide slide, Element element, Long x, Long y, Long width, Long height, Double angle) {
         this.slide = slide;
         this.element = element;
         this.x = x;
@@ -42,5 +42,14 @@ public class SlideElement {
         this.width = width;
         this.height = height;
         this.angle = angle;
+    }
+
+    public SlideElement update(Long x, Long y, Long width, Long height, Double angle) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.angle = angle;
+        return this;
     }
 }

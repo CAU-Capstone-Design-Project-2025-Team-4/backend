@@ -22,9 +22,9 @@ public class Element {
     @Column(nullable = false)
     private Boolean isDefault;
 
-    private Float x;
+    private Long x;
 
-    private Float y;
+    private Long y;
 
     private Long width;
 
@@ -33,7 +33,7 @@ public class Element {
     private Double angle;
 
     @Builder
-    private Element(Type type, String url, Boolean isDefault, Float x, Float y, Long width, Long height, Double angle) {
+    private Element(Type type, String url, Boolean isDefault, Long x, Long y, Long width, Long height, Double angle) {
         this.type = type;
         this.url = url;
         this.isDefault = isDefault;
