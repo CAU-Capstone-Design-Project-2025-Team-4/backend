@@ -19,6 +19,7 @@ public class Element {
 
     private Type type;
 
+    @Column(nullable = false)
     private Boolean isDefault;
 
     private Float x;
@@ -31,11 +32,8 @@ public class Element {
 
     private Double angle;
 
-    @Embedded
-    private Color color;
-
     @Builder
-    private Element(Type type, String url, Boolean isDefault, Float x, Float y, Long width, Long height, Double angle, Color color) {
+    private Element(Type type, String url, Boolean isDefault, Float x, Float y, Long width, Long height, Double angle) {
         this.type = type;
         this.url = url;
         this.isDefault = isDefault;
@@ -44,6 +42,5 @@ public class Element {
         this.width = width;
         this.height = height;
         this.angle = angle;
-        this.color = color;
     }
 }

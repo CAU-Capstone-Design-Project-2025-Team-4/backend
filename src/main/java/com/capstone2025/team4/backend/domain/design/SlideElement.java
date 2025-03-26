@@ -33,11 +33,8 @@ public class SlideElement {
 
     private Double angle;
 
-    @Embedded
-    private Color color;
-
     @Builder
-    private SlideElement(Slide slide, Element element, Float x, Float y, Long width, Long height, Double angle, Color color) {
+    private SlideElement(Slide slide, Element element, Float x, Float y, Long width, Long height, Double angle) {
         this.slide = slide;
         this.element = element;
         this.x = x;
@@ -45,6 +42,5 @@ public class SlideElement {
         this.width = width;
         this.height = height;
         this.angle = angle;
-        this.color = color;
     }
 }
