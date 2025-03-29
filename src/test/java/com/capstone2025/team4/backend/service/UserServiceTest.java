@@ -4,12 +4,12 @@ import com.capstone2025.team4.backend.domain.User;
 import com.capstone2025.team4.backend.exception.user.EmailAlreadyExistsException;
 import com.capstone2025.team4.backend.exception.user.PasswordDoesntMatchException;
 import com.capstone2025.team4.backend.exception.user.UserNotFoundException;
-import com.capstone2025.team4.backend.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,10 +24,14 @@ class UserServiceTest {
     @Autowired
     UserService userService;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @Test
     void login() {
         //given
-        User user = User.builder().name("name").email("email").password("pass").build();
+        String password = passwordEncoder.encode("pass");
+        User user = User.builder().name("name").email("email").password(password).build();
         em.persist(user);
 
         em.flush();
@@ -39,7 +43,7 @@ class UserServiceTest {
         //then
         assertThat(successLogin).isNotNull();
         assertThat(successLogin.getEmail()).isEqualTo("email");
-        assertThat(successLogin.getPassword()).isEqualTo("pass");
+        assertThat(passwordEncoder.matches("pass", successLogin.getPassword())).isTrue();
         assertThat(successLogin.getId()).isNotNull();
 
         assertThrowsExactly(PasswordDoesntMatchException.class, () -> userService.login("email", "passsss"), "틀린 비밀번호로 로그인 시 PasswordDoesntMatchException 이 발생하지 않았다");
@@ -68,7 +72,6 @@ class UserServiceTest {
         assertThat(success.getId()).isNotEqualTo(alreadyExists.getId());
 
         assertThrowsExactly(EmailAlreadyExistsException.class, () -> userService.register("temp", "alreadyExistsEmail", "temp", "temp"), "이메일 중복 시 예외가 발생하지 않았다.");
-        assertThrowsExactly(PasswordDoesntMatchException.class, () -> userService.register("temp", "email", "temp", "notEqual"), "회원가입 시 비밀번호가 동일하지 않음");
-
+        assertThrowsExactly(PasswordDoesntMatchException.class, () -> userService.register("temp", "newEmail", "temp", "badConfirmPass"), "회원가입 시 두 비밀번호가 다르지만 예외가 발생하지 않았다.");
     }
 }

@@ -7,6 +7,7 @@ import com.capstone2025.team4.backend.exception.user.UserNotFoundException;
 import com.capstone2025.team4.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -17,6 +18,7 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final WorkspaceService workspaceService;
+    private final PasswordEncoder passwordEncoder;
 
     public User login(String email, String password) {
 
@@ -27,7 +29,7 @@ public class UserService {
         }
 
         User user = optionalUser.get();
-        if (user.getPassword().equals(password)) {
+        if (passwordEncoder.matches(password, user.getPassword())) {
             log.debug("[LOGIN SUCCESS] email = {}", email);
             return user;
         }
@@ -36,6 +38,9 @@ public class UserService {
     }
 
     public User register(String name, String email, String password, String confirmPassword) {
+        if (!password.equals(confirmPassword)) {
+            throw new PasswordDoesntMatchException();
+        }
 
         Optional<User> byEmail = userRepository.findByEmail(email);
         if (byEmail.isPresent()) {
@@ -43,16 +48,12 @@ public class UserService {
             throw new EmailAlreadyExistsException();
         }
 
-        if (!password.equals(confirmPassword)) {
-            log.debug("[REGISTRATION FAILED] 비밀번호 맞지 않음");
-            throw new PasswordDoesntMatchException();
-        }
-
+        String encodedPassword = passwordEncoder.encode(password);
 
         User newUser = User.builder()
                 .name(name)
                 .email(email)
-                .password(password).build();
+                .password(encodedPassword).build();
         userRepository.save(newUser);
         workspaceService.newWorkspace(newUser);
 
