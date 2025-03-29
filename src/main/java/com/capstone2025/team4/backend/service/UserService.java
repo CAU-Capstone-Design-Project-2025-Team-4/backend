@@ -1,14 +1,15 @@
 package com.capstone2025.team4.backend.service;
 
 import com.capstone2025.team4.backend.domain.User;
+import com.capstone2025.team4.backend.exception.user.EmailAlreadyExistsException;
+import com.capstone2025.team4.backend.exception.user.PasswordDoesntMatchException;
+import com.capstone2025.team4.backend.exception.user.UserNotFoundException;
 import com.capstone2025.team4.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
-import static com.capstone2025.team4.backend.utils.StringChecker.stringsAreEmpty;
 
 @Service
 @RequiredArgsConstructor
@@ -18,15 +19,11 @@ public class UserService {
     private final WorkspaceService workspaceService;
 
     public User login(String email, String password) {
-        if (stringsAreEmpty(email, password)) {
-            log.debug("[LOGIN FAILED] Empty Email and Pass");
-            return null;
-        }
 
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty()) {
             log.debug("[LOGIN FAILED] No user found! email = {}", email);
-            return null;
+            throw new UserNotFoundException();
         }
 
         User user = optionalUser.get();
@@ -35,26 +32,28 @@ public class UserService {
             return user;
         }
 
-        log.debug("[LOGIN FAILED] Password Doesnt Match! email = {}, pass = {}", email, password);
-        return null;
+        throw new PasswordDoesntMatchException();
     }
 
-    public User register(String name, String email, String password) {
-        if (stringsAreEmpty(name, email, password)) {
-            log.debug("[REGISTRATION FAILED] Empty Email and Pass");
-            return null;
-        }
+    public User register(String name, String email, String password, String confirmPassword) {
 
         Optional<User> byEmail = userRepository.findByEmail(email);
         if (byEmail.isPresent()) {
             log.debug("[REGISTRATION FAILED] Email = {} Already Exists!", email);
-            return null;
+            throw new EmailAlreadyExistsException();
         }
+
+        if (!password.equals(confirmPassword)) {
+            log.debug("[REGISTRATION FAILED] 비밀번호 맞지 않음");
+            throw new PasswordDoesntMatchException();
+        }
+
 
         User newUser = User.builder()
                 .name(name)
                 .email(email)
                 .password(password).build();
+        userRepository.save(newUser);
         workspaceService.newWorkspace(newUser);
 
         log.debug("[REGISTRATION SUCCESS] Email = {}", email);

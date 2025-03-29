@@ -1,6 +1,9 @@
 package com.capstone2025.team4.backend.service;
 
 import com.capstone2025.team4.backend.domain.User;
+import com.capstone2025.team4.backend.exception.user.EmailAlreadyExistsException;
+import com.capstone2025.team4.backend.exception.user.PasswordDoesntMatchException;
+import com.capstone2025.team4.backend.exception.user.UserNotFoundException;
 import com.capstone2025.team4.backend.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -20,8 +23,6 @@ class UserServiceTest {
 
     @Autowired
     UserService userService;
-    @Autowired
-    private UserRepository userRepository;
 
     @Test
     void login() {
@@ -33,22 +34,17 @@ class UserServiceTest {
         em.clear();
 
         //when
-        User badEmailAndPassLogin = userService.login("badEmail", "badPass");
-        User nullLogin = userService.login(null, null);
-        User emptyEmailAndPassLogin = userService.login("", "");
-        User emptyEmailLogin = userService.login("", "pass");
-        User badPassLogin = userService.login("email", "passsss");
         User successLogin = userService.login("email", "pass");
 
         //then
-        assertThat(
-                new User[]{
-                        badEmailAndPassLogin, nullLogin, emptyEmailAndPassLogin, emptyEmailLogin, badPassLogin
-                }).containsOnlyNulls();
         assertThat(successLogin).isNotNull();
         assertThat(successLogin.getEmail()).isEqualTo("email");
         assertThat(successLogin.getPassword()).isEqualTo("pass");
         assertThat(successLogin.getId()).isNotNull();
+
+        assertThrowsExactly(PasswordDoesntMatchException.class, () -> userService.login("email", "passsss"), "틀린 비밀번호로 로그인 시 PasswordDoesntMatchException 이 발생하지 않았다");
+        assertThrowsExactly(UserNotFoundException.class, () -> userService.login("badEmail", "badPass"), "틀린 이메일로 로그인 시 UserNotFoundException 이 발생하지 않았다.");
+
     }
 
     @Test
@@ -65,12 +61,14 @@ class UserServiceTest {
         em.clear();
 
         //when
-        User failedUser = userService.register("temp", "alreadyExistsEmail", "temp");
-        User success = userService.register("temp", "temp", "temp");
+        User success = userService.register("temp", "temp", "temp", "temp");
 
         //then
-        assertThat(failedUser).isNull();
         assertThat(success).isNotNull();
         assertThat(success.getId()).isNotEqualTo(alreadyExists.getId());
+
+        assertThrowsExactly(EmailAlreadyExistsException.class, () -> userService.register("temp", "alreadyExistsEmail", "temp", "temp"), "이메일 중복 시 예외가 발생하지 않았다.");
+        assertThrowsExactly(PasswordDoesntMatchException.class, () -> userService.register("temp", "email", "temp", "notEqual"), "회원가입 시 비밀번호가 동일하지 않음");
+
     }
 }
