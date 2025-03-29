@@ -3,7 +3,6 @@ package com.capstone2025.team4.backend.infra.security;
 import com.capstone2025.team4.backend.domain.User;
 import com.capstone2025.team4.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
