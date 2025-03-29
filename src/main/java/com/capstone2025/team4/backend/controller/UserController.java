@@ -1,7 +1,7 @@
 package com.capstone2025.team4.backend.controller;
 
 import com.capstone2025.team4.backend.controller.api.ApiResponse;
-import com.capstone2025.team4.backend.controller.dto.user.LoginRequest;
+import com.capstone2025.team4.backend.controller.dto.user.UserLoginRequest;
 import com.capstone2025.team4.backend.controller.dto.user.UserLoginResponse;
 import com.capstone2025.team4.backend.controller.dto.user.UserRegisterRequest;
 import com.capstone2025.team4.backend.controller.dto.user.UserRegisterResponse;
@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserLoginResponse> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<UserLoginResponse> login(@Valid @RequestBody UserLoginRequest request) {
         User user = userService.login(request.getEmail(), request.getPassword());
 
         String token = jwtService.generateToken(user.getEmail());
