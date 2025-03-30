@@ -1,13 +1,9 @@
-package com.capstone2025.team4.backend.service;
+package com.capstone2025.team4.backend.service.design;
 
 import com.capstone2025.team4.backend.domain.User;
 import com.capstone2025.team4.backend.domain.Workspace;
 import com.capstone2025.team4.backend.domain.design.*;
 import com.capstone2025.team4.backend.exception.design.DesignSourceNotFound;
-import com.capstone2025.team4.backend.exception.element.ElementDefaultNotFound;
-import com.capstone2025.team4.backend.exception.element.ElementNotDefault;
-import com.capstone2025.team4.backend.exception.user.UserNotAllowedDesign;
-import com.capstone2025.team4.backend.exception.user.UserNotAllowedWorkspace;
 import com.capstone2025.team4.backend.exception.user.UserNotFoundException;
 import com.capstone2025.team4.backend.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.capstone2025.team4.backend.service.design.DesignUtil.checkUWDS;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -25,8 +23,6 @@ public class DesignService {
     private final DesignRepository designRepository;
     private final WorkspaceRepository workspaceRepository;
     private final SlideRepository slideRepository;
-    private final ElementRepository elementRepository;
-    private final SlideElementRepository slideElementRepository;
     private final UserRepository userRepository;
 
     // 디자인을 만들때, 공유된걸 가지고 만든다면 공유 불가
@@ -122,115 +118,4 @@ public class DesignService {
         return slideRepository.save(slide);
     }
 
-    // 유자 직접 추가한 요소를 슬라이드에 추가하는 기능
-    public SlideElement addUserElementToSlide(
-            User user,
-            Workspace workspace,
-            Design design,
-            Slide slide,
-            String url,
-            String typeString,
-            Long x, Long y,
-            Double angle,
-            Long width, Long height
-            ) {
-        // 해당 유저가 해당 워크스페이스, 디자인의 소유자인지 확인
-        checkUWDS(user, workspace, design, slide);
-
-        Type type = Type.valueOf(typeString);
-
-        Element element = Element.builder()
-                .url(url) // TODO : S3 추가
-                .type(type)
-                .isDefault(false)
-                .x(x)
-                .y(y)
-                .width(width)
-                .height(height)
-                .angle(angle)
-                .build();
-        elementRepository.save(element);
-
-        SlideElement slideElement = SlideElement.builder()
-                .slide(slide)
-                .element(element)
-                .x(x)
-                .y(y)
-                .width(width)
-                .height(height)
-                .angle(angle)
-                .build();
-
-        return slideElementRepository.save(slideElement);
-    }
-
-    // 기본으로 제공되는 요소를 슬라이드에 추가하는 기능
-    public SlideElement addDefaultElementToSlide(
-            User user,
-            Workspace workspace,
-            Design design,
-            Slide slide,
-            long elementId,
-            Long x, Long y,
-            Double angle,
-            Long width, Long height
-    ) {
-
-        checkUWDS(user, workspace, design, slide);
-
-        Optional<Element> byId = elementRepository.findById(elementId);
-        if (byId.isEmpty()) {
-            log.error("[addDefaultElementToSlide] Can not find element with id = {}", elementId);
-            throw new ElementDefaultNotFound();
-        }
-        Element element = byId.get();
-
-        if (!element.getIsDefault()) {
-            log.error("[addDefaultElementToSlide] Element is not default!");
-            throw new ElementNotDefault();
-        }
-
-        SlideElement slideElement = SlideElement.builder()
-                .slide(slide)
-                .element(element)
-                .x(x)
-                .y(y)
-                .width(width)
-                .height(height)
-                .angle(angle)
-                .build();
-
-        return slideElementRepository.save(slideElement);
-    }
-
-    private void checkUWDS(User user, Workspace workspace, Design design, Slide slide) {
-        if (workspace != null && workspace.getUser() != user) {
-            log.debug("[checkUWDS] This user is not the owner of that workspace. userEmail = {}, workspaceId = {}", user.getEmail(), workspace.getId());
-            throw new UserNotAllowedWorkspace();
-        }
-
-        if (design != null && design.getWorkspace().getUser() != user) {
-            log.debug("[checkUWDS] This user cannot modify the design. userEmail = {}, workspaceId = {}", user.getEmail(), workspace.getId());
-            throw new UserNotAllowedDesign();
-        }
-
-        // 해당 슬라이드가 이 디자인의 슬라이드인지 확인
-        if (slide != null && slide.getDesign() != design) {
-            log.error("[checkUWDS] Slides that do not exist in that design. SlideId = {}, DesignId = {}", slide.getId(), design.getId());
-            throw new RuntimeException("해당 디자인에 존재하지 않는 슬라이드.");
-        }
-    }
-
-    public SlideElement updateSlideElement(
-            User user,
-            SlideElement slideElement,
-            Design design,
-            long x, long y,
-            double angle,
-            long width, long height
-    ) {
-        checkUWDS(user, design.getWorkspace(), design, slideElement.getSlide());
-
-        return slideElement.update(x, y, width, height, angle);
-    }
 }
