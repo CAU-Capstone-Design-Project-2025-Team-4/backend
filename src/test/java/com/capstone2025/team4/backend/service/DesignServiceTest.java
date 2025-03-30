@@ -152,7 +152,7 @@ class DesignServiceTest {
         em.clear();
 
         //when
-        Slide slide = designService.newSlide(testUser, testWorkspace, testDesign, 0);
+        Slide slide = designService.newSlide(testUser.getId(), testDesign.getId(), 0);
 
         //then
         assertThat(slide.getOrder()).isEqualTo(0);

@@ -16,6 +16,7 @@ public enum ExceptionCode {
     USER_NOT_ALLOWED_DESIGN(HttpStatus.METHOD_NOT_ALLOWED, "해당 디자인을 수정할 수 없습니다"),
 
     DESIGN_SOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, "템플릿 디자인이 존재하지 않습니다"),
+    DESIGN_NOT_FOUND(HttpStatus.NOT_FOUND, "디자인이 존재하지 않습니다"),
 
     ELEMENT_DEFAULT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 기본 요소는 없는 요소입니다."),
     ELEMENT_NOT_DEFAULT(HttpStatus.EXPECTATION_FAILED, "해당 요소는 기본 요소가 아닙니다")

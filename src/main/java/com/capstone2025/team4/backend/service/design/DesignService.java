@@ -3,6 +3,7 @@ package com.capstone2025.team4.backend.service.design;
 import com.capstone2025.team4.backend.domain.User;
 import com.capstone2025.team4.backend.domain.Workspace;
 import com.capstone2025.team4.backend.domain.design.*;
+import com.capstone2025.team4.backend.exception.design.DesignNotFound;
 import com.capstone2025.team4.backend.exception.design.DesignSourceNotFound;
 import com.capstone2025.team4.backend.exception.user.UserNotFoundException;
 import com.capstone2025.team4.backend.repository.*;
@@ -27,18 +28,9 @@ public class DesignService {
 
     // 디자인을 만들때, 공유된걸 가지고 만든다면 공유 불가
     public Design createNewDesign(Long creatorId, Long sourceDesignId, boolean shared) {
-        Optional<User> creatorOptional = userRepository.findById(creatorId);
-        if (creatorOptional.isEmpty()) {
-            throw new UserNotFoundException();
-        }
-        User creator = creatorOptional.get();
+        User creator = getUser(creatorId);
 
-        Optional<Workspace> optionalWorkspace = workspaceRepository.findByUser(creator);
-        if (optionalWorkspace.isEmpty()) {
-            log.error("[ERROR CREATING DESIGN] No workspace for user = {}, id = {} ", creator.getEmail(), creator.getId());
-            throw new RuntimeException("워크스페이스 없는 사용자입니다.");
-        }
-        Workspace workspace = optionalWorkspace.get();
+        Workspace workspace = getWorkspace(creator);
         log.debug("[CREATING NEW DESIGN] Workspace id = {}, user = {}", workspace.getId(), creator.getEmail());
 
         if (sourceDesignId != null) {
@@ -107,7 +99,18 @@ public class DesignService {
         return newDesign;
     }
 
-    public Slide newSlide(User user, Workspace workspace, Design design, Integer order) {
+    public Slide newSlide(Long userId, Long designId, Integer order) {
+        User user = getUser(userId);
+
+        Workspace workspace = getWorkspace(user);
+
+        Optional<Design> optionalDesign = designRepository.findById(designId);
+        if (optionalDesign.isEmpty()) {
+            throw new DesignNotFound();
+        }
+        Design design = optionalDesign.get();
+
+
         checkUWDS(user, workspace, design, null);
 
         Slide slide = Slide.builder()
@@ -116,6 +119,23 @@ public class DesignService {
                 .build();
 
         return slideRepository.save(slide);
+    }
+
+    private Workspace getWorkspace(User creator) {
+        Optional<Workspace> optionalWorkspace = workspaceRepository.findByUser(creator);
+        if (optionalWorkspace.isEmpty()) {
+            log.error("No workspace for user = {}, id = {} ", creator.getEmail(), creator.getId());
+            throw new RuntimeException("워크스페이스 없는 사용자입니다.");
+        }
+        return optionalWorkspace.get();
+    }
+
+    private User getUser(Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+        return optionalUser.get();
     }
 
 }
