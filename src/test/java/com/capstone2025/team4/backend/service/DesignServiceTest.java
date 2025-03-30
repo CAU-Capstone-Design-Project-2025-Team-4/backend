@@ -8,11 +8,13 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -44,12 +46,12 @@ class DesignServiceTest {
         em.clear();
 
         // when
-        Design failed = designService.createNewDesign(userWithoutWorkspace, null, false);
-        Design succeed = designService.createNewDesign(userWithWorkspace, null, false);
+        Design succeed = designService.createNewDesign(userWithWorkspace.getId(), null, false);
 
         // then
-        assertThat(failed).isNull();
         assertThat(succeed.getId()).isNotNull();
+
+        assertThrowsExactly(RuntimeException.class, () -> designService.createNewDesign(userWithoutWorkspace.getId(), null, false), "워크스페이스 없는 사용자가 디자인을 생성했으나 예외가 발생하지 않음");
     }
 
     @Test
@@ -65,22 +67,24 @@ class DesignServiceTest {
         Element e2 = Element.builder().isDefault(false).build();
 
         ArrayList<SlideElement> slideElementList = new ArrayList<>();
-        SlideElement se1 = SlideElement.builder().element(e1)
-                .build();
-        SlideElement se2 = SlideElement.builder().element(e2)
-                .build();
-        slideElementList.add(se1);
-        slideElementList.add(se2);
-
         List<Slide> slideList = new ArrayList<>();
-        Slide s1 = Slide.builder().slideElementList(slideElementList).build();
-        slideList.add(s1);
 
         Design sourceDesign = Design.builder()
                 .user(testUser)
                 .workspace(testWorkspace)
-                .slideList(slideList) // 테스트에서는 간단히 empty list
+                .slideList(slideList)
                 .build();
+        Slide s1 = Slide.builder().slideElementList(slideElementList).design(sourceDesign).build();
+        slideList.add(s1);
+
+
+        SlideElement se1 = SlideElement.builder().element(e1).slide(s1)
+                .build();
+        SlideElement se2 = SlideElement.builder().element(e2).slide(s1)
+                .build();
+        slideElementList.add(se1);
+        slideElementList.add(se2);
+
 
         em.persist(e1);
         em.persist(e2);
@@ -88,12 +92,14 @@ class DesignServiceTest {
         em.persist(testWorkspace);
         em.persist(s1);
         em.persist(sourceDesign);
+        em.persist(se1);
+        em.persist(se2);
 
         em.flush();
         em.clear();
 
         //when
-        Design newDesign = designService.createNewDesign(testUser, sourceDesign, false);
+        Design newDesign = designService.createNewDesign(testUser.getId(), sourceDesign.getId(), false);
 
         //then
         assertThat(newDesign.getSlideList().size()).isEqualTo(sourceDesign.getSlideList().size());
@@ -117,7 +123,7 @@ class DesignServiceTest {
         em.clear();
 
         //when
-        Design succeed = designService.createNewDesign(testUser, null, false);
+        Design succeed = designService.createNewDesign(testUser.getId(), null, false);
 
         //then
         assertThat(succeed.getId()).isNotNull();
@@ -258,14 +264,14 @@ class DesignServiceTest {
         assertThat(slideElement2.getElement().getId()).isEqualTo(e2.getId());
 
         // Optionally, verify position and size properties
-        assertThat(slideElement1.getX()).isEqualTo(10.0F);
-        assertThat(slideElement1.getY()).isEqualTo(10.0F);
+        assertThat(slideElement1.getX()).isEqualTo(10);
+        assertThat(slideElement1.getY()).isEqualTo(10);
         assertThat(slideElement1.getAngle()).isEqualTo(10.0);
         assertThat(slideElement1.getWidth()).isEqualTo(1000L);
         assertThat(slideElement1.getHeight()).isEqualTo(1000L);
 
-        assertThat(slideElement2.getX()).isEqualTo(20.0F);
-        assertThat(slideElement2.getY()).isEqualTo(20.0F);
+        assertThat(slideElement2.getX()).isEqualTo(20);
+        assertThat(slideElement2.getY()).isEqualTo(20);
         assertThat(slideElement2.getAngle()).isEqualTo(20.0);
         assertThat(slideElement2.getWidth()).isEqualTo(2000L);
         assertThat(slideElement2.getHeight()).isEqualTo(2000L);
@@ -319,9 +325,6 @@ class DesignServiceTest {
         assertThat(updatedSlideElement.getAngle()).isEqualTo(3.0);
         assertThat(updatedSlideElement.getWidth()).isEqualTo(4L);
         assertThat(updatedSlideElement.getHeight()).isEqualTo(5L);
-
-
-        //then
 
     }
 }

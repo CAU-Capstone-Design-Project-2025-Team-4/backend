@@ -11,8 +11,14 @@ public enum ExceptionCode {
     USER_EMAIL_DUPLICATE(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다"),
     USER_PASSWORD_INCONSISTENT(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다"),
     USER_BAD_REQUEST(HttpStatus.BAD_REQUEST, "입력하신 정보를 다시 확인해주세요"),
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "일치하는 사용자를 찾지 못했습니다")
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "일치하는 사용자를 찾지 못했습니다"),
+    USER_NOT_ALLOWED_WORKSPACE(HttpStatus.METHOD_NOT_ALLOWED, "해당 워크스페이스를 사용할 수 없습니다"),
+    USER_NOT_ALLOWED_DESIGN(HttpStatus.METHOD_NOT_ALLOWED, "해당 디자인을 수정할 수 없습니다"),
 
+    DESIGN_SOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, "템플릿 디자인이 존재하지 않습니다"),
+
+    ELEMENT_DEFAULT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 기본 요소는 없는 요소입니다."),
+    ELEMENT_NOT_DEFAULT(HttpStatus.EXPECTATION_FAILED, "해당 요소는 기본 요소가 아닙니다")
     ;
 
     private final HttpStatus httpStatus;

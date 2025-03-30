@@ -3,6 +3,12 @@ package com.capstone2025.team4.backend.service;
 import com.capstone2025.team4.backend.domain.User;
 import com.capstone2025.team4.backend.domain.Workspace;
 import com.capstone2025.team4.backend.domain.design.*;
+import com.capstone2025.team4.backend.exception.design.DesignSourceNotFound;
+import com.capstone2025.team4.backend.exception.element.ElementDefaultNotFound;
+import com.capstone2025.team4.backend.exception.element.ElementNotDefault;
+import com.capstone2025.team4.backend.exception.user.UserNotAllowedDesign;
+import com.capstone2025.team4.backend.exception.user.UserNotAllowedWorkspace;
+import com.capstone2025.team4.backend.exception.user.UserNotFoundException;
 import com.capstone2025.team4.backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,19 +27,30 @@ public class DesignService {
     private final SlideRepository slideRepository;
     private final ElementRepository elementRepository;
     private final SlideElementRepository slideElementRepository;
+    private final UserRepository userRepository;
 
     // 디자인을 만들때, 공유된걸 가지고 만든다면 공유 불가
-    public Design createNewDesign(User creator, Design source, boolean shared) {
+    public Design createNewDesign(Long creatorId, Long sourceDesignId, boolean shared) {
+        Optional<User> creatorOptional = userRepository.findById(creatorId);
+        if (creatorOptional.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+        User creator = creatorOptional.get();
 
         Optional<Workspace> optionalWorkspace = workspaceRepository.findByUser(creator);
         if (optionalWorkspace.isEmpty()) {
             log.error("[ERROR CREATING DESIGN] No workspace for user = {}, id = {} ", creator.getEmail(), creator.getId());
-            return null;
+            throw new RuntimeException("워크스페이스 없는 사용자입니다.");
         }
         Workspace workspace = optionalWorkspace.get();
         log.debug("[CREATING NEW DESIGN] Workspace id = {}, user = {}", workspace.getId(), creator.getEmail());
 
-        if (source != null) {
+        if (sourceDesignId != null) {
+            Optional<Design> sourceDesignOptional = designRepository.findById(sourceDesignId);
+            if (sourceDesignOptional.isEmpty()) {
+                throw new DesignSourceNotFound();
+            }
+            Design source = sourceDesignOptional.get();
             log.debug("[CREATING NEW DESIGN] From Source(id = {})", source.getId());
             Design newDesignFromSource = createNewDesignFromSource(creator, workspace, source);
             designRepository.save(newDesignFromSource);
@@ -95,17 +112,8 @@ public class DesignService {
     }
 
     public Slide newSlide(User user, Workspace workspace, Design design, Integer order) {
-        // 1. 해당 유저가 해당 워크스페이스의 주인인지 확인
-        if (workspace.getUser() != user) {
-            return null;
-        }
+        checkUWDS(user, workspace, design, null);
 
-        // 2. 디자인이 해당 워크스페이스의 디자인인지 확인
-        if (design.getWorkspace() != workspace) {
-            return null;
-        }
-
-        // 3. 새로운 슬라이드 생성
         Slide slide = Slide.builder()
                 .order(order)
                 .design(design)
@@ -127,14 +135,7 @@ public class DesignService {
             Long width, Long height
             ) {
         // 해당 유저가 해당 워크스페이스, 디자인의 소유자인지 확인
-        if (UWDSareNull(user, workspace, design, slide)) {
-            log.error("[addDefaultElementToSlide]Something is null. " +
-                    "User = {}, " +
-                    "Workspace = {}, " +
-                    "Design = {}," +
-                    "SLide = {}", user, workspace, design, slide);
-            return null;
-        }
+        checkUWDS(user, workspace, design, slide);
 
         Type type = Type.valueOf(typeString);
 
@@ -175,25 +176,18 @@ public class DesignService {
             Long width, Long height
     ) {
 
-        if (UWDSareNull(user, workspace, design, slide)) {
-            log.error("[addDefaultElementToSlide]Something is null. " +
-                    "User = {}, " +
-                    "Workspace = {}, " +
-                    "Design = {}," +
-                    "SLide = {}", user, workspace, design, slide);
-            return null;
-        }
+        checkUWDS(user, workspace, design, slide);
 
         Optional<Element> byId = elementRepository.findById(elementId);
         if (byId.isEmpty()) {
             log.error("[addDefaultElementToSlide] Can not find element with id = {}", elementId);
-            return null;
+            throw new ElementDefaultNotFound();
         }
         Element element = byId.get();
 
         if (!element.getIsDefault()) {
             log.error("[addDefaultElementToSlide] Element is not default!");
-            return null;
+            throw new ElementNotDefault();
         }
 
         SlideElement slideElement = SlideElement.builder()
@@ -209,21 +203,22 @@ public class DesignService {
         return slideElementRepository.save(slideElement);
     }
 
-    private boolean UWDSareNull(User user, Workspace workspace, Design design, Slide slide) {
-        if (workspace.getUser() != user) {
-            return true;
+    private void checkUWDS(User user, Workspace workspace, Design design, Slide slide) {
+        if (workspace != null && workspace.getUser() != user) {
+            log.debug("[checkUWDS] This user is not the owner of that workspace. userEmail = {}, workspaceId = {}", user.getEmail(), workspace.getId());
+            throw new UserNotAllowedWorkspace();
         }
 
-        if (design.getWorkspace().getUser() != user) {
-            return true;
+        if (design != null && design.getWorkspace().getUser() != user) {
+            log.debug("[checkUWDS] This user cannot modify the design. userEmail = {}, workspaceId = {}", user.getEmail(), workspace.getId());
+            throw new UserNotAllowedDesign();
         }
 
         // 해당 슬라이드가 이 디자인의 슬라이드인지 확인
-        if (slide.getDesign() != design) {
-            return true;
+        if (slide != null && slide.getDesign() != design) {
+            log.error("[checkUWDS] Slides that do not exist in that design. SlideId = {}, DesignId = {}", slide.getId(), design.getId());
+            throw new RuntimeException("해당 디자인에 존재하지 않는 슬라이드.");
         }
-
-        return false;
     }
 
     public SlideElement updateSlideElement(
@@ -234,13 +229,7 @@ public class DesignService {
             double angle,
             long width, long height
     ) {
-        if (design.getUser() != user) {
-            return null;
-        }
-
-        if (slideElement.getSlide().getDesign() != design) {
-            return null;
-        }
+        checkUWDS(user, design.getWorkspace(), design, slideElement.getSlide());
 
         return slideElement.update(x, y, width, height, angle);
     }
