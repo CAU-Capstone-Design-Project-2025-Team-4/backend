@@ -1,8 +1,6 @@
 package com.capstone2025.team4.backend.controller.api;
 
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -14,7 +12,7 @@ import java.util.Map;
 public class ApiResponse<T> {
     private static final String OK_STATUS = "OK"; // 정상
     private static final String VALIDATION_ERROR_STATUS = "VALIDATION_ERROR"; // 검증 오류
-    private static final String EXCEPTION_STATUS = "EXCEPTION"; // 예외 발생
+    private static final String BUSINESS_EXCEPTION_STATUS = "BUSINESS_EXCEPTION"; // 예외 발생
 
     private String status;
     private T data;
@@ -44,5 +42,7 @@ public class ApiResponse<T> {
         return new ApiResponse<>(VALIDATION_ERROR_STATUS, errors, null);
     }
 
-
+    public static ApiResponse<?> businessException(String message) {
+        return new ApiResponse<>(BUSINESS_EXCEPTION_STATUS, null, message);
+    }
 }

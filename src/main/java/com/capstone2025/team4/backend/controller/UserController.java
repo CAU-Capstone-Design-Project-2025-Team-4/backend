@@ -11,7 +11,6 @@ import com.capstone2025.team4.backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +26,7 @@ public class UserController {
     private final JwtService jwtService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserRegisterResponse> register(@Valid @RequestBody UserRegisterRequest request) {
+    public ApiResponse<UserRegisterResponse> register(@Valid @RequestBody UserRegisterRequest request) {
 
         User user = userService.register(request.getName(), request.getEmail(), request.getPassword(), request.getConfirmPassword());
 
@@ -35,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserLoginResponse> login(@Valid @RequestBody UserLoginRequest request) {
+    public ApiResponse<UserLoginResponse> login(@Valid @RequestBody UserLoginRequest request) {
         User user = userService.login(request.getEmail(), request.getPassword());
 
         String token = jwtService.generateToken(user.getEmail());
