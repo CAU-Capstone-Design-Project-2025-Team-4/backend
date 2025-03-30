@@ -8,17 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class SlideWithElementsResponse {
+public class SlideResponse {
 
     private Long id;
     private Integer order;
     private List<ElementResponse> slideElements = new ArrayList<>();
 
-    public SlideWithElementsResponse(Slide slide) {
+    public SlideResponse(Slide slide) {
         this.id = slide.getId();
         this.order = slide.getOrder();
-        for (SlideElement slideElement : slide.getSlideElementList()) {
-            slideElements.add(new ElementResponse(slideElement));
+        if (slide.getSlideElementList() != null) {
+            for (SlideElement slideElement : slide.getSlideElementList()) {
+                slideElements.add(new ElementResponse(slideElement));
+            }
         }
     }
 }

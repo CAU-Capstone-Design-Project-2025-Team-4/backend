@@ -11,14 +11,14 @@ import java.util.List;
 public class DesignWithSlidesResponse {
     private Long id;
     private Boolean shared;
-    private List<SlideWithElementsResponse> slideList = new ArrayList<>();
+    private List<SlideResponse> slideList = new ArrayList<>();
 
     public DesignWithSlidesResponse(Design design) {
         this.id = design.getId();
         this.shared = design.getShared();
         if (design.getSlideList() != null) {
             for (Slide slide : design.getSlideList()) {
-                slideList.add(new SlideWithElementsResponse(slide));
+                slideList.add(new SlideResponse(slide));
             }
         }
     }
