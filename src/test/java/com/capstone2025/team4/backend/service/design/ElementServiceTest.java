@@ -35,7 +35,6 @@ class ElementServiceTest {
                 .user(testUser)
                 .workspace(testWorkspace)
                 .build();
-//        Slide testSlide = designService.newSlide(testUser, testWorkspace, testDesign, 0);
         Slide testSlide = Slide.builder()
                 .order(0)
                 .design(testDesign).build();
@@ -51,10 +50,9 @@ class ElementServiceTest {
 
         //when
         User user = em.find(User.class, testUser.getId());
-        Workspace workspace = em.find(Workspace.class, testWorkspace.getId());
         Design design = em.find(Design.class, testDesign.getId());
         Slide slide = em.find(Slide.class, testSlide.getId());
-        SlideElement slideElement = elementService.addUserElementToSlide(user, workspace, design, slide, "tempUrl", "ICON", 0L, 0L, 0.0, 10L, 10L);
+        SlideElement slideElement = elementService.addUserElementToSlide(user.getId(), slide.getId(), "tempUrl", "ICON", 0L, 0L, 0.0, 10L, 10L);
 
         //then
         assertThat(slideElement.getId()).isNotNull();
@@ -75,7 +73,6 @@ class ElementServiceTest {
                 .user(testUser)
                 .workspace(testWorkspace)
                 .build();
-//        Slide testSlide = designService.newSlide(testUser, testWorkspace, testDesign, 0);
         Slide testSlide = Slide.builder()
                 .order(0)
                 .design(testDesign).build();
@@ -95,10 +92,8 @@ class ElementServiceTest {
 
         //when
         SlideElement slideElement1 = elementService.addDefaultElementToSlide(
-                em.find(User.class, testUser.getId()),
-                em.find(Workspace.class, testWorkspace.getId()),
-                em.find(Design.class, testDesign.getId()),
-                em.find(Slide.class, testSlide.getId()),
+                testUser.getId(),
+                testSlide.getId(),
                 e1.getId(),
                 10L,
                 10L,
@@ -108,10 +103,8 @@ class ElementServiceTest {
         );
 
         SlideElement slideElement2 = elementService.addDefaultElementToSlide(
-                em.find(User.class, testUser.getId()),
-                em.find(Workspace.class, testWorkspace.getId()),
-                em.find(Design.class, testDesign.getId()),
-                em.find(Slide.class, testSlide.getId()),
+                testUser.getId(),
+                testSlide.getId(),
                 e2.getId(),
                 20L,
                 20L,
@@ -160,7 +153,6 @@ class ElementServiceTest {
                 .user(testUser)
                 .workspace(testWorkspace)
                 .build();
-//        Slide testSlide = designService.newSlide(testUser, testWorkspace, testDesign, 0);
         Slide testSlide = Slide.builder().order(0).design(testDesign).build();
 
         Element e = Element.builder().isDefault(true).build();
@@ -186,7 +178,7 @@ class ElementServiceTest {
         em.clear();
 
         //when
-        SlideElement updatedSlideElement = elementService.updateSlideElement(em.find(User.class, testUser.getId()), em.find(SlideElement.class, se.getId()), em.find(Design.class, testDesign.getId()),
+        SlideElement updatedSlideElement = elementService.updateSlideElement(testUser.getId(), se.getId(),
                 1L, 2L, 3.0, 4L, 5L
         );
 

@@ -5,8 +5,13 @@ import com.capstone2025.team4.backend.domain.Workspace;
 import com.capstone2025.team4.backend.domain.design.*;
 import com.capstone2025.team4.backend.exception.element.ElementDefaultNotFound;
 import com.capstone2025.team4.backend.exception.element.ElementNotDefault;
+import com.capstone2025.team4.backend.exception.element.SlideElementNotFound;
+import com.capstone2025.team4.backend.exception.slide.SlideNotFound;
+import com.capstone2025.team4.backend.exception.user.UserNotAllowedAddElement;
 import com.capstone2025.team4.backend.repository.ElementRepository;
 import com.capstone2025.team4.backend.repository.SlideElementRepository;
+import com.capstone2025.team4.backend.repository.SlideRepository;
+import com.capstone2025.team4.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,19 +27,23 @@ public class ElementService {
 
     private final ElementRepository elementRepository;
     private final SlideElementRepository slideElementRepository;
+    private final SlideRepository slideRepository;
+    private final UserRepository userRepository;
 
     // 유자 직접 추가한 요소를 슬라이드에 추가하는 기능
     public SlideElement addUserElementToSlide(
-            User user,
-            Workspace workspace,
-            Design design,
-            Slide slide,
+            Long userId,
+            Long slideId,
             String url,
             String typeString,
             Long x, Long y,
             Double angle,
             Long width, Long height
     ) {
+        User user = getUser(userId);
+        Slide slide = getSlide(slideId);
+        Design design = slide.getDesign();
+        Workspace workspace = design.getWorkspace();
         // 해당 유저가 해당 워크스페이스, 디자인의 소유자인지 확인
         checkUWDS(user, workspace, design, slide);
 
@@ -67,16 +76,17 @@ public class ElementService {
 
     // 기본으로 제공되는 요소를 슬라이드에 추가하는 기능
     public SlideElement addDefaultElementToSlide(
-            User user,
-            Workspace workspace,
-            Design design,
-            Slide slide,
+            Long userId,
+            Long slideId,
             long elementId,
             Long x, Long y,
             Double angle,
             Long width, Long height
     ) {
-
+        User user = getUser(userId);
+        Slide slide = getSlide(slideId);
+        Design design = slide.getDesign();
+        Workspace workspace = design.getWorkspace();
         checkUWDS(user, workspace, design, slide);
 
         Optional<Element> byId = elementRepository.findById(elementId);
@@ -104,16 +114,36 @@ public class ElementService {
         return slideElementRepository.save(slideElement);
     }
 
+    private Slide getSlide(Long slideId) {
+        Optional<Slide> slideOptional = slideRepository.findById(slideId);
+        if (slideOptional.isEmpty()) {
+            throw new SlideNotFound();
+        }
+        return slideOptional.get();
+    }
 
+    private User getUser(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            throw new UserNotAllowedAddElement();
+        }
+        return userOptional.get();
+    }
 
     public SlideElement updateSlideElement(
-            User user,
-            SlideElement slideElement,
-            Design design,
+            Long userId,
+            Long slideElementId,
             long x, long y,
             double angle,
             long width, long height
     ) {
+        User user = getUser(userId);
+        Optional<SlideElement> slideElementOptional = slideElementRepository.findById(slideElementId);
+        if (slideElementOptional.isEmpty()) {
+            throw new SlideElementNotFound();
+        }
+        SlideElement slideElement = slideElementOptional.get();
+        Design design = slideElement.getSlide().getDesign();
         checkUWDS(user, design.getWorkspace(), design, slideElement.getSlide());
 
         return slideElement.update(x, y, width, height, angle);

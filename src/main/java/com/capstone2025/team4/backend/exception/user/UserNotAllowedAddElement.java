@@ -3,9 +3,9 @@ package com.capstone2025.team4.backend.exception.user;
 import com.capstone2025.team4.backend.exception.BusinessException;
 import com.capstone2025.team4.backend.exception.ExceptionCode;
 
-public class UserNotAllowedWorkspace extends BusinessException {
+public class UserNotAllowedAddElement extends BusinessException {
 
-    public UserNotAllowedWorkspace() {
+    public UserNotAllowedAddElement() {
         super(ExceptionCode.USER_NOT_ALLOWED);
     }
 }
