@@ -20,6 +20,7 @@ public enum ExceptionCode {
     ELEMENT_DEFAULT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 기본 요소는 없는 요소입니다."),
     ELEMENT_NOT_DEFAULT(HttpStatus.EXPECTATION_FAILED, "해당 요소는 기본 요소가 아닙니다"),
     SLIDE_ELEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "슬라이드의 요소가 존재하지 않습니다"),
+    ELEMENT_FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "저장된 파일을 찾을 수 없습니다"),
 
     SLIDE_NOT_FOUND(HttpStatus.NOT_FOUND, "슬라이드를 찾을 수 없습니다")
     ;

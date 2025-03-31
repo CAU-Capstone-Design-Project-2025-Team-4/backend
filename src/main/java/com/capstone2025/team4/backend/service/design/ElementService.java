@@ -35,7 +35,7 @@ public class ElementService {
             Long userId,
             Long slideId,
             String url,
-            String typeString,
+            Type type,
             Long x, Long y,
             Double angle,
             Long width, Long height
@@ -46,8 +46,6 @@ public class ElementService {
         Workspace workspace = design.getWorkspace();
         // 해당 유저가 해당 워크스페이스, 디자인의 소유자인지 확인
         checkUWDS(user, workspace, design, slide);
-
-        Type type = Type.valueOf(typeString);
 
         Element element = Element.builder()
                 .url(url) // TODO : S3 추가

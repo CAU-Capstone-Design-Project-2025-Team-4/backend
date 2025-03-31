@@ -2,10 +2,7 @@ package com.capstone2025.team4.backend.service.design;
 
 import com.capstone2025.team4.backend.domain.User;
 import com.capstone2025.team4.backend.domain.Workspace;
-import com.capstone2025.team4.backend.domain.design.Design;
-import com.capstone2025.team4.backend.domain.design.Element;
-import com.capstone2025.team4.backend.domain.design.Slide;
-import com.capstone2025.team4.backend.domain.design.SlideElement;
+import com.capstone2025.team4.backend.domain.design.*;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +49,7 @@ class ElementServiceTest {
         User user = em.find(User.class, testUser.getId());
         Design design = em.find(Design.class, testDesign.getId());
         Slide slide = em.find(Slide.class, testSlide.getId());
-        SlideElement slideElement = elementService.addUserElementToSlide(user.getId(), slide.getId(), "tempUrl", "ICON", 0L, 0L, 0.0, 10L, 10L);
+        SlideElement slideElement = elementService.addUserElementToSlide(user.getId(), slide.getId(), "tempUrl", Type.ICON, 0L, 0L, 0.0, 10L, 10L);
 
         //then
         assertThat(slideElement.getId()).isNotNull();
