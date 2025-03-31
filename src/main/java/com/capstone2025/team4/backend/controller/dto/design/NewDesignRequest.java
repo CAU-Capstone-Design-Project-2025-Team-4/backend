@@ -1,8 +1,10 @@
 package com.capstone2025.team4.backend.controller.dto.design;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@AllArgsConstructor
 @Getter
 public class NewDesignRequest {
     @NotNull(message = "유저 정보는 필수입니다")
