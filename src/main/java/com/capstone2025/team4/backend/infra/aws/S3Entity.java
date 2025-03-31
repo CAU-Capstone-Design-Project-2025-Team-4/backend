@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(uniqueConstraints = {@UniqueConstraint(name = "S3ENTITY_URL_UNIQUE", columnNames = {"url"}), @UniqueConstraint(name = "S3ENTITY_KEY_UNIQUE", columnNames = {"key"})})
+@Table(uniqueConstraints = {@UniqueConstraint(name = "S3ENTITY_URL_UNIQUE", columnNames = {"url"}), @UniqueConstraint(name = "S3ENTITY_KEY_UNIQUE", columnNames = {"s3Key"})})
 @Getter
 public class S3Entity {
 
