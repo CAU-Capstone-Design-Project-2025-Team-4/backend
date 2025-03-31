@@ -10,9 +10,9 @@ import java.util.Map;
 
 @Getter
 public class ApiResponse<T> {
-    private static final String OK_STATUS = "OK"; // 정상
-    private static final String VALIDATION_ERROR_STATUS = "VALIDATION_ERROR"; // 검증 오류
-    private static final String BUSINESS_EXCEPTION_STATUS = "BUSINESS_EXCEPTION"; // 예외 발생
+    public static final String OK_STATUS = "OK"; // 정상
+    public static final String VALIDATION_ERROR_STATUS = "VALIDATION_ERROR"; // 검증 오류
+    public static final String BUSINESS_EXCEPTION_STATUS = "BUSINESS_EXCEPTION"; // 예외 발생
 
     private String status;
     private T data;
