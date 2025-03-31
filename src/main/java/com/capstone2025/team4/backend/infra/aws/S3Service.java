@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
@@ -56,18 +55,19 @@ public class S3Service {
     }
 
     @Transactional
-    public File download(String url) {
+    public S3Entity findByUrl(String url) {
         Optional<S3Entity> optionalS3Entity = s3Repository.findByUrl(url);
         if (optionalS3Entity.isEmpty()) {
             throw new ElementFileNotFound();
         }
-        S3Entity s3Entity = optionalS3Entity.get();
 
+        return optionalS3Entity.get();
+    }
 
-        S3Resource s3Resource = s3Operations.download(BUCKET, s3Entity.getS3Key());
-
+    @Transactional
+    public byte[] download(S3Entity s3Entity) {
         try {
-            return s3Resource.getFile();
+            return s3Operations.download(BUCKET, s3Entity.getS3Key()).getContentAsByteArray();
         } catch (IOException e) {
             log.error("Cannot get file from S3Resource");
             throw new RuntimeException(e);
