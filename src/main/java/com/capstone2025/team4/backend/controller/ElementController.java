@@ -42,7 +42,6 @@ public class ElementController {
 
     @GetMapping("/{elementId}")
     public ResponseEntity<byte[]> getFile(@PathVariable Long elementId) {
-        // TODO : CORS 허용해야되냐 아니냐
         Optional<Element> optionalElement = elementRepository.findById(elementId);
         if (optionalElement.isEmpty()) {
             throw new ElementNotFound();
