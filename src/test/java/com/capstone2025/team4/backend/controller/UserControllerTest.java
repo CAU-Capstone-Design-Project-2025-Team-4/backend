@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.lang.reflect.Field;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -44,14 +43,8 @@ class UserControllerTest {
     @Test
     void registerSuccess() throws Exception {
         //given
-        User mockUser = User.builder()
-                .name("name")
-                .email("email@email.com")
-                .password("encodedPass")
-                .build();
-        Field idField = User.class.getDeclaredField("id");
-        idField.setAccessible(true);
-        idField.set(mockUser, 1L);
+        User mockUser = getUser();
+        setUserId(mockUser, 1L);
         UserRegisterRequest request = new UserRegisterRequest("name", "email@email.com", "pass", "pass");
         given(userService.register(request.getName(), request.getEmail(), request.getPassword(), request.getConfirmPassword()))
                 .willReturn(mockUser);
@@ -70,6 +63,21 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andDo(print());
 
+    }
+
+    private static void setUserId(User mockUser, long id) throws NoSuchFieldException, IllegalAccessException {
+        Field idField = User.class.getDeclaredField("id");
+        idField.setAccessible(true);
+        idField.set(mockUser, id);
+    }
+
+    private static User getUser() {
+        User mockUser = User.builder()
+                .name("name")
+                .email("email@email.com")
+                .password("encodedPass")
+                .build();
+        return mockUser;
     }
 
 
@@ -106,14 +114,8 @@ class UserControllerTest {
     void loginSuccess() throws Exception{
         //given
         UserLoginRequest request = new UserLoginRequest("email@email.com", "pass");
-        User mockUser = User.builder()
-                .name("name")
-                .email("email@email.com")
-                .password("encodedPass")
-                .build();
-        Field idField = User.class.getDeclaredField("id");
-        idField.setAccessible(true);
-        idField.set(mockUser, 1L);
+        User mockUser = getUser();
+        setUserId(mockUser, 1L);
         given(userService.login(request.getEmail(), request.getPassword()))
                 .willReturn(mockUser);
         given(jwtService.generateToken("email@email.com")).willReturn("jwtToken");
@@ -140,14 +142,8 @@ class UserControllerTest {
         //given
         UserLoginRequest badEmailRequest = new UserLoginRequest("email", "pass");
         UserLoginRequest blankEmailRequest = new UserLoginRequest("", "pass");
-        User mockUser = User.builder()
-                .name("name")
-                .email("email@email.com")
-                .password("encodedPass")
-                .build();
-        Field idField = User.class.getDeclaredField("id");
-        idField.setAccessible(true);
-        idField.set(mockUser, 1L);
+        User mockUser = getUser();
+        setUserId(mockUser, 1L);
         given(userService.login(badEmailRequest.getEmail(), badEmailRequest.getPassword()))
                 .willReturn(mockUser);
         given(jwtService.generateToken("email@email.com")).willReturn("jwtToken");
@@ -182,14 +178,8 @@ class UserControllerTest {
     void loginBadPass() throws Exception{
         //given
         UserLoginRequest badEmailRequest = new UserLoginRequest("email@email.com", "");
-        User mockUser = User.builder()
-                .name("name")
-                .email("email@email.com")
-                .password("encodedPass")
-                .build();
-        Field idField = User.class.getDeclaredField("id");
-        idField.setAccessible(true);
-        idField.set(mockUser, 1L);
+        User mockUser = getUser();
+        setUserId(mockUser, 1L);
         given(userService.login(badEmailRequest.getEmail(), badEmailRequest.getPassword()))
                 .willReturn(mockUser);
         given(jwtService.generateToken("email@email.com")).willReturn("jwtToken");
