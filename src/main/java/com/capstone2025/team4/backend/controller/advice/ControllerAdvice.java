@@ -5,6 +5,7 @@ import com.capstone2025.team4.backend.exception.BusinessException;
 import com.capstone2025.team4.backend.exception.ExceptionCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -27,5 +28,11 @@ public class ControllerAdvice {
         String message = exceptionCode.getMessage();
 
         return ResponseEntity.status(httpStatus).body(ApiResponse.businessException(message));
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<String> badMethod(HttpRequestMethodNotSupportedException exception) {
+        String method = exception.getMethod();
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(method + " is Not Allowed");
     }
 }
