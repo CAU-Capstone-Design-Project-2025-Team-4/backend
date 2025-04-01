@@ -1,6 +1,7 @@
 package com.capstone2025.team4.backend.controller;
 
 import com.capstone2025.team4.backend.controller.api.ApiResponse;
+import com.capstone2025.team4.backend.controller.dto.design.DesignWithoutSlidesResponse;
 import com.capstone2025.team4.backend.controller.dto.design.NewDesignRequest;
 import com.capstone2025.team4.backend.controller.dto.design.NewSlideRequest;
 import com.capstone2025.team4.backend.domain.design.Design;
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -172,5 +174,39 @@ class DesignControllerTest {
         id.setAccessible(true);
         id.set(slide, 1L);
         return slide;
+    }
+
+    @Test
+    void getAllSuccess() throws Exception {
+        //given
+        given(designService.findAll(1L)).willReturn(anyList());
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get("/design/1")
+        );
+
+        //then
+        resultActions
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getAllBadArg() throws Exception {
+        //given
+
+        //when
+        ResultActions emptyIdResult = mockMvc.perform(
+                get("/design/")
+        );
+        ResultActions stringPathVarResult = mockMvc.perform(
+                get("/design/string")
+        );
+        //then
+        emptyIdResult
+                .andExpect(status().is4xxClientError());
+
+        stringPathVarResult
+                .andExpect(status().isBadRequest());
     }
 }

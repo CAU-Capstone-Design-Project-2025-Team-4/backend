@@ -161,4 +161,37 @@ class DesignServiceTest {
         assertThat(slide.getId()).isNotNull();
     }
 
+    @Test
+    void findAll(){
+        //given
+        User user = User.builder()
+                .build();
+        Design design1 = Design.builder()
+                .user(user)
+                .build();
+        Design design2 = Design.builder()
+                .user(user)
+                .build();
+        Design design3 = Design.builder()
+                .user(user)
+                .build();
+
+        em.persist(user);
+        em.persist(design1);
+        em.persist(design2);
+        em.persist(design3);
+
+        em.flush();
+        em.clear();
+
+        //when
+        List<Design> all = designService.findAll(user.getId());
+        List<Long> idList = all.stream().map(Design::getId).toList();
+
+        //then
+        assertThat(all).isNotEmpty();
+        assertThat(all.size()).isEqualTo(3);
+        assertThat(idList).contains(design1.getId(), design2.getId(), design3.getId());
+
+    }
 }

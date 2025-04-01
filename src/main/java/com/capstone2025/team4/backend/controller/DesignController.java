@@ -1,19 +1,15 @@
 package com.capstone2025.team4.backend.controller;
 
 import com.capstone2025.team4.backend.controller.api.ApiResponse;
-import com.capstone2025.team4.backend.controller.dto.design.NewDesignRequest;
-import com.capstone2025.team4.backend.controller.dto.design.DesignWithSlidesResponse;
-import com.capstone2025.team4.backend.controller.dto.design.NewSlideRequest;
-import com.capstone2025.team4.backend.controller.dto.design.SlideResponse;
+import com.capstone2025.team4.backend.controller.dto.design.*;
 import com.capstone2025.team4.backend.domain.design.Design;
 import com.capstone2025.team4.backend.domain.design.Slide;
 import com.capstone2025.team4.backend.service.design.DesignService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -33,5 +29,12 @@ public class DesignController {
     public ApiResponse<SlideResponse> newSlide(@Valid @RequestBody NewSlideRequest request) {
         Slide newSlide = designService.newSlide(request.getUserId(), request.getDesignId(), request.getOrder());
         return ApiResponse.success(new SlideResponse(newSlide));
+    }
+
+    @GetMapping("/{userId}")
+    public ApiResponse<List<DesignWithoutSlidesResponse>> getAll(@PathVariable Long userId) {
+        List<Design> all = designService.findAll(userId);
+        List<DesignWithoutSlidesResponse> result = all.stream().map(DesignWithoutSlidesResponse::new).toList();
+        return ApiResponse.success(result);
     }
 }

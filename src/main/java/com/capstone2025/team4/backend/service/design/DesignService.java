@@ -138,4 +138,8 @@ public class DesignService {
         return optionalUser.get();
     }
 
+    public List<Design> findAll(Long userId) {
+        return designRepository.findAllByUser_Id(userId);
+    }
+
 }
