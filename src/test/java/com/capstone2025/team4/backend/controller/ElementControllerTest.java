@@ -65,7 +65,7 @@ class ElementControllerTest {
     @Test
     void addNewElementSuccess() throws Exception {
         //given
-        MockMultipartFile multipart = new MockMultipartFile("file", "test.png", "image/png", new FileInputStream(new File("/Users/vladkim/Pictures/test.png")));
+        MockMultipartFile multipart = new MockMultipartFile("file", "test.png", "image/png", new FileInputStream(("/Users/vladkim/Pictures/test.png")));
         given(s3Service.upload(multipart)).willReturn("tempUrl");
 
         SlideElement slideElement = createSlideElement();
@@ -95,7 +95,7 @@ class ElementControllerTest {
     @Test
     void addNewElementBadArg() throws Exception {
         //given
-        MockMultipartFile multipart = new MockMultipartFile("file", "test.png", "image/png", new FileInputStream(new File("/Users/vladkim/Pictures/test.png")));
+        MockMultipartFile multipart = new MockMultipartFile("file", "test.png", "image/png", new FileInputStream(("/Users/vladkim/Pictures/test.png")));
         given(s3Service.upload(multipart)).willReturn("tempUrl");
 
         SlideElement slideElement = createSlideElement();
