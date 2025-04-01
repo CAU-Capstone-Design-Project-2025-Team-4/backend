@@ -31,8 +31,8 @@ public class DesignController {
         return ApiResponse.success(new SlideResponse(newSlide));
     }
 
-    @GetMapping("/{userId}")
-    public ApiResponse<List<DesignWithoutSlidesResponse>> getAll(@PathVariable Long userId) {
+    @GetMapping
+    public ApiResponse<List<DesignWithoutSlidesResponse>> getAll(@RequestParam Long userId) {
         List<Design> all = designService.findAll(userId);
         List<DesignWithoutSlidesResponse> result = all.stream().map(DesignWithoutSlidesResponse::new).toList();
         return ApiResponse.success(result);
