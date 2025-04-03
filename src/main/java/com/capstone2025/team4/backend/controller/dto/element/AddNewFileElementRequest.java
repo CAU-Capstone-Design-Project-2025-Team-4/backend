@@ -8,13 +8,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 @AllArgsConstructor
 @Getter
-public class AddNewElementRequest {
+public class AddNewFileElementRequest {
     @NotNull(message = "유저 정보는 필수입니다")
     private Long userId;
 
     @NotNull(message = "슬라이드 정보는 필수입니다")
     private Long slideId;
 
+    @NotNull(message = "파일은 필수입니다")
     private MultipartFile file;
 
     @NotNull(message = "요소 타입은 필수입니다")
