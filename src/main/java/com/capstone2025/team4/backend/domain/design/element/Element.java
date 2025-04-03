@@ -1,21 +1,23 @@
-package com.capstone2025.team4.backend.domain.design;
+package com.capstone2025.team4.backend.domain.design.element;
 
+import com.capstone2025.team4.backend.domain.design.Type;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "format")
+@SuperBuilder
 public class Element {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String url;
 
     private Type type;
 
@@ -32,15 +34,4 @@ public class Element {
 
     private Double angle;
 
-    @Builder
-    private Element(Type type, String url, Boolean isDefault, Long x, Long y, Long width, Long height, Double angle) {
-        this.type = type;
-        this.url = url;
-        this.isDefault = isDefault;
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.angle = angle;
-    }
 }
