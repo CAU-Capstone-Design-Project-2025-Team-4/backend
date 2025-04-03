@@ -3,6 +3,8 @@ package com.capstone2025.team4.backend.service.design;
 import com.capstone2025.team4.backend.domain.User;
 import com.capstone2025.team4.backend.domain.Workspace;
 import com.capstone2025.team4.backend.domain.design.*;
+import com.capstone2025.team4.backend.domain.design.element.Element;
+import com.capstone2025.team4.backend.domain.design.element.FileElement;
 import com.capstone2025.team4.backend.exception.element.ElementDefaultNotFound;
 import com.capstone2025.team4.backend.exception.element.ElementNotDefault;
 import com.capstone2025.team4.backend.exception.element.SlideElementNotFound;
@@ -30,11 +32,10 @@ public class ElementService {
     private final SlideRepository slideRepository;
     private final UserRepository userRepository;
 
-    // 유자 직접 추가한 요소를 슬라이드에 추가하는 기능
-    public SlideElement addUserElementToSlide(
+    public SlideElement addUserFileElementToSlide(
             Long userId,
             Long slideId,
-            String url,
+            String s3Url,
             Type type,
             Long x, Long y,
             Double angle,
@@ -47,8 +48,8 @@ public class ElementService {
         // 해당 유저가 해당 워크스페이스, 디자인의 소유자인지 확인
         checkUWDS(user, workspace, design, slide);
 
-        Element element = Element.builder()
-                .url(url) // TODO : S3 추가
+        FileElement element = FileElement.builder()
+                .s3Url(s3Url)
                 .type(type)
                 .isDefault(false)
                 .x(x)
@@ -57,6 +58,7 @@ public class ElementService {
                 .height(height)
                 .angle(angle)
                 .build();
+
         elementRepository.save(element);
 
         SlideElement slideElement = SlideElement.builder()

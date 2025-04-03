@@ -1,8 +1,8 @@
 package com.capstone2025.team4.backend.controller;
 
-import com.capstone2025.team4.backend.domain.design.Element;
 import com.capstone2025.team4.backend.domain.design.SlideElement;
 import com.capstone2025.team4.backend.domain.design.Type;
+import com.capstone2025.team4.backend.domain.design.element.FileElement;
 import com.capstone2025.team4.backend.infra.aws.S3Entity;
 import com.capstone2025.team4.backend.infra.aws.S3Service;
 import com.capstone2025.team4.backend.infra.security.CustomUserDetailService;
@@ -10,6 +10,7 @@ import com.capstone2025.team4.backend.infra.security.config.SecurityConfig;
 import com.capstone2025.team4.backend.infra.security.jwt.JwtService;
 import com.capstone2025.team4.backend.mock.WithCustomMockUser;
 import com.capstone2025.team4.backend.repository.ElementRepository;
+import com.capstone2025.team4.backend.repository.FileElementRepository;
 import com.capstone2025.team4.backend.service.design.ElementService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -21,12 +22,10 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Field;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -50,6 +49,9 @@ class ElementControllerTest {
     @MockitoBean
     ElementRepository elementRepository;
 
+    @MockitoBean
+    FileElementRepository fileElementRepository;
+
     @Autowired
     MockMvc mockMvc;
 
@@ -68,12 +70,12 @@ class ElementControllerTest {
         MockMultipartFile multipart = new MockMultipartFile("file", "test.png", "image/png", new FileInputStream(("/Users/vladkim/Pictures/test.png")));
         given(s3Service.upload(multipart)).willReturn("tempUrl");
 
-        SlideElement slideElement = createSlideElement();
-        given(elementService.addUserElementToSlide(1L, 1L, "tempUrl", Type.IMAGE, 0L, 0L, 3.14, 1920L, 1080L)).willReturn(slideElement);
+        SlideElement slideElement = createFileSlideElement();
+        given(elementService.addUserFileElementToSlide(1L, 1L, "tempUrl", Type.IMAGE, 0L, 0L, 3.14, 1920L, 1080L)).willReturn(slideElement);
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                multipart("/element/add") // 여기를 post()가 아니라 multipart()로 변경
+                multipart("/element/add/file") // 여기를 post()가 아니라 multipart()로 변경
                         .file(multipart)
                         .param("userId", "1")
                         .param("slideId", "1")
@@ -98,12 +100,12 @@ class ElementControllerTest {
         MockMultipartFile multipart = new MockMultipartFile("file", "test.png", "image/png", new FileInputStream(("/Users/vladkim/Pictures/test.png")));
         given(s3Service.upload(multipart)).willReturn("tempUrl");
 
-        SlideElement slideElement = createSlideElement();
-        given(elementService.addUserElementToSlide(1L, 1L, "tempUrl", Type.IMAGE, 0L, 0L, 3.14, 1920L, 1080L)).willReturn(slideElement);
+        SlideElement slideElement = createFileSlideElement();
+        given(elementService.addUserFileElementToSlide(1L, 1L, "tempUrl", Type.IMAGE, 0L, 0L, 3.14, 1920L, 1080L)).willReturn(slideElement);
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                multipart("/element/add") // 여기를 post()가 아니라 multipart()로 변경
+                multipart("/element/add/file") // 여기를 post()가 아니라 multipart()로 변경
                         .file(multipart)
                         .param("userId", "")
                         .param("slideId", "1")
@@ -124,12 +126,12 @@ class ElementControllerTest {
     @Test
     void getFileSuccess() throws Exception {
         //given
-        given(elementRepository.findById(1L)).willReturn(Optional.of(createElement()));
+        given(fileElementRepository.findById(1L)).willReturn(Optional.of(createFileElement()));
         given(s3Service.findByUrl("tempUrl")).willReturn(S3Entity.builder().url("tempUrl").s3Key("s3Key").originalFileName("fileName").build());
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                get("/element/1")
+                get("/element/file/1")
         );
 
         //then
@@ -141,7 +143,7 @@ class ElementControllerTest {
     @Test
     void getFileBadArg() throws Exception {
         //given
-        given(elementRepository.findById(1L)).willReturn(Optional.of(createElement()));
+        given(fileElementRepository.findById(1L)).willReturn(Optional.of(createFileElement()));
         given(s3Service.findByUrl("tempUrl")).willReturn(S3Entity.builder().url("tempUrl").s3Key("s3Key").originalFileName("fileName").build());
 
         //when
@@ -155,9 +157,9 @@ class ElementControllerTest {
 
     }
 
-    private SlideElement createSlideElement() throws Exception {
+    private SlideElement createFileSlideElement() throws Exception {
         SlideElement slideElement = SlideElement.builder()
-                .element(Element.builder().url("tempUrl").build())
+                .element(createFileElement())
                 .build();
         Field id = SlideElement.class.getDeclaredField("id");
         id.setAccessible(true);
@@ -165,9 +167,9 @@ class ElementControllerTest {
         return slideElement;
     }
 
-    private Element createElement() {
-        return Element.builder()
-                .url("tempUrl")
+    private FileElement createFileElement() {
+        return FileElement.builder()
+                .s3Url("tempUrl")
                 .build();
     }
 }

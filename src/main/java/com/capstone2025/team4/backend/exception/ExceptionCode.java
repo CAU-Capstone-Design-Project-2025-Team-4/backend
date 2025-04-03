@@ -22,6 +22,9 @@ public enum ExceptionCode {
     SLIDE_ELEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "슬라이드의 요소가 존재하지 않습니다"),
     ELEMENT_FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "저장된 파일을 찾을 수 없습니다"),
     ELEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "없는 요소입니다"),
+    ELEMENT_NOT_FILE(HttpStatus.BAD_REQUEST, "해당 요소 타입은 허용되지 않습니다 (허용 : 이미지, 모델)"),
+
+    FILE_IS_EMPTY(HttpStatus.BAD_REQUEST, "빈 파일입니다"),
 
     SLIDE_NOT_FOUND(HttpStatus.NOT_FOUND, "슬라이드를 찾을 수 없습니다")
     ;

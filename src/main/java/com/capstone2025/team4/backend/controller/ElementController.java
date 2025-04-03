@@ -1,15 +1,19 @@
 package com.capstone2025.team4.backend.controller;
 
 import com.capstone2025.team4.backend.controller.api.ApiResponse;
-import com.capstone2025.team4.backend.controller.dto.design.ElementResponse;
-import com.capstone2025.team4.backend.controller.dto.element.AddNewElementRequest;
-import com.capstone2025.team4.backend.domain.design.Element;
+import com.capstone2025.team4.backend.controller.dto.design.FileElementResponse;
+import com.capstone2025.team4.backend.controller.dto.element.AddNewFileElementRequest;
 import com.capstone2025.team4.backend.domain.design.SlideElement;
+import com.capstone2025.team4.backend.domain.design.Type;
+import com.capstone2025.team4.backend.domain.design.element.FileElement;
 import com.capstone2025.team4.backend.exception.element.ElementFileNotFound;
+import com.capstone2025.team4.backend.exception.element.ElementNotFileType;
 import com.capstone2025.team4.backend.exception.element.ElementNotFound;
+import com.capstone2025.team4.backend.exception.file.FileIsEmpty;
 import com.capstone2025.team4.backend.infra.aws.S3Entity;
 import com.capstone2025.team4.backend.infra.aws.S3Service;
 import com.capstone2025.team4.backend.repository.ElementRepository;
+import com.capstone2025.team4.backend.repository.FileElementRepository;
 import com.capstone2025.team4.backend.service.design.ElementService;
 import com.capstone2025.team4.backend.utils.StringChecker;
 import jakarta.validation.Valid;
@@ -30,29 +34,37 @@ public class ElementController {
     private final ElementService elementService;
     private final S3Service s3Service;
     private final ElementRepository elementRepository;
+    private final FileElementRepository fileElementRepository;
 
     // 유저가 새로운 파일 형태의 요소 추가 : ex) 사진, 모델 등
-    @PostMapping("/add")
-    public ApiResponse<ElementResponse> addNewElement(@Valid @ModelAttribute AddNewElementRequest request) {
+    @PostMapping("/add/file")
+    public ApiResponse<FileElementResponse> addNewElement(@Valid @ModelAttribute AddNewFileElementRequest request) {
         String url = s3Service.upload(request.getFile());
-        SlideElement slideElement = elementService.addUserElementToSlide(request.getUserId(), request.getSlideId(), url, request.getType(), request.getX(), request.getY(), request.getAngle(), request.getWidth(), request.getHeight());
+        if (request.getType() != Type.IMAGE && request.getType() != Type.MODEL) {
+            throw new ElementNotFileType();
+        }
+        if (request.getFile().isEmpty()) {
+            throw new FileIsEmpty();
+        }
+        SlideElement slideElement = elementService.addUserFileElementToSlide(request.getUserId(), request.getSlideId(), url, request.getType(), request.getX(), request.getY(), request.getAngle(), request.getWidth(), request.getHeight());
 
-        return ApiResponse.success(new ElementResponse(slideElement));
+        return ApiResponse.success(new FileElementResponse(slideElement));
     }
 
-    @GetMapping("/{elementId}")
+    @GetMapping("/file/{elementId}")
     public ResponseEntity<byte[]> getFile(@PathVariable Long elementId) {
-        Optional<Element> optionalElement = elementRepository.findById(elementId);
+        Optional<FileElement> optionalElement = fileElementRepository.findById(elementId);
         if (optionalElement.isEmpty()) {
             throw new ElementNotFound();
         }
 
-        Element element = optionalElement.get();
-        if (StringChecker.stringsAreEmpty(element.getUrl())) {
+        FileElement element = optionalElement.get();
+
+        if (StringChecker.stringsAreEmpty(element.getS3Url())) {
             throw new ElementFileNotFound();
         }
 
-        S3Entity s3Entity = s3Service.findByUrl(element.getUrl());
+        S3Entity s3Entity = s3Service.findByUrl(element.getS3Url());
 
         byte[] fileBytes = s3Service.download(s3Entity);
         String fileName = s3Entity.getOriginalFileName();

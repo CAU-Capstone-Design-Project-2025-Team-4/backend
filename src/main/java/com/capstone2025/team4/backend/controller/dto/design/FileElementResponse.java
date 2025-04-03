@@ -1,10 +1,12 @@
 package com.capstone2025.team4.backend.controller.dto.design;
 
 import com.capstone2025.team4.backend.domain.design.SlideElement;
+import com.capstone2025.team4.backend.domain.design.element.Element;
+import com.capstone2025.team4.backend.domain.design.element.FileElement;
 import lombok.Getter;
 
 @Getter
-public class ElementResponse {
+public class FileElementResponse {
     private Long id;
     private String url;
     private Long x;
@@ -13,9 +15,10 @@ public class ElementResponse {
     private Long height;
     private Double angle;
 
-    public ElementResponse(SlideElement slideElement) {
+    public FileElementResponse(SlideElement slideElement) {
         this.id = slideElement.getId();
-        this.url = slideElement.getElement().getUrl();
+        FileElement fileElement = (FileElement) slideElement.getElement();
+        this.url = fileElement.getS3Url();
         this.x = slideElement.getX();
         this.y = slideElement.getY();
         this.width = slideElement.getWidth();

@@ -1,5 +1,6 @@
 package com.capstone2025.team4.backend.domain.design;
 
+import com.capstone2025.team4.backend.domain.design.element.Element;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
