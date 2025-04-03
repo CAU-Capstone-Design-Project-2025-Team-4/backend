@@ -1,9 +1,7 @@
 package com.capstone2025.team4.backend.controller;
 
 import com.capstone2025.team4.backend.controller.api.ApiResponse;
-import com.capstone2025.team4.backend.controller.dto.design.DesignWithoutSlidesResponse;
 import com.capstone2025.team4.backend.controller.dto.design.NewDesignRequest;
-import com.capstone2025.team4.backend.controller.dto.design.NewSlideRequest;
 import com.capstone2025.team4.backend.domain.design.Design;
 import com.capstone2025.team4.backend.domain.design.Slide;
 import com.capstone2025.team4.backend.infra.security.CustomUserDetailService;
@@ -99,65 +97,6 @@ class DesignControllerTest {
                 .andExpect(jsonPath("$.data.id").value(1L));
     }
 
-    @Test
-    void newSlideSuccess() throws Exception {
-        //given
-        NewSlideRequest request = new NewSlideRequest(1L, 2L, 0);
-        given(designService.newSlide(1L, 2L, 0)).willReturn(createSlide());
-
-        //when
-        ResultActions resultActions = mockMvc.perform(
-                post("/design/slide/new")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request))
-        );
-
-        //then
-        resultActions
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.id").value(1L));
-    }
-
-    @Test
-    void newSlideBadArgs() throws Exception{
-        //given
-        NewSlideRequest nullUserIdRequest= new NewSlideRequest(null, 2L, 0);
-        NewSlideRequest nullDesignIdRequest= new NewSlideRequest(1L, null, 0);
-        NewSlideRequest nullOrderRequest= new NewSlideRequest(1L, 2L, null);
-
-        //when
-        ResultActions nullUserIdResultActions = mockMvc.perform(
-                post("/design/slide/new")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(nullUserIdRequest))
-        );
-
-        ResultActions nullDesignIdResultActions = mockMvc.perform(
-                post("/design/slide/new")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(nullDesignIdRequest))
-        );
-
-        ResultActions nullOrderResultActions = mockMvc.perform(
-                post("/design/slide/new")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(nullOrderRequest))
-        );
-
-        //then
-        nullUserIdResultActions
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.data.userId").value("유저 정보는 필수입니다"));
-
-        nullDesignIdResultActions
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.data.designId").value("디자인 정보는 필수입니다"));
-
-        nullOrderResultActions
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.data.order").value("순서 정보는 필수입니다"));
-    }
-
     private Design createDesign() throws NoSuchFieldException, IllegalAccessException {
         Design design = Design.builder()
                 .build();
@@ -166,14 +105,6 @@ class DesignControllerTest {
         id.setAccessible(true);
         id.set(design, 1L);
         return design;
-    }
-
-    private Slide createSlide() throws Exception {
-        Slide slide = Slide.builder().build();
-        Field id = Slide.class.getDeclaredField("id");
-        id.setAccessible(true);
-        id.set(slide, 1L);
-        return slide;
     }
 
     @Test

@@ -1,7 +1,6 @@
 package com.capstone2025.team4.backend.controller.dto.design;
 
 import com.capstone2025.team4.backend.domain.design.SlideElement;
-import com.capstone2025.team4.backend.domain.design.element.Element;
 import com.capstone2025.team4.backend.domain.design.element.FileElement;
 import lombok.Getter;
 
