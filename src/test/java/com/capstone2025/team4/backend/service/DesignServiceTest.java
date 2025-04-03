@@ -3,6 +3,7 @@ package com.capstone2025.team4.backend.service;
 import com.capstone2025.team4.backend.domain.User;
 import com.capstone2025.team4.backend.domain.Workspace;
 import com.capstone2025.team4.backend.domain.design.*;
+import com.capstone2025.team4.backend.domain.design.element.Element;
 import com.capstone2025.team4.backend.service.design.DesignService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;

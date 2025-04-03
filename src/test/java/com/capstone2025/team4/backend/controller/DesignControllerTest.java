@@ -183,7 +183,8 @@ class DesignControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                get("/design/1")
+                get("/design")
+                        .param("userId", "1")
         );
 
         //then
@@ -207,6 +208,6 @@ class DesignControllerTest {
                 .andExpect(status().is4xxClientError());
 
         stringPathVarResult
-                .andExpect(status().isBadRequest());
+                .andExpect(status().is4xxClientError());
     }
 }

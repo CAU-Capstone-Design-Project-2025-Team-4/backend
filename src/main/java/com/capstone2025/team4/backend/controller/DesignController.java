@@ -19,16 +19,16 @@ public class DesignController {
     private final DesignService designService;
 
     @PostMapping("/new")
-    public ApiResponse<DesignWithSlidesResponse> newDesign(@Valid @RequestBody NewDesignRequest request) {
+    public ApiResponse<DesignWithSlidesFileElementsResponse> newDesign(@Valid @RequestBody NewDesignRequest request) {
         Design newDesign = designService.createNewDesign(request.getUserId(), request.getSourceId(), request.getIsShared());
 
-        return ApiResponse.success(new DesignWithSlidesResponse(newDesign));
+        return ApiResponse.success(new DesignWithSlidesFileElementsResponse(newDesign));
     }
 
     @PostMapping("/slide/new")
-    public ApiResponse<SlideResponse> newSlide(@Valid @RequestBody NewSlideRequest request) {
+    public ApiResponse<SlideResponseWithFileElement> newSlide(@Valid @RequestBody NewSlideRequest request) {
         Slide newSlide = designService.newSlide(request.getUserId(), request.getDesignId(), request.getOrder());
-        return ApiResponse.success(new SlideResponse(newSlide));
+        return ApiResponse.success(new SlideResponseWithFileElement(newSlide));
     }
 
     @GetMapping
