@@ -7,7 +7,6 @@ import com.capstone2025.team4.backend.infra.security.config.SecurityConfig;
 import com.capstone2025.team4.backend.infra.security.jwt.JwtService;
 import com.capstone2025.team4.backend.mock.WithCustomMockUser;
 import com.capstone2025.team4.backend.service.design.DesignService;
-import com.capstone2025.team4.backend.service.design.SlideController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
