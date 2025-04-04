@@ -7,6 +7,7 @@ import com.capstone2025.team4.backend.exception.design.DesignNotFound;
 import com.capstone2025.team4.backend.exception.design.DesignSourceNotFound;
 import com.capstone2025.team4.backend.exception.user.UserNotFoundException;
 import com.capstone2025.team4.backend.repository.*;
+import com.capstone2025.team4.backend.repository.design.DesignRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -140,6 +141,10 @@ public class DesignService {
 
     public List<Design> findAll(Long userId) {
         return designRepository.findAllByUser_Id(userId);
+    }
+
+    public Design findDesign(Long designId) {
+        return null;
     }
 
 }
