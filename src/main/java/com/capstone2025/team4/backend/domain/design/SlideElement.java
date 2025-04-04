@@ -24,6 +24,8 @@ public class SlideElement {
     @JoinColumn(name = "element_id")
     private Element element;
 
+    private Type type;
+
     private Long x;
 
     private Long y;
@@ -38,6 +40,7 @@ public class SlideElement {
     private SlideElement(Slide slide, Element element, Long x, Long y, Long width, Long height, Double angle) {
         this.slide = slide;
         this.element = element;
+        this.type = element.getType();
         this.x = x;
         this.y = y;
         this.width = width;
