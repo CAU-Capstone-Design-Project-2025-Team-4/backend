@@ -170,6 +170,7 @@ class ElementControllerTest {
     private FileElement createFileElement() {
         return FileElement.builder()
                 .s3Url("tempUrl")
+                .type(Type.MODEL)
                 .build();
     }
 }

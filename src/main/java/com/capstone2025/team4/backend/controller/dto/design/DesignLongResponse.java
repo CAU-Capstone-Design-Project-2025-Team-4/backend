@@ -8,17 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class DesignWithSlidesFileElementsResponse {
+public class DesignLongResponse {
     private Long id;
     private Boolean shared;
-    private List<SlideResponseWithFileElement> slideList = new ArrayList<>();
+    private List<SlideWithElementResponse> slideList = new ArrayList<>();
 
-    public DesignWithSlidesFileElementsResponse(Design design) {
+    public DesignLongResponse(Design design) {
         this.id = design.getId();
         this.shared = design.getShared();
         if (design.getSlideList() != null) {
             for (Slide slide : design.getSlideList()) {
-                slideList.add(new SlideResponseWithFileElement(slide));
+                slideList.add(new SlideWithElementResponse(slide));
             }
         }
     }

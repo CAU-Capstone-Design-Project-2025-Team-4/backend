@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Getter
-public class DesignWithoutSlidesResponse {
+public class DesignShortResponse {
     private Long id;
     private Boolean shared;
     private LocalDateTime createdAt;
 
-    public DesignWithoutSlidesResponse(Design design) {
+    public DesignShortResponse(Design design) {
         this.id = design.getId();
         this.shared = design.getShared();
         this.createdAt = design.getCreatedAt();

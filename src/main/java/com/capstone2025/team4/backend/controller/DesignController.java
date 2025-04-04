@@ -18,16 +18,16 @@ public class DesignController {
     private final DesignService designService;
 
     @PostMapping("/new")
-    public ApiResponse<DesignWithSlidesFileElementsResponse> newDesign(@Valid @RequestBody NewDesignRequest request) {
+    public ApiResponse<DesignLongResponse> newDesign(@Valid @RequestBody NewDesignRequest request) {
         Design newDesign = designService.createNewDesign(request.getUserId(), request.getSourceId(), request.getIsShared());
 
-        return ApiResponse.success(new DesignWithSlidesFileElementsResponse(newDesign));
+        return ApiResponse.success(new DesignLongResponse(newDesign));
     }
 
     @GetMapping
-    public ApiResponse<List<DesignWithoutSlidesResponse>> getAll(@RequestParam Long userId) {
+    public ApiResponse<List<DesignShortResponse>> getAll(@RequestParam Long userId) {
         List<Design> all = designService.findAll(userId);
-        List<DesignWithoutSlidesResponse> result = all.stream().map(DesignWithoutSlidesResponse::new).toList();
+        List<DesignShortResponse> result = all.stream().map(DesignShortResponse::new).toList();
         return ApiResponse.success(result);
     }
 }

@@ -1,8 +1,8 @@
 package com.capstone2025.team4.backend.controller;
 
 import com.capstone2025.team4.backend.controller.api.ApiResponse;
-import com.capstone2025.team4.backend.controller.dto.design.FileElementResponse;
 import com.capstone2025.team4.backend.controller.dto.element.AddNewFileElementRequest;
+import com.capstone2025.team4.backend.controller.dto.element.ElementResponse;
 import com.capstone2025.team4.backend.domain.design.SlideElement;
 import com.capstone2025.team4.backend.domain.design.Type;
 import com.capstone2025.team4.backend.domain.design.element.FileElement;
@@ -38,7 +38,7 @@ public class ElementController {
 
     // 유저가 새로운 파일 형태의 요소 추가 : ex) 사진, 모델 등
     @PostMapping("/add/file")
-    public ApiResponse<FileElementResponse> addNewElement(@Valid @ModelAttribute AddNewFileElementRequest request) {
+    public ApiResponse<ElementResponse> addNewElement(@Valid @ModelAttribute AddNewFileElementRequest request) {
         String url = s3Service.upload(request.getFile());
         if (request.getType() != Type.IMAGE && request.getType() != Type.MODEL) {
             throw new ElementNotFileType();
@@ -48,7 +48,7 @@ public class ElementController {
         }
         SlideElement slideElement = elementService.addUserFileElementToSlide(request.getUserId(), request.getSlideId(), url, request.getType(), request.getX(), request.getY(), request.getAngle(), request.getWidth(), request.getHeight());
 
-        return ApiResponse.success(new FileElementResponse(slideElement));
+        return ApiResponse.success(new ElementResponse(slideElement));
     }
 
     @GetMapping("/file/{elementId}")
