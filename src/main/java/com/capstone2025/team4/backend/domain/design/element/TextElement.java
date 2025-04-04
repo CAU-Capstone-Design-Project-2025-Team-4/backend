@@ -4,6 +4,7 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -11,6 +12,7 @@ import lombok.experimental.SuperBuilder;
 @DiscriminatorValue("TEXT")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
+@Getter
 public class TextElement extends Element{
 
     @Lob
