@@ -4,7 +4,6 @@ import com.capstone2025.team4.backend.domain.design.Type;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.web.multipart.MultipartFile;
 
 @AllArgsConstructor
 @Getter
