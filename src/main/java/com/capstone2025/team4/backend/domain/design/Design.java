@@ -38,6 +38,7 @@ public class Design {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "design", fetch = FetchType.LAZY)
+    @OrderColumn(name = "slide_order")
     private List<Slide> slideList = new ArrayList<>();
 
     @PrePersist
