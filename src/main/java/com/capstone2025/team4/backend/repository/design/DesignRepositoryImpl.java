@@ -4,7 +4,6 @@ import com.capstone2025.team4.backend.domain.design.Design;
 import com.capstone2025.team4.backend.domain.design.QDesign;
 import com.capstone2025.team4.backend.domain.design.QSlide;
 import com.capstone2025.team4.backend.domain.design.QSlideElement;
-import com.capstone2025.team4.backend.domain.design.element.QElement;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
