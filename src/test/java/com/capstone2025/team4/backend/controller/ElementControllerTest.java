@@ -1,8 +1,11 @@
 package com.capstone2025.team4.backend.controller;
 
+import com.capstone2025.team4.backend.controller.dto.element.AddNewTextElementRequest;
 import com.capstone2025.team4.backend.domain.design.SlideElement;
 import com.capstone2025.team4.backend.domain.design.Type;
+import com.capstone2025.team4.backend.domain.design.element.Element;
 import com.capstone2025.team4.backend.domain.design.element.FileElement;
+import com.capstone2025.team4.backend.domain.design.element.TextElement;
 import com.capstone2025.team4.backend.infra.aws.S3Entity;
 import com.capstone2025.team4.backend.infra.aws.S3Service;
 import com.capstone2025.team4.backend.infra.security.CustomUserDetailService;
@@ -17,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,8 +31,7 @@ import java.lang.reflect.Field;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -65,12 +68,12 @@ class ElementControllerTest {
     CustomUserDetailService customUserDetailService;
 
     @Test
-    void addNewElementSuccess() throws Exception {
+    void addNewFileElementSuccess() throws Exception {
         //given
         MockMultipartFile multipart = new MockMultipartFile("file", "test.png", "image/png", new FileInputStream(("/Users/vladkim/Pictures/test.png")));
         given(s3Service.upload(multipart)).willReturn("tempUrl");
 
-        SlideElement slideElement = createFileSlideElement();
+        SlideElement slideElement = createFileSlideElement(true);
         given(elementService.addUserElementToSlide(1L, 1L, "tempUrl", Type.IMAGE, 0L, 0L, 3.14, 1920L, 1080L)).willReturn(slideElement);
 
         //when
@@ -95,12 +98,12 @@ class ElementControllerTest {
     }
 
     @Test
-    void addNewElementBadArg() throws Exception {
+    void addNewFileElementBadArg() throws Exception {
         //given
         MockMultipartFile multipart = new MockMultipartFile("file", "test.png", "image/png", new FileInputStream(("/Users/vladkim/Pictures/test.png")));
         given(s3Service.upload(multipart)).willReturn("tempUrl");
 
-        SlideElement slideElement = createFileSlideElement();
+        SlideElement slideElement = createFileSlideElement(true);
         given(elementService.addUserElementToSlide(1L, 1L, "tempUrl", Type.IMAGE, 0L, 0L, 3.14, 1920L, 1080L)).willReturn(slideElement);
 
         //when
@@ -124,9 +127,29 @@ class ElementControllerTest {
     }
 
     @Test
+    void addNewTextElementSuccess() throws Exception {
+        //given
+        SlideElement slideElement = createFileSlideElement(false);
+        given(elementService.addUserElementToSlide(1L, 1L, "tempText", Type.TEXT, 0L, 0L, 3.14, 1920L, 1080L)).willReturn(slideElement);
+        AddNewTextElementRequest request = new AddNewTextElementRequest(1L, 1L, "tempText", Type.TEXT, 0L, 0L, 3.14, 1920L, 1080L);
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                post("/element/add/text")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+
+        //then
+        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(jsonPath("$.data.type").value(Type.TEXT.toString()));
+
+    }
+
+    @Test
     void getFileSuccess() throws Exception {
         //given
-        given(fileElementRepository.findById(1L)).willReturn(Optional.of(createFileElement()));
+        given(fileElementRepository.findById(1L)).willReturn(Optional.of((FileElement)createFileElement(true)));
         given(s3Service.findByUrl("tempUrl")).willReturn(S3Entity.builder().url("tempUrl").s3Key("s3Key").originalFileName("fileName").build());
 
         //when
@@ -143,7 +166,7 @@ class ElementControllerTest {
     @Test
     void getFileBadArg() throws Exception {
         //given
-        given(fileElementRepository.findById(1L)).willReturn(Optional.of(createFileElement()));
+        given(fileElementRepository.findById(1L)).willReturn(Optional.of((FileElement)createFileElement(true)));
         given(s3Service.findByUrl("tempUrl")).willReturn(S3Entity.builder().url("tempUrl").s3Key("s3Key").originalFileName("fileName").build());
 
         //when
@@ -157,9 +180,11 @@ class ElementControllerTest {
 
     }
 
-    private SlideElement createFileSlideElement() throws Exception {
-        SlideElement slideElement = SlideElement.builder()
-                .element(createFileElement())
+    private SlideElement createFileSlideElement(boolean isFile) throws Exception {
+        SlideElement slideElement;
+        Element element = createFileElement(isFile);
+        slideElement = SlideElement.builder()
+                .element(element)
                 .build();
         Field id = SlideElement.class.getDeclaredField("id");
         id.setAccessible(true);
@@ -167,10 +192,17 @@ class ElementControllerTest {
         return slideElement;
     }
 
-    private FileElement createFileElement() {
-        return FileElement.builder()
-                .s3Url("tempUrl")
-                .type(Type.MODEL)
-                .build();
+    private Element createFileElement(boolean isFIle) {
+        if (isFIle) {
+            return FileElement.builder()
+                    .s3Url("tempUrl")
+                    .type(Type.MODEL)
+                    .build();
+        } else {
+            return TextElement.builder()
+                    .content("tempContent")
+                    .type(Type.TEXT)
+                    .build();
+        }
     }
 }
