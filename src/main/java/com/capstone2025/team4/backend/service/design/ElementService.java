@@ -5,6 +5,7 @@ import com.capstone2025.team4.backend.domain.Workspace;
 import com.capstone2025.team4.backend.domain.design.*;
 import com.capstone2025.team4.backend.domain.design.element.Element;
 import com.capstone2025.team4.backend.domain.design.element.FileElement;
+import com.capstone2025.team4.backend.domain.design.element.TextElement;
 import com.capstone2025.team4.backend.exception.element.ElementDefaultNotFound;
 import com.capstone2025.team4.backend.exception.element.ElementNotDefault;
 import com.capstone2025.team4.backend.exception.element.SlideElementNotFound;
@@ -32,10 +33,10 @@ public class ElementService {
     private final SlideRepository slideRepository;
     private final UserRepository userRepository;
 
-    public SlideElement addUserFileElementToSlide(
+    public SlideElement addUserElementToSlide(
             Long userId,
             Long slideId,
-            String s3Url,
+            String content,
             Type type,
             Long x, Long y,
             Double angle,
@@ -48,16 +49,31 @@ public class ElementService {
         // 해당 유저가 해당 워크스페이스, 디자인의 소유자인지 확인
         checkUWDS(user, workspace, design, slide);
 
-        FileElement element = FileElement.builder()
-                .s3Url(s3Url)
-                .type(type)
-                .isDefault(false)
-                .x(x)
-                .y(y)
-                .width(width)
-                .height(height)
-                .angle(angle)
-                .build();
+        Element element;
+        if (type == Type.MODEL || type == Type.IMAGE) {
+            element = FileElement.builder()
+                    .s3Url(content)
+                    .type(type)
+                    .isDefault(false)
+                    .x(x)
+                    .y(y)
+                    .width(width)
+                    .height(height)
+                    .angle(angle)
+                    .build();
+
+        } else {
+            element = TextElement.builder()
+                    .content(content)
+                    .type(type)
+                    .isDefault(false)
+                    .x(x)
+                    .y(y)
+                    .width(width)
+                    .height(height)
+                    .angle(angle)
+                    .build();
+        }
 
         elementRepository.save(element);
 

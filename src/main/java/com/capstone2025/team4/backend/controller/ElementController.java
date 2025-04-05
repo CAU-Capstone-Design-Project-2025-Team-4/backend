@@ -46,7 +46,7 @@ public class ElementController {
         if (request.getFile().isEmpty()) {
             throw new FileIsEmpty();
         }
-        SlideElement slideElement = elementService.addUserFileElementToSlide(request.getUserId(), request.getSlideId(), url, request.getType(), request.getX(), request.getY(), request.getAngle(), request.getWidth(), request.getHeight());
+        SlideElement slideElement = elementService.addUserElementToSlide(request.getUserId(), request.getSlideId(), url, request.getType(), request.getX(), request.getY(), request.getAngle(), request.getWidth(), request.getHeight());
 
         return ApiResponse.success(new ElementResponse(slideElement));
     }

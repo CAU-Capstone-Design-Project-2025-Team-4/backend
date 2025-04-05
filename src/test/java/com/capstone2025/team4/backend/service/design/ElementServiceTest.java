@@ -4,6 +4,8 @@ import com.capstone2025.team4.backend.domain.User;
 import com.capstone2025.team4.backend.domain.Workspace;
 import com.capstone2025.team4.backend.domain.design.*;
 import com.capstone2025.team4.backend.domain.design.element.Element;
+import com.capstone2025.team4.backend.domain.design.element.FileElement;
+import com.capstone2025.team4.backend.domain.design.element.TextElement;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ class ElementServiceTest {
     EntityManager em;
 
     @Test
-    void addUserFileElementToSlide(){
+    void addUserElementToSlide(){
         //given
         User testUser = User.builder()
                 .email("test@example.com")
@@ -46,17 +48,23 @@ class ElementServiceTest {
         em.clear();
 
         //when
-        User user = em.find(User.class, testUser.getId());
-        Design design = em.find(Design.class, testDesign.getId());
-        Slide slide = em.find(Slide.class, testSlide.getId());
-        SlideElement slideElement = elementService.addUserFileElementToSlide(user.getId(), slide.getId(), "tempUrl", Type.ICON, 0L, 0L, 0.0, 10L, 10L);
+        SlideElement slideElementFile = elementService.addUserElementToSlide(testUser.getId(), testSlide.getId(), "tempUrl", Type.IMAGE, 0L, 0L, 0.0, 10L, 10L);
+        SlideElement slideElementText = elementService.addUserElementToSlide(testUser.getId(), testSlide.getId(), "tempSvg", Type.ICON, 0L, 0L, 0.0, 10L, 10L);
 
         //then
-        assertThat(slideElement.getId()).isNotNull();
-        assertThat(slideElement.getSlide().getId()).isEqualTo(slide.getId());
-        assertThat(slideElement.getSlide().getDesign().getId()).isEqualTo(design.getId());
+        assertThat(slideElementFile.getId()).isNotNull();
+        assertThat(slideElementFile.getSlide().getId()).isEqualTo(testSlide.getId());
+        assertThat(slideElementFile.getSlide().getDesign().getId()).isEqualTo(testDesign.getId());
+        assertThat(slideElementFile.getElement()).isInstanceOf(FileElement.class);
+        FileElement fileElement = (FileElement) slideElementFile.getElement();
+        assertThat(fileElement.getS3Url()).isEqualTo("tempUrl");
 
-
+        assertThat(slideElementText.getId()).isNotNull();
+        assertThat(slideElementText.getSlide().getId()).isEqualTo(testSlide.getId());
+        assertThat(slideElementText.getSlide().getDesign().getId()).isEqualTo(testDesign.getId());
+        assertThat(slideElementText.getElement()).isInstanceOf(TextElement.class);
+        TextElement textElement = (TextElement) slideElementText.getElement();
+        assertThat(textElement.getContent()).isEqualTo("tempSvg");
     }
 
     @Test

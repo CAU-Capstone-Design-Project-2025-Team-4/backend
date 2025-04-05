@@ -71,7 +71,7 @@ class ElementControllerTest {
         given(s3Service.upload(multipart)).willReturn("tempUrl");
 
         SlideElement slideElement = createFileSlideElement();
-        given(elementService.addUserFileElementToSlide(1L, 1L, "tempUrl", Type.IMAGE, 0L, 0L, 3.14, 1920L, 1080L)).willReturn(slideElement);
+        given(elementService.addUserElementToSlide(1L, 1L, "tempUrl", Type.IMAGE, 0L, 0L, 3.14, 1920L, 1080L)).willReturn(slideElement);
 
         //when
         ResultActions resultActions = mockMvc.perform(
@@ -101,7 +101,7 @@ class ElementControllerTest {
         given(s3Service.upload(multipart)).willReturn("tempUrl");
 
         SlideElement slideElement = createFileSlideElement();
-        given(elementService.addUserFileElementToSlide(1L, 1L, "tempUrl", Type.IMAGE, 0L, 0L, 3.14, 1920L, 1080L)).willReturn(slideElement);
+        given(elementService.addUserElementToSlide(1L, 1L, "tempUrl", Type.IMAGE, 0L, 0L, 3.14, 1920L, 1080L)).willReturn(slideElement);
 
         //when
         ResultActions resultActions = mockMvc.perform(
