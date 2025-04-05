@@ -27,7 +27,7 @@ public class ElementResponse {
             this.content = fileElement.getS3Url();
         } else {
             TextElement textElement = (TextElement) element;
-            this.content = textElement.getText();
+            this.content = textElement.getContent();
         }
         this.x = element.getX();
         this.y = element.getY();
@@ -46,7 +46,7 @@ public class ElementResponse {
             this.content = fileElement.getS3Url();
         } else {
             TextElement textElement = (TextElement) element;
-            this.content = textElement.getText();
+            this.content = textElement.getContent();
         }
         this.x = slideElement.getX();
         this.y = slideElement.getY();
