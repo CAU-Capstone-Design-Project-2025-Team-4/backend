@@ -4,6 +4,7 @@ import com.capstone2025.team4.backend.controller.api.ApiResponse;
 import com.capstone2025.team4.backend.controller.dto.element.AddNewFileElementRequest;
 import com.capstone2025.team4.backend.controller.dto.element.AddNewTextElementRequest;
 import com.capstone2025.team4.backend.controller.dto.element.ElementResponse;
+import com.capstone2025.team4.backend.controller.dto.element.UpdateElementRequest;
 import com.capstone2025.team4.backend.domain.design.SlideElement;
 import com.capstone2025.team4.backend.domain.design.Type;
 import com.capstone2025.team4.backend.domain.design.element.FileElement;
@@ -62,6 +63,13 @@ public class ElementController {
         }
 
         SlideElement slideElement = elementService.addUserElementToSlide(request.getUserId(), request.getSlideId(), request.getContent(), request.getType(), request.getX(), request.getY(), request.getAngle(), request.getWidth(), request.getHeight());
+
+        return ApiResponse.success(new ElementResponse(slideElement));
+    }
+
+    @PostMapping("/update")
+    public ApiResponse<ElementResponse> updateElement(@Valid @RequestBody UpdateElementRequest request) {
+        SlideElement slideElement = elementService.updateSlideElement(request.getUserId(), request.getElementId(), request.getX(), request.getY(), request.getAngle(), request.getWidth(), request.getHeight());
 
         return ApiResponse.success(new ElementResponse(slideElement));
     }

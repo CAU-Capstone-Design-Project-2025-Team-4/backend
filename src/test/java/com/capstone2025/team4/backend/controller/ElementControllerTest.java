@@ -1,6 +1,8 @@
 package com.capstone2025.team4.backend.controller;
 
+import com.capstone2025.team4.backend.controller.api.ApiResponse;
 import com.capstone2025.team4.backend.controller.dto.element.AddNewTextElementRequest;
+import com.capstone2025.team4.backend.controller.dto.element.UpdateElementRequest;
 import com.capstone2025.team4.backend.domain.design.SlideElement;
 import com.capstone2025.team4.backend.domain.design.Type;
 import com.capstone2025.team4.backend.domain.design.element.Element;
@@ -164,6 +166,46 @@ class ElementControllerTest {
         //then
         resultActions.andExpect(status().is4xxClientError());
         resultActions.andExpect(jsonPath("$.message").value(ExceptionCode.ELEMENT_NOT_TEXT.getMessage()));
+
+    }
+
+    @Test
+    void updateElementSuccess() throws Exception {
+        //given
+        SlideElement slideElement = createFileSlideElement(true);
+        given(elementService.updateSlideElement(1L, 1L, 0L, 0L, 3.14, 1920L, 1080L)).willReturn(slideElement);
+        UpdateElementRequest request = new UpdateElementRequest(1L, 1L, 0L, 0L, 3.14, 1920L, 1080L);
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                post("/element/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+
+        //then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.id").value(1L));
+
+    }
+
+    @Test
+    void updateElementBadArgs() throws Exception {
+        //given
+        SlideElement slideElement = createFileSlideElement(true);
+        given(elementService.updateSlideElement(1L, 1L, 0L, 0L, 3.14, 1920L, 1080L)).willReturn(slideElement);
+        UpdateElementRequest request = new UpdateElementRequest(null, 1L, 0L, 0L, 3.14, 1920L, 1080L);
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                post("/element/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+
+        //then
+        resultActions.andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.status").value(ApiResponse.VALIDATION_ERROR_STATUS));
 
     }
 
