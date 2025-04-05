@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -196,6 +198,62 @@ class ElementServiceTest {
         assertThat(updatedSlideElement.getAngle()).isEqualTo(3.0);
         assertThat(updatedSlideElement.getWidth()).isEqualTo(4L);
         assertThat(updatedSlideElement.getHeight()).isEqualTo(5L);
+
+    }
+
+    @Test
+    void getAllElementsInSlide(){
+        //given
+        User testUser = User.builder()
+                .email("test@example.com")
+                .build();
+        Workspace testWorkspace = new Workspace(testUser);
+        Design testDesign = Design.builder()
+                .user(testUser)
+                .workspace(testWorkspace)
+                .build();
+        Slide testSlide = Slide.builder().order(0).design(testDesign).build();
+
+        Element e = Element.builder().isDefault(true).build();
+
+        SlideElement se1 = SlideElement.builder()
+                .slide(testSlide)
+                .element(e)
+                .x(0L)
+                .y(0L)
+                .width(0L)
+                .height(0L)
+                .angle(0.0)
+                .build();
+
+        SlideElement se2 = SlideElement.builder()
+                .slide(testSlide)
+                .element(e)
+                .x(0L)
+                .y(0L)
+                .width(0L)
+                .height(0L)
+                .angle(0.0)
+                .build();
+
+        em.persist(testUser);
+        em.persist(testWorkspace);
+        em.persist(testDesign);
+        em.persist(e);
+        em.persist(se1);
+        em.persist(se2);
+        em.persist(testSlide);
+
+        em.flush();
+        em.clear();
+
+        //when
+        List<SlideElement> allElementsInSlide = elementService.getAllElementsInSlide(testUser.getId(), testSlide.getId());
+
+        //then
+        assertThat(allElementsInSlide).isNotNull();
+        assertThat(allElementsInSlide).isNotEmpty();
+        assertThat(allElementsInSlide.size()).isEqualTo(2);
 
     }
 }

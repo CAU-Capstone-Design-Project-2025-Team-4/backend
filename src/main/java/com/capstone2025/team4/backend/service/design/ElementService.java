@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.capstone2025.team4.backend.service.design.DesignUtil.checkUWDS;
@@ -163,5 +164,14 @@ public class ElementService {
         checkUWDS(user, design.getWorkspace(), design, slideElement.getSlide());
 
         return slideElement.update(x, y, width, height, angle);
+    }
+
+    public List<SlideElement> getAllElementsInSlide(Long userId, Long slideId) {
+        Slide slide = getSlide(slideId);
+        User user = getUser(userId);
+        Design design = slide.getDesign();
+        checkUWDS(user, null, design, slide);
+
+        return slide.getSlideElementList();
     }
 }
