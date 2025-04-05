@@ -23,11 +23,9 @@ public class DesignRepositoryImpl implements DesignRepositoryCustom{
         QDesign design = QDesign.design;
         QSlide slide = QSlide.slide;
         QSlideElement slideElement = QSlideElement.slideElement;
-        QElement element = QElement.element;
         Design result = queryFactory.selectFrom(design)
                 .join(design.slideList, slide).fetchJoin()
                 .join(slide.slideElementList, slideElement).fetchJoin()
-                .join(slideElement.element, element).fetchJoin()
                 .where(design.id.eq(designId))
                 .fetchOne();
         return Optional.ofNullable(result);
