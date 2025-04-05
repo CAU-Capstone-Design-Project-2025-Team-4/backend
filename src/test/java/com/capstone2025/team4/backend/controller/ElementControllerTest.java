@@ -6,6 +6,7 @@ import com.capstone2025.team4.backend.domain.design.Type;
 import com.capstone2025.team4.backend.domain.design.element.Element;
 import com.capstone2025.team4.backend.domain.design.element.FileElement;
 import com.capstone2025.team4.backend.domain.design.element.TextElement;
+import com.capstone2025.team4.backend.exception.ExceptionCode;
 import com.capstone2025.team4.backend.infra.aws.S3Entity;
 import com.capstone2025.team4.backend.infra.aws.S3Service;
 import com.capstone2025.team4.backend.infra.security.CustomUserDetailService;
@@ -143,6 +144,26 @@ class ElementControllerTest {
         //then
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(jsonPath("$.data.type").value(Type.TEXT.toString()));
+
+    }
+
+    @Test
+    void addNewTextElementBadArgs() throws Exception {
+        //given
+        SlideElement slideElement = createFileSlideElement(false);
+        given(elementService.addUserElementToSlide(1L, 1L, "tempText", Type.MODEL, 0L, 0L, 3.14, 1920L, 1080L)).willReturn(slideElement);
+        AddNewTextElementRequest request = new AddNewTextElementRequest(1L, 1L, "tempText", Type.MODEL, 0L, 0L, 3.14, 1920L, 1080L);
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                post("/element/add/text")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+
+        //then
+        resultActions.andExpect(status().is4xxClientError());
+        resultActions.andExpect(jsonPath("$.message").value(ExceptionCode.ELEMENT_NOT_TEXT.getMessage()));
 
     }
 
