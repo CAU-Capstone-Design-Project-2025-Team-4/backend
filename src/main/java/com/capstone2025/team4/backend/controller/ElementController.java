@@ -27,7 +27,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/element")
@@ -113,5 +116,16 @@ public class ElementController {
         headers.setContentDisposition(ContentDisposition.inline().filename(fileName, StandardCharsets.UTF_8).build());
 
         return new ResponseEntity<>(fileBytes, headers, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ApiResponse<List<ElementResponse>> getAllElementsInSlide(@RequestParam Long userId, Long slideId) {
+        List<SlideElement> allElementsInSlide = elementService.getAllElementsInSlide(userId, slideId);
+
+        List<ElementResponse> result = allElementsInSlide.stream()
+                .map(ElementResponse::new)
+                .collect(Collectors.toList());
+
+        return ApiResponse.success(result);
     }
 }

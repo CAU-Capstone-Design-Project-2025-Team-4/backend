@@ -31,6 +31,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.io.FileInputStream;
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
@@ -240,6 +241,24 @@ class ElementControllerTest {
         //then
         resultActions
                 .andExpect(status().is4xxClientError());
+
+    }
+
+    @Test
+    void getAllElementsInSlideSuccess() throws Exception {
+        //given
+        given(elementService.getAllElementsInSlide(1L, 1L)).willReturn(Collections.singletonList(createFileSlideElement(true)));
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get("/element")
+                        .param("userId", "1")
+                        .param("slideId", "1")
+        );
+
+        //then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].id").value("1"));
 
     }
 
