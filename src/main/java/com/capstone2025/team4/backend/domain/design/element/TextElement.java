@@ -16,6 +16,6 @@ import lombok.experimental.SuperBuilder;
 public class TextElement extends Element{
 
     @Lob
-    private String text;
+    private String content;
 
 }
