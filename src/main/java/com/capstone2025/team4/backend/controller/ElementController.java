@@ -42,7 +42,7 @@ public class ElementController {
     private final FileElementRepository fileElementRepository;
 
     // 유저가 새로운 파일 형태의 요소 추가 : ex) 사진, 모델 등
-    @PostMapping("/add/file")
+    @PostMapping("/file")
     public ApiResponse<ElementResponse> addNewFileElement(@Valid @ModelAttribute AddNewFileElementRequest request) {
         String url = s3Service.upload(request.getFile());
         Type type = request.getType();
@@ -57,7 +57,7 @@ public class ElementController {
         return ApiResponse.success(new ElementResponse(slideElement));
     }
 
-    @PostMapping("/add/text")
+    @PostMapping("/text")
     public ApiResponse<ElementResponse> addNewTextElement(@Valid @RequestBody AddNewTextElementRequest request) {
         Type type = request.getType();
         if (!type.isTextType()) {
