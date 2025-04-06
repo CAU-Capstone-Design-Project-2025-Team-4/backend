@@ -19,7 +19,7 @@ public class SlideController {
 
     private final DesignService designService;
 
-    @PostMapping("/new")
+    @PostMapping
     public ApiResponse<SlideWithElementResponse> newSlide(@Valid @RequestBody NewSlideRequest request) {
         Slide newSlide = designService.newSlide(request.getUserId(), request.getDesignId(), request.getOrder());
         return ApiResponse.success(new SlideWithElementResponse(newSlide));
