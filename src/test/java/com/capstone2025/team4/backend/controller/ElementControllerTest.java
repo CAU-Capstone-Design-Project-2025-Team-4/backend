@@ -82,7 +82,7 @@ class ElementControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                multipart("/element/add/file") // 여기를 post()가 아니라 multipart()로 변경
+                multipart("/element/file") // 여기를 post()가 아니라 multipart()로 변경
                         .file(multipart)
                         .param("userId", "1")
                         .param("slideId", "1")
@@ -112,7 +112,7 @@ class ElementControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                multipart("/element/add/file") // 여기를 post()가 아니라 multipart()로 변경
+                multipart("/element/file") // 여기를 post()가 아니라 multipart()로 변경
                         .file(multipart)
                         .param("userId", "")
                         .param("slideId", "1")
@@ -139,7 +139,7 @@ class ElementControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                post("/element/add/text")
+                post("/element/text")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
         );
@@ -159,7 +159,7 @@ class ElementControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                post("/element/add/text")
+                post("/element/text")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
         );
@@ -179,7 +179,7 @@ class ElementControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                post("/element/update")
+                patch("/element")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
         );
@@ -199,7 +199,7 @@ class ElementControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                post("/element/update")
+                patch("/element")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
         );

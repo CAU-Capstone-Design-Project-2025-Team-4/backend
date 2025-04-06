@@ -55,13 +55,13 @@ class DesignControllerTest {
 
         //when
         ResultActions noUserIdResultActions = mockMvc.perform(
-                post("/design/new")
+                post("/design")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(noUserIdRequest))
         );
 
         ResultActions noShareFlagResultActions = mockMvc.perform(
-                post("/design/new")
+                post("/design")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(noShareFlagRequest))
         );
@@ -86,7 +86,7 @@ class DesignControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                post("/design/new")
+                post("/design")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
         );

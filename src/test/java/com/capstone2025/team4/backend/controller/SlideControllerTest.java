@@ -51,7 +51,7 @@ class SlideControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                post("/slide/new")
+                post("/slide")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
         );
@@ -71,19 +71,19 @@ class SlideControllerTest {
 
         //when
         ResultActions nullUserIdResultActions = mockMvc.perform(
-                post("/slide/new")
+                post("/slide")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(nullUserIdRequest))
         );
 
         ResultActions nullDesignIdResultActions = mockMvc.perform(
-                post("/slide/new")
+                post("/slide")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(nullDesignIdRequest))
         );
 
         ResultActions nullOrderResultActions = mockMvc.perform(
-                post("/slide/new")
+                post("/slide")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(nullOrderRequest))
         );
