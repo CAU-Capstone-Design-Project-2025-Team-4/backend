@@ -69,7 +69,7 @@ public class ElementController {
         return ApiResponse.success(new ElementResponse(slideElement));
     }
 
-    @PostMapping("/update")
+    @PatchMapping
     public ApiResponse<ElementResponse> updateElement(@Valid @RequestBody UpdateElementRequest request) {
         SlideElement slideElement = elementService.updateSlideElement(request.getUserId(), request.getElementId(), request.getX(), request.getY(), request.getAngle(), request.getWidth(), request.getHeight());
 
