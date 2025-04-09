@@ -168,6 +168,7 @@ public class ElementService {
         return slideElement.update(x, y, width, height, angle);
     }
 
+    @Transactional(readOnly = true)
     public List<SlideElement> getAllElementsInSlide(Long userId, Long slideId) {
         Slide slide = getSlide(slideId);
         User user = getUser(userId);

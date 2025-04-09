@@ -11,6 +11,7 @@ import com.capstone2025.team4.backend.repository.design.DesignRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ import static com.capstone2025.team4.backend.service.design.DesignUtil.checkUWDS
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class DesignService {
     private final DesignRepository designRepository;
     private final WorkspaceRepository workspaceRepository;
@@ -139,6 +141,7 @@ public class DesignService {
         return optionalUser.get();
     }
 
+    @Transactional(readOnly = true)
     public List<Design> findAll(Long userId) {
         return designRepository.findAllByUser_Id(userId);
     }

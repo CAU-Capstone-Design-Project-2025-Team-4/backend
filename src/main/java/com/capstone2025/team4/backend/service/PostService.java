@@ -8,6 +8,7 @@ import com.capstone2025.team4.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -16,6 +17,7 @@ import static com.capstone2025.team4.backend.utils.StringChecker.*;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class PostService {
 
     private final PostRepository postRepository;
