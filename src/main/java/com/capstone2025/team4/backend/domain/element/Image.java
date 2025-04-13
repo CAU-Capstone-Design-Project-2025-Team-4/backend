@@ -17,4 +17,14 @@ public class Image extends Element {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "file_id")
     private File file;
+
+    @Override
+    protected Element createNewInstance() {
+        return new Image();
+    }
+
+    @Override
+    protected void copyElementFields(Element copy) {
+        ((Image) copy).file = this.file;
+    }
 }

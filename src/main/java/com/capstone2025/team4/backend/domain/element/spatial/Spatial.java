@@ -26,4 +26,18 @@ public class Spatial extends Element {
     private File file;
 
     private String backgroundColor;
+
+    @Override
+    protected Element createNewInstance() {
+        return new Spatial();
+    }
+
+    @Override
+    protected void copyElementFields(Element copy) {
+        Spatial spatialCopy = (Spatial) copy;
+        spatialCopy.cameraMode = this.cameraMode;
+        spatialCopy.cameraTransform = this.cameraTransform.copy();
+        spatialCopy.file = this.file;
+        spatialCopy.backgroundColor = this.backgroundColor;
+    }
 }

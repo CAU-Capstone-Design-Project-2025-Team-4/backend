@@ -19,4 +19,16 @@ public class Shape extends Element {
     private String path;
 
     private String color;
+
+    @Override
+    protected Element createNewInstance() {
+        return new Shape();
+    }
+
+    @Override
+    protected void copyElementFields(Element copy) {
+        Shape shapeCopy = (Shape) copy;
+        shapeCopy.path = this.path;
+        shapeCopy.color = this.color;
+    }
 }

@@ -22,4 +22,17 @@ public class TextBox extends Element {
 
     @Enumerated(value = EnumType.STRING)
     private TextAlign align;
+
+    @Override
+    protected Element createNewInstance() {
+        return new TextBox();
+    }
+
+    @Override
+    protected void copyElementFields(Element copy) {
+        TextBox textBoxCopy = (TextBox) copy;
+        textBoxCopy.text = this.text;
+        textBoxCopy.size = this.size;
+        textBoxCopy.weight = this.weight;
+    }
 }

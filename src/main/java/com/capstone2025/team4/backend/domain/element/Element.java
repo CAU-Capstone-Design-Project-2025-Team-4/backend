@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @DiscriminatorColumn(name = "type")
 @Getter
 @SuperBuilder
-public class Element {
+public abstract class Element {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,4 +38,21 @@ public class Element {
     private Long height;
 
     private Double angle;
+
+    public final Element copy(Slide destSlide) {
+        Element copy = createNewInstance();
+        copy.slide = destSlide;
+        copy.borderRef = this.getBorderRef().copy();
+        copy.x = this.x;
+        copy.y = this.y;
+        copy.z = this.z;
+        copy.width = this.width;
+        copy.height = this.height;
+        copy.angle = this.angle;
+        copyElementFields(copy);
+        return copy;
+    }
+
+    protected abstract Element createNewInstance();
+    protected abstract void copyElementFields(Element copy);
 }
