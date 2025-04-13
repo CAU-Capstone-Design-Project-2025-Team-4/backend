@@ -1,6 +1,7 @@
-package com.capstone2025.team4.backend.domain.design.element;
+package com.capstone2025.team4.backend.domain.element;
 
-import com.capstone2025.team4.backend.domain.design.Type;
+import com.capstone2025.team4.backend.domain.design.Slide;
+import com.capstone2025.team4.backend.domain.element.border.BorderRef;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,9 +10,9 @@ import lombok.experimental.SuperBuilder;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "format")
+@DiscriminatorColumn(name = "type")
+@Getter
 @SuperBuilder
 public class Element {
 
@@ -19,19 +20,22 @@ public class Element {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Type type;
+    @ManyToOne
+    @JoinColumn(name = "slide_id")
+    private Slide slide;
 
-    @Column(nullable = false)
-    private Boolean isDefault;
+    @Embedded
+    private BorderRef borderRef;
 
     private Long x;
 
     private Long y;
+
+    private Long z;
 
     private Long width;
 
     private Long height;
 
     private Double angle;
-
 }
