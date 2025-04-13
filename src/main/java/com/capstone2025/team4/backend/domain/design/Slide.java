@@ -1,5 +1,7 @@
 package com.capstone2025.team4.backend.domain.design;
 
+import com.capstone2025.team4.backend.domain.element.Element;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -26,10 +28,10 @@ public class Slide {
     private Design design;
 
     @OneToMany(mappedBy = "slide", fetch = FetchType.LAZY)
-    private List<SlideElement> slideElementList = new ArrayList<>();
+    private List<Element> slideElementList = new ArrayList<>();
 
     @Builder
-    private Slide(Integer order, Design design, List<SlideElement> slideElementList) {
+    private Slide(Integer order, Design design, List<Element> slideElementList) {
         this.order = order;
         this.design = design;
         this.slideElementList = slideElementList;
