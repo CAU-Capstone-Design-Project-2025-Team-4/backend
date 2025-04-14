@@ -40,7 +40,7 @@ public class ElementController {
     private final ElementRepository elementRepository;
 
     @PostMapping("/textbox")
-    public ApiResponse<ElementResponse> addNewTextBoxElement(@Valid @ModelAttribute AddTextRequest request) {
+    public ApiResponse<ElementResponse> addNewTextBoxElement(@Valid @RequestBody AddTextRequest request) {
         BorderRef borderRef = BorderRef.builder()
                 .borderType(request.getBorderType())
                 .color(request.getBorderColor())
@@ -51,7 +51,7 @@ public class ElementController {
     }
 
     @PostMapping("/shape")
-    public ApiResponse<ElementResponse> addNewShapeElement(@Valid @ModelAttribute AddShapeRequest request) {
+    public ApiResponse<ElementResponse> addNewShapeElement(@Valid @RequestBody AddShapeRequest request) {
         BorderRef borderRef = BorderRef.builder()
                 .borderType(request.getBorderType())
                 .color(request.getBorderColor())
@@ -97,7 +97,12 @@ public class ElementController {
     // 요소의 공통 속성 업데이트
     @PatchMapping
     public ApiResponse<ElementResponse> updateElement(@Valid @RequestBody UpdateElementRequest request) {
-        Element element = elementService.updateCommonFields(request.getUserId(), request.getElementId(), request.getBorderRef(), request.getX(), request.getY(), request.getZ(), request.getWidth(), request.getHeight(), request.getAngle());
+        BorderRef borderRef = BorderRef.builder()
+                .borderType(request.getBorderType())
+                .color(request.getBorderColor())
+                .thickness(request.getBorderThickness())
+                .build();
+        Element element = elementService.updateCommonFields(request.getUserId(), request.getElementId(), borderRef, request.getX(), request.getY(), request.getZ(), request.getWidth(), request.getHeight(), request.getAngle());
 
         return ApiResponse.success(ElementResponse.create(element));
     }
