@@ -3,16 +3,16 @@ package com.capstone2025.team4.backend.domain.element.border;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+@EqualsAndHashCode
 public class BorderRef {
 
     @Enumerated(value = EnumType.STRING)
-    private BorderType type;
+    private BorderType borderType;
 
     private String color;
 
@@ -20,14 +20,14 @@ public class BorderRef {
 
     @Builder
     public BorderRef(BorderType borderType, String color, Long thickness) {
-        this.type = borderType;
+        this.borderType = borderType;
         this.color = color;
         this.thickness = thickness;
     }
 
     public BorderRef copy() {
         BorderRef borderRef = new BorderRef();
-        borderRef.type = this.type;
+        borderRef.borderType = this.borderType;
         borderRef.color = this.color;
         borderRef.thickness = this.thickness;
         return borderRef;

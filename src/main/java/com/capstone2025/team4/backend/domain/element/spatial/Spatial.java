@@ -1,6 +1,5 @@
 package com.capstone2025.team4.backend.domain.element.spatial;
 
-import com.capstone2025.team4.backend.domain.File;
 import com.capstone2025.team4.backend.domain.element.Element;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,10 +8,11 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@DiscriminatorValue("TEXT_BOX")
+@DiscriminatorValue("SPATIAL")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @SuperBuilder
+@Table(name = "spatial_element")
 public class Spatial extends Element {
 
     @Enumerated(value = EnumType.STRING)
@@ -21,9 +21,7 @@ public class Spatial extends Element {
     @Embedded
     private CameraTransform cameraTransform;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "file_id")
-    private File file;
+    private String content;
 
     private String backgroundColor;
 
@@ -37,7 +35,14 @@ public class Spatial extends Element {
         Spatial spatialCopy = (Spatial) copy;
         spatialCopy.cameraMode = this.cameraMode;
         spatialCopy.cameraTransform = this.cameraTransform.copy();
-        spatialCopy.file = this.file;
+        spatialCopy.content = this.content;
         spatialCopy.backgroundColor = this.backgroundColor;
+    }
+
+    public void update(CameraMode cameraMode, CameraTransform cameraTransform, String content, String backgroundColor) {
+        this.cameraMode = cameraMode;
+        this.cameraTransform = cameraTransform;
+        this.content = content;
+        this.backgroundColor = backgroundColor;
     }
 }

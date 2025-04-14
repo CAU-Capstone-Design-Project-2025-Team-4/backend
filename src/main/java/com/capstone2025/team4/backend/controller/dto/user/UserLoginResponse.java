@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 public class UserLoginResponse {
-    private Long id;
-    private String name;
-    private String email;
-    private String jwtToken;
+    private final Long id;
+    private final String name;
+    private final String email;
+    private final String jwtToken;
 
     public UserLoginResponse(User user, String jwtToken) {
         this.id = user.getId();

@@ -35,4 +35,10 @@ public class TextBox extends Element {
         textBoxCopy.size = this.size;
         textBoxCopy.weight = this.weight;
     }
+
+    public void update(String text, Long size, Long weight) {
+        this.text = text;
+        this.size = size;
+        this.weight = weight;
+    }
 }

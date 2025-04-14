@@ -3,6 +3,7 @@ package com.capstone2025.team4.backend.service.design;
 import com.capstone2025.team4.backend.domain.User;
 import com.capstone2025.team4.backend.domain.Workspace;
 import com.capstone2025.team4.backend.domain.design.*;
+import com.capstone2025.team4.backend.domain.element.Element;
 import com.capstone2025.team4.backend.exception.design.DesignNotFound;
 import com.capstone2025.team4.backend.exception.design.DesignSourceNotFound;
 import com.capstone2025.team4.backend.exception.user.UserNotFoundException;
@@ -78,23 +79,15 @@ public class DesignService {
         List<Slide> sourceSlideList = source.getSlideList();
 
         for (Slide sourceSlide : sourceSlideList) {
-            ArrayList<SlideElement> newSlideElementList = new ArrayList<>();
+            ArrayList<Element> newSlideElementList = new ArrayList<>();
             Slide newSlide = Slide.builder()
                     .order(sourceSlide.getOrder())
                     .design(newDesign)
                     .slideElementList(newSlideElementList)
                     .build();
-            for (SlideElement slideElement : sourceSlide.getSlideElementList()) {
-                SlideElement newSlideElement = SlideElement.builder()
-                        .slide(newSlide)
-                        .element(slideElement.getElement())
-                        .x(slideElement.getX())
-                        .y(slideElement.getY())
-                        .width(slideElement.getWidth())
-                        .height(slideElement.getHeight())
-                        .angle(slideElement.getAngle())
-                        .build();
-                newSlideElementList.add(newSlideElement);
+            for (Element slideElement : sourceSlide.getSlideElementList()) {
+                Element copy = slideElement.copy(newSlide);
+                newSlideElementList.add(copy);
             }
             newSlideList.add(newSlide);
         }

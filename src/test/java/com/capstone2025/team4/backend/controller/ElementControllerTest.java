@@ -1,22 +1,23 @@
 package com.capstone2025.team4.backend.controller;
 
 import com.capstone2025.team4.backend.controller.api.ApiResponse;
-import com.capstone2025.team4.backend.controller.dto.element.AddNewTextElementRequest;
-import com.capstone2025.team4.backend.controller.dto.element.UpdateElementRequest;
-import com.capstone2025.team4.backend.domain.design.SlideElement;
-import com.capstone2025.team4.backend.domain.design.Type;
-import com.capstone2025.team4.backend.domain.design.element.Element;
-import com.capstone2025.team4.backend.domain.design.element.FileElement;
-import com.capstone2025.team4.backend.domain.design.element.TextElement;
-import com.capstone2025.team4.backend.exception.ExceptionCode;
+import com.capstone2025.team4.backend.controller.dto.element.request.UpdateElementRequest;
+import com.capstone2025.team4.backend.controller.dto.element.request.UpdateSpatialRequest;
+import com.capstone2025.team4.backend.domain.element.Element;
+import com.capstone2025.team4.backend.domain.element.Image;
+import com.capstone2025.team4.backend.domain.element.TextBox;
+import com.capstone2025.team4.backend.domain.element.border.BorderRef;
+import com.capstone2025.team4.backend.domain.element.border.BorderType;
+import com.capstone2025.team4.backend.domain.element.spatial.CameraTransform;
+import com.capstone2025.team4.backend.domain.element.spatial.Spatial;
+import com.capstone2025.team4.backend.domain.element.spatial.CameraMode;
 import com.capstone2025.team4.backend.infra.aws.S3Entity;
 import com.capstone2025.team4.backend.infra.aws.S3Service;
 import com.capstone2025.team4.backend.infra.security.CustomUserDetailService;
 import com.capstone2025.team4.backend.infra.security.config.SecurityConfig;
 import com.capstone2025.team4.backend.infra.security.jwt.JwtService;
 import com.capstone2025.team4.backend.mock.WithCustomMockUser;
-import com.capstone2025.team4.backend.repository.ElementRepository;
-import com.capstone2025.team4.backend.repository.FileElementRepository;
+import com.capstone2025.team4.backend.repository.element.ElementRepository;
 import com.capstone2025.team4.backend.service.design.ElementService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -34,7 +35,9 @@ import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -49,15 +52,13 @@ class ElementControllerTest {
 
     @MockitoBean
     ElementService elementService;
-    
+
     @MockitoBean
     S3Service s3Service;
 
     @MockitoBean
     ElementRepository elementRepository;
 
-    @MockitoBean
-    FileElementRepository fileElementRepository;
 
     @Autowired
     MockMvc mockMvc;
@@ -74,25 +75,33 @@ class ElementControllerTest {
     @Test
     void addNewFileElementSuccess() throws Exception {
         //given
-        MockMultipartFile multipart = new MockMultipartFile("file", "test.png", "image/png", new FileInputStream(("/Users/vladkim/Pictures/test.png")));
+        MockMultipartFile multipart = new MockMultipartFile("image", "test.png", "image/png", new FileInputStream(("/Users/vladkim/Pictures/test.png")));
         given(s3Service.upload(multipart)).willReturn("tempUrl");
 
-        SlideElement slideElement = createFileSlideElement(true);
-        given(elementService.addUserElementToSlide(1L, 1L, "tempUrl", Type.IMAGE, 0L, 0L, 3.14, 1920L, 1080L)).willReturn(slideElement);
+        Element slideElement = createFileSlideElement(true);
+        given(elementService.addImageElementToSlide(
+                anyLong(), anyLong(),
+                any(BorderRef.class),
+                anyLong(), anyLong(), anyLong(),
+                anyDouble(), anyLong(), anyLong(),
+                eq("tempUrl")          // 문자열은 eq(...)로
+        )).willReturn((Image) slideElement);
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                multipart("/element/file") // 여기를 post()가 아니라 multipart()로 변경
+                multipart("/element/image") // 여기를 post()가 아니라 multipart()로 변경
                         .file(multipart)
                         .param("userId", "1")
                         .param("slideId", "1")
-                        .param("elementId", "1")
-                        .param("type", "IMAGE")
                         .param("x", "0")
                         .param("y", "0")
+                        .param("z", "0")
                         .param("angle", "3.14")
                         .param("width", "1920")
                         .param("height", "1080")
+                        .param("borderType", "NONE")
+                        .param("borderColor", "black")
+                        .param("borderThickness", "1")
         );
         //then
         resultActions
@@ -103,26 +112,33 @@ class ElementControllerTest {
 
     @Test
     void addNewFileElementBadArg() throws Exception {
-        //given
-        MockMultipartFile multipart = new MockMultipartFile("file", "test.png", "image/png", new FileInputStream(("/Users/vladkim/Pictures/test.png")));
+        MockMultipartFile multipart = new MockMultipartFile("image", "test.png", "image/png", new FileInputStream(("/Users/vladkim/Pictures/test.png")));
         given(s3Service.upload(multipart)).willReturn("tempUrl");
 
-        SlideElement slideElement = createFileSlideElement(true);
-        given(elementService.addUserElementToSlide(1L, 1L, "tempUrl", Type.IMAGE, 0L, 0L, 3.14, 1920L, 1080L)).willReturn(slideElement);
+        Element slideElement = createFileSlideElement(true);
+        given(elementService.addImageElementToSlide(
+                anyLong(), anyLong(),
+                any(BorderRef.class),
+                anyLong(), anyLong(), anyLong(),
+                anyDouble(), anyLong(), anyLong(),
+                eq("tempUrl")          // 문자열은 eq(...)로
+        )).willReturn((Image) slideElement);
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                multipart("/element/file") // 여기를 post()가 아니라 multipart()로 변경
+                multipart("/element/image") // 여기를 post()가 아니라 multipart()로 변경
                         .file(multipart)
                         .param("userId", "")
                         .param("slideId", "1")
-                        .param("elementId", "1")
-                        .param("type", "IMAGE")
                         .param("x", "0")
                         .param("y", "0")
+                        .param("z", "0")
                         .param("angle", "3.14")
                         .param("width", "1920")
                         .param("height", "1080")
+                        .param("borderType", "NONE")
+                        .param("borderColor", "black")
+                        .param("borderThickness", "1")
         );
         //then
         resultActions
@@ -131,52 +147,16 @@ class ElementControllerTest {
     }
 
     @Test
-    void addNewTextElementSuccess() throws Exception {
+    void updateCommonFieldsSuccess() throws Exception {
         //given
-        SlideElement slideElement = createFileSlideElement(false);
-        given(elementService.addUserElementToSlide(1L, 1L, "tempText", Type.TEXT, 0L, 0L, 3.14, 1920L, 1080L)).willReturn(slideElement);
-        AddNewTextElementRequest request = new AddNewTextElementRequest(1L, 1L, "tempText", Type.TEXT, 0L, 0L, 3.14, 1920L, 1080L);
-
-        //when
-        ResultActions resultActions = mockMvc.perform(
-                post("/element/text")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request))
-        );
-
-        //then
-        resultActions.andExpect(status().isOk());
-        resultActions.andExpect(jsonPath("$.data.type").value(Type.TEXT.toString()));
-
-    }
-
-    @Test
-    void addNewTextElementBadArgs() throws Exception {
-        //given
-        SlideElement slideElement = createFileSlideElement(false);
-        given(elementService.addUserElementToSlide(1L, 1L, "tempText", Type.MODEL, 0L, 0L, 3.14, 1920L, 1080L)).willReturn(slideElement);
-        AddNewTextElementRequest request = new AddNewTextElementRequest(1L, 1L, "tempText", Type.MODEL, 0L, 0L, 3.14, 1920L, 1080L);
-
-        //when
-        ResultActions resultActions = mockMvc.perform(
-                post("/element/text")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request))
-        );
-
-        //then
-        resultActions.andExpect(status().is4xxClientError());
-        resultActions.andExpect(jsonPath("$.message").value(ExceptionCode.ELEMENT_NOT_TEXT.getMessage()));
-
-    }
-
-    @Test
-    void updateElementSuccess() throws Exception {
-        //given
-        SlideElement slideElement = createFileSlideElement(true);
-        given(elementService.updateSlideElement(1L, 1L, 0L, 0L, 3.14, 1920L, 1080L)).willReturn(slideElement);
-        UpdateElementRequest request = new UpdateElementRequest(1L, 1L, 0L, 0L, 3.14, 1920L, 1080L);
-
+        Element element = createFileElement(true);
+        BorderRef borderRef = BorderRef.builder()
+                .borderType(BorderType.NONE)
+                .color("black")
+                .thickness(1L)
+                .build();
+        given(elementService.updateCommonFields(1L, 1L, borderRef, 0L, 0L, 0L, 1920L, 1080L, 3.14)).willReturn(element);
+        UpdateElementRequest request = new UpdateElementRequest(1L, 1L, borderRef, 0L, 0L, 0L, 3.14, 1920L, 1080L);
         //when
         ResultActions resultActions = mockMvc.perform(
                 patch("/element")
@@ -186,16 +166,21 @@ class ElementControllerTest {
 
         //then
         resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.id").value(1L));
+                .andExpect(jsonPath("$.data.content").value("tempUrl"));
 
     }
 
     @Test
-    void updateElementBadArgs() throws Exception {
+    void updateCommonFieldsBadArgs() throws Exception {
         //given
-        SlideElement slideElement = createFileSlideElement(true);
-        given(elementService.updateSlideElement(1L, 1L, 0L, 0L, 3.14, 1920L, 1080L)).willReturn(slideElement);
-        UpdateElementRequest request = new UpdateElementRequest(null, 1L, 0L, 0L, 3.14, 1920L, 1080L);
+        Element element = createFileElement(true);
+        BorderRef borderRef = BorderRef.builder()
+                .borderType(BorderType.NONE)
+                .color("black")
+                .thickness(1L)
+                .build();
+        given(elementService.updateCommonFields(1L, 1L, borderRef, 0L, 0L, 0L, 1920L, 1080L, 3.14)).willReturn(element);
+        UpdateElementRequest request = new UpdateElementRequest(null, 1L, borderRef, 0L, 0L, 0L, 3.14, 1920L, 1080L);
 
         //when
         ResultActions resultActions = mockMvc.perform(
@@ -213,7 +198,7 @@ class ElementControllerTest {
     @Test
     void getFileSuccess() throws Exception {
         //given
-        given(fileElementRepository.findById(1L)).willReturn(Optional.of((FileElement)createFileElement(true)));
+        given(elementRepository.findById(1L)).willReturn(Optional.of(createFileElement(true)));
         given(s3Service.findByUrl("tempUrl")).willReturn(S3Entity.builder().url("tempUrl").s3Key("s3Key").originalFileName("fileName").build());
 
         //when
@@ -230,12 +215,12 @@ class ElementControllerTest {
     @Test
     void getFileBadArg() throws Exception {
         //given
-        given(fileElementRepository.findById(1L)).willReturn(Optional.of((FileElement)createFileElement(true)));
+        given(elementRepository.findById(1L)).willReturn(Optional.of(createFileElement(true)));
         given(s3Service.findByUrl("tempUrl")).willReturn(S3Entity.builder().url("tempUrl").s3Key("s3Key").originalFileName("fileName").build());
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                get("/element/")
+                get("/element/file/S")
         );
 
         //then
@@ -247,7 +232,7 @@ class ElementControllerTest {
     @Test
     void getAllElementsInSlideSuccess() throws Exception {
         //given
-        given(elementService.getAllElementsInSlide(1L, 1L)).willReturn(Collections.singletonList(createFileSlideElement(true)));
+        given(elementService.findAllElementsInSlide(1L, 1L)).willReturn(Collections.singletonList(createFileSlideElement(true)));
 
         //when
         ResultActions resultActions = mockMvc.perform(
@@ -262,28 +247,102 @@ class ElementControllerTest {
 
     }
 
-    private SlideElement createFileSlideElement(boolean isFile) throws Exception {
-        SlideElement slideElement;
-        Element element = createFileElement(isFile);
-        slideElement = SlideElement.builder()
-                .element(element)
+
+    // Test methods
+    @Test
+    void updateSpatialSuccess() throws Exception {
+        // given
+        CameraTransform cameraTransform = CameraTransform.builder()
+                .positionX(0L)
+                .positionY(0L)
+                .positionZ(0L)
+                .rotationX(0L)
+                .rotationY(0L)
+                .rotationZ(0L)
                 .build();
-        Field id = SlideElement.class.getDeclaredField("id");
+
+        Spatial spatial = mock(Spatial.class);
+        given(spatial.getContent()).willReturn("tempUrl");
+        given(spatial.getCameraMode()).willReturn(CameraMode.FREE);
+
+        given(elementService.updateSpatial(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+        )).willReturn(spatial);
+
+        UpdateSpatialRequest request = new UpdateSpatialRequest();
+        request.setUserId(1L);
+        request.setElementId(1L);
+        request.setCameraMode(CameraMode.FREE);
+        request.setCameraTransform(cameraTransform);
+        request.setContent("tempUrl");
+        request.setBackgroundColor("#ffffff");
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                patch("/element/spatial")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+
+        // then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.content").value("tempUrl"))
+                .andExpect(jsonPath("$.data.cameraMode").value("FREE"));
+    }
+
+    @Test
+    void updateSpatialBadArgs() throws Exception {
+        // given
+        CameraTransform cameraTransform = CameraTransform.builder()
+                .positionX(0L)
+                .positionY(0L)
+                .positionZ(0L)
+                .rotationX(0L)
+                .rotationY(0L)
+                .rotationZ(0L)
+                .build();
+
+        UpdateSpatialRequest request = new UpdateSpatialRequest();
+        request.setUserId(null); // userId missing
+        request.setElementId(1L);
+        request.setCameraMode(CameraMode.FREE);
+        request.setCameraTransform(cameraTransform);
+        request.setContent("tempUrl");
+        request.setBackgroundColor("#ffffff");
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                patch("/element/spatial")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+
+        // then
+        resultActions.andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.status").value(ApiResponse.VALIDATION_ERROR_STATUS));
+    }
+
+    private Element createFileSlideElement(boolean isFile) throws Exception {
+        Element element = createFileElement(isFile);
+        Field id = Element.class.getDeclaredField("id");
         id.setAccessible(true);
-        id.set(slideElement, 1L);
-        return slideElement;
+        id.set(element, 1L);
+        return element;
     }
 
     private Element createFileElement(boolean isFIle) {
         if (isFIle) {
-            return FileElement.builder()
-                    .s3Url("tempUrl")
-                    .type(Type.MODEL)
+            return Image.builder()
+                    .content("tempUrl")
                     .build();
         } else {
-            return TextElement.builder()
-                    .content("tempContent")
-                    .type(Type.TEXT)
+            return TextBox.builder()
+                    .text("tempContent")
                     .build();
         }
     }

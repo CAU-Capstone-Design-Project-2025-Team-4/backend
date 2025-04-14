@@ -14,13 +14,13 @@ import lombok.experimental.SuperBuilder;
 @DiscriminatorColumn(name = "type")
 @Getter
 @SuperBuilder
-public abstract class Element {
+public class Element {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "slide_id")
     private Slide slide;
 
@@ -53,6 +53,18 @@ public abstract class Element {
         return copy;
     }
 
-    protected abstract Element createNewInstance();
-    protected abstract void copyElementFields(Element copy);
+    protected Element createNewInstance() {throw new RuntimeException();}
+
+    protected void copyElementFields(Element copy) {
+        throw new RuntimeException();
+    }
+    public void update(BorderRef borderRef, long x, long y, long z, long width, long height, double angle) {
+        this.borderRef = borderRef;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.width = width;
+        this.height = height;
+        this.angle = angle;
+    }
 }

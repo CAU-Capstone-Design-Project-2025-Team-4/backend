@@ -3,16 +3,18 @@ package com.capstone2025.team4.backend.service.design;
 import com.capstone2025.team4.backend.domain.User;
 import com.capstone2025.team4.backend.domain.Workspace;
 import com.capstone2025.team4.backend.domain.design.*;
-import com.capstone2025.team4.backend.domain.design.element.Element;
-import com.capstone2025.team4.backend.domain.design.element.FileElement;
-import com.capstone2025.team4.backend.domain.design.element.TextElement;
-import com.capstone2025.team4.backend.exception.element.ElementDefaultNotFound;
-import com.capstone2025.team4.backend.exception.element.ElementNotDefault;
-import com.capstone2025.team4.backend.exception.element.SlideElementNotFound;
+import com.capstone2025.team4.backend.domain.element.Element;
+import com.capstone2025.team4.backend.domain.element.Image;
+import com.capstone2025.team4.backend.domain.element.Shape;
+import com.capstone2025.team4.backend.domain.element.TextBox;
+import com.capstone2025.team4.backend.domain.element.border.BorderRef;
+import com.capstone2025.team4.backend.domain.element.spatial.CameraMode;
+import com.capstone2025.team4.backend.domain.element.spatial.CameraTransform;
+import com.capstone2025.team4.backend.domain.element.spatial.Spatial;
+import com.capstone2025.team4.backend.exception.element.ElementNotFound;
 import com.capstone2025.team4.backend.exception.slide.SlideNotFound;
 import com.capstone2025.team4.backend.exception.user.UserNotAllowedAddElement;
-import com.capstone2025.team4.backend.repository.ElementRepository;
-import com.capstone2025.team4.backend.repository.SlideElementRepository;
+import com.capstone2025.team4.backend.repository.element.*;
 import com.capstone2025.team4.backend.repository.SlideRepository;
 import com.capstone2025.team4.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,109 +34,151 @@ import static com.capstone2025.team4.backend.service.design.DesignUtil.checkUWDS
 public class ElementService {
 
     private final ElementRepository elementRepository;
-    private final SlideElementRepository slideElementRepository;
     private final SlideRepository slideRepository;
     private final UserRepository userRepository;
 
-    public SlideElement addUserElementToSlide(
+    public TextBox addTextBoxElementToSlide(
             Long userId,
             Long slideId,
-            String content,
-            Type type,
-            Long x, Long y,
+            BorderRef borderRef,
+            Long x, Long y, Long z,
             Double angle,
-            Long width, Long height
+            Long width, Long height,
+            String text,
+            Long size,
+            Long weight
     ) {
         User user = getUser(userId);
-        Slide slide = getSlide(slideId);
+        Slide slide = getSlide(slideId, false);
         Design design = slide.getDesign();
         Workspace workspace = design.getWorkspace();
         // 해당 유저가 해당 워크스페이스, 디자인의 소유자인지 확인
         checkUWDS(user, workspace, design, slide);
 
-        Element element;
-        if (type == Type.MODEL || type == Type.IMAGE) {
-            element = FileElement.builder()
-                    .s3Url(content)
-                    .type(type)
-                    .isDefault(false)
-                    .x(x)
-                    .y(y)
-                    .width(width)
-                    .height(height)
-                    .angle(angle)
-                    .build();
-
-        } else {
-            element = TextElement.builder()
-                    .content(content)
-                    .type(type)
-                    .isDefault(false)
-                    .x(x)
-                    .y(y)
-                    .width(width)
-                    .height(height)
-                    .angle(angle)
-                    .build();
-        }
-
-        elementRepository.save(element);
-
-        SlideElement slideElement = SlideElement.builder()
+        TextBox element = TextBox.builder()
                 .slide(slide)
-                .element(element)
+                .borderRef(borderRef)
                 .x(x)
                 .y(y)
+                .z(z)
+                .angle(angle)
                 .width(width)
                 .height(height)
-                .angle(angle)
-                .build();
+                .text(text)
+                .size(size)
+                .weight(weight).build();
 
-        return slideElementRepository.save(slideElement);
+        return elementRepository.save(element);
     }
 
-    // 기본으로 제공되는 요소를 슬라이드에 추가하는 기능
-    public SlideElement addDefaultElementToSlide(
+    public Shape addShapeElementToSlide(
             Long userId,
             Long slideId,
-            long elementId,
-            Long x, Long y,
+            BorderRef borderRef,
+            Long x, Long y, Long z,
             Double angle,
-            Long width, Long height
+            Long width, Long height,
+            String path,
+            String color
     ) {
         User user = getUser(userId);
-        Slide slide = getSlide(slideId);
+        Slide slide = getSlide(slideId, false);
         Design design = slide.getDesign();
         Workspace workspace = design.getWorkspace();
+        // 해당 유저가 해당 워크스페이스, 디자인의 소유자인지 확인
         checkUWDS(user, workspace, design, slide);
 
-        Optional<Element> byId = elementRepository.findById(elementId);
-        if (byId.isEmpty()) {
-            log.error("[addDefaultElementToSlide] Can not find element with id = {}", elementId);
-            throw new ElementDefaultNotFound();
-        }
-        Element element = byId.get();
-
-        if (!element.getIsDefault()) {
-            log.error("[addDefaultElementToSlide] Element is not default!");
-            throw new ElementNotDefault();
-        }
-
-        SlideElement slideElement = SlideElement.builder()
+        Shape shape = Shape.builder()
                 .slide(slide)
-                .element(element)
+                .borderRef(borderRef)
                 .x(x)
                 .y(y)
+                .z(z)
+                .angle(angle)
                 .width(width)
                 .height(height)
-                .angle(angle)
+                .path(path)
+                .color(color)
                 .build();
 
-        return slideElementRepository.save(slideElement);
+        return elementRepository.save(shape);
     }
 
-    private Slide getSlide(Long slideId) {
-        Optional<Slide> slideOptional = slideRepository.findById(slideId);
+    public Image addImageElementToSlide(
+            Long userId,
+            Long slideId,
+            BorderRef borderRef,
+            Long x, Long y, Long z,
+            Double angle,
+            Long width, Long height,
+            String s3Url
+    ) {
+        User user = getUser(userId);
+        Slide slide = getSlide(slideId, false);
+        Design design = slide.getDesign();
+        Workspace workspace = design.getWorkspace();
+        // 해당 유저가 해당 워크스페이스, 디자인의 소유자인지 확인
+        checkUWDS(user, workspace, design, slide);
+
+        Image image = Image.builder()
+                .slide(slide)
+                .borderRef(borderRef)
+                .x(x)
+                .y(y)
+                .z(z)
+                .angle(angle)
+                .width(width)
+                .height(height)
+                .content(s3Url)
+                .build();
+
+        return elementRepository.save(image);
+    }
+
+    public Spatial addSpatialElementToSlide(
+            Long userId,
+            Long slideId,
+            BorderRef borderRef,
+            Long x, Long y, Long z,
+            Double angle,
+            Long width, Long height,
+            CameraMode cameraMode,
+            CameraTransform cameraTransform,
+            String content,
+            String backgroundColor
+    ) {
+        User user = getUser(userId);
+        Slide slide = getSlide(slideId, false);
+        Design design = slide.getDesign();
+        Workspace workspace = design.getWorkspace();
+        // 해당 유저가 해당 워크스페이스, 디자인의 소유자인지 확인
+        checkUWDS(user, workspace, design, slide);
+
+        Spatial spatial = Spatial.builder()
+                .slide(slide)
+                .borderRef(borderRef)
+                .x(x)
+                .y(y)
+                .z(z)
+                .angle(angle)
+                .width(width)
+                .height(height)
+                .cameraMode(cameraMode)
+                .cameraTransform(cameraTransform)
+                .content(content)
+                .backgroundColor(backgroundColor)
+                .build();
+
+        return elementRepository.save(spatial);
+    }
+
+    private Slide getSlide(Long slideId, boolean withElementsFlag) {
+        Optional<Slide> slideOptional;
+        if (withElementsFlag) {
+            slideOptional = slideRepository.findWithSlideElementListById(slideId);
+        } else {
+             slideOptional = slideRepository.findById(slideId);
+        }
         if (slideOptional.isEmpty()) {
             throw new SlideNotFound();
         }
@@ -149,28 +193,78 @@ public class ElementService {
         return userOptional.get();
     }
 
-    public SlideElement updateSlideElement(
+    public TextBox updateTextBox(
             Long userId,
-            Long slideElementId,
-            long x, long y,
-            double angle,
-            long width, long height
+            Long elementId,
+            String text,
+            long size,
+            long weight
     ) {
-        User user = getUser(userId);
-        Optional<SlideElement> slideElementOptional = slideElementRepository.findById(slideElementId);
-        if (slideElementOptional.isEmpty()) {
-            throw new SlideElementNotFound();
+        Optional<TextBox> optionalElement = elementRepository.findTextBoxByIdAndUserId(elementId, userId);
+        if (optionalElement.isEmpty()) {
+            throw new ElementNotFound();
         }
-        SlideElement slideElement = slideElementOptional.get();
-        Design design = slideElement.getSlide().getDesign();
-        checkUWDS(user, design.getWorkspace(), design, slideElement.getSlide());
+        TextBox textBox = optionalElement.get();
 
-        return slideElement.update(x, y, width, height, angle);
+        textBox.update(text, size, weight);
+        return textBox;
+    }
+
+    public Shape updateShape(
+            Long userId,
+            Long elementId,
+            String path,
+            String color
+    ) {
+        Optional<Shape> optionalShape = elementRepository.findShapeByIdAndUserId(elementId, userId);
+        if (optionalShape.isEmpty()) {
+            throw new ElementNotFound();
+        }
+
+        Shape shape = optionalShape.get();
+        shape.update(path, color);
+        return shape;
+    }
+
+    public Spatial updateSpatial(
+            Long userId,
+            Long elementId,
+            CameraMode cameraMode,
+            CameraTransform cameraTransform,
+            String content,
+            String backgroundColor
+    ){
+        Optional<Spatial> optionalSpatial = elementRepository.findSpatialById(elementId, userId);
+        if (optionalSpatial.isEmpty()) {
+            throw new ElementNotFound();
+        }
+
+        Spatial spatial = optionalSpatial.get();
+        spatial.update(cameraMode, cameraTransform, content, backgroundColor);
+        return spatial;
+    }
+
+    public Element updateCommonFields(
+            Long userId,
+            Long elementId,
+            BorderRef borderRef,
+            long x, long y, long z,
+            long width, long height,
+            double angle
+    ) {
+        Optional<Element> optionalElement =  elementRepository.findElementById(elementId, userId);
+        if (optionalElement.isEmpty()) {
+            throw new ElementNotFound();
+        }
+
+        Element element = optionalElement.get();
+        element.update(borderRef, x, y, z, width, height, angle);
+        return element;
     }
 
     @Transactional(readOnly = true)
-    public List<SlideElement> getAllElementsInSlide(Long userId, Long slideId) {
-        Slide slide = getSlide(slideId);
+    public List<Element> findAllElementsInSlide(Long userId, Long slideId) {
+        Slide slide = getSlide(slideId, true);
         User user = getUser(userId);
         Design design = slide.getDesign();
         checkUWDS(user, null, design, slide);

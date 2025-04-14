@@ -23,7 +23,7 @@ public class Workspace {
     private User user;
 
     @OneToMany(mappedBy = "workspace", fetch = FetchType.LAZY)
-    private List<Design> designList = new ArrayList<>();
+    private final List<Design> designList = new ArrayList<>();
 
     public Workspace(User user) {
         this.user = user;

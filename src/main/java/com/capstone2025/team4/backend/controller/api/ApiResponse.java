@@ -14,9 +14,9 @@ public class ApiResponse<T> {
     public static final String VALIDATION_ERROR_STATUS = "VALIDATION_ERROR"; // 검증 오류
     public static final String BUSINESS_EXCEPTION_STATUS = "BUSINESS_EXCEPTION"; // 예외 발생
 
-    private String status;
-    private T data;
-    private String message;
+    private final String status;
+    private final T data;
+    private final String message;
 
     private ApiResponse(String status, T data, String message) {
         this.status = status;

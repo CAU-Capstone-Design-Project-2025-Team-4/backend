@@ -1,31 +1,31 @@
-package com.capstone2025.team4.backend.controller.dto.element;
+package com.capstone2025.team4.backend.controller.dto.element.request;
 
-import com.capstone2025.team4.backend.domain.design.Type;
+import com.capstone2025.team4.backend.domain.element.border.BorderRef;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.web.multipart.MultipartFile;
 
 @AllArgsConstructor
 @Getter
-public class AddNewFileElementRequest {
+public class UpdateElementRequest{
+
     @NotNull(message = "유저 정보는 필수입니다")
     private Long userId;
 
-    @NotNull(message = "슬라이드 정보는 필수입니다")
-    private Long slideId;
+    @NotNull(message = "요소 정보는 필수입니다")
+    private Long elementId;
 
-    @NotNull(message = "파일은 필수입니다")
-    private MultipartFile file;
-
-    @NotNull(message = "요소 타입은 필수입니다")
-    private Type type;
+    @NotNull(message = "테두리 정보는 필수입니다")
+    private BorderRef borderRef;
 
     @NotNull(message = "x 좌표는 필수입니다")
     private Long x;
 
     @NotNull(message = "y 좌표는 필수입니다")
     private Long y;
+
+    @NotNull(message = "z 좌표는 필수입니다")
+    private Long z;
 
     @NotNull(message = "각도는 필수입니다")
     private Double angle;

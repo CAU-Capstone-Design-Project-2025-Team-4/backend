@@ -3,41 +3,43 @@ package com.capstone2025.team4.backend.domain.element.spatial;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class CameraTransform {
-    private Long position_x;
+    private Long positionX;
 
-    private Long position_y;
+    private Long positionY;
 
-    private Long position_z;
+    private Long positionZ;
 
-    private Long rotation_x;
+    private Long rotationX;
 
-    private Long rotation_y;
+    private Long rotationY;
 
-    private Long rotation_z;
+    private Long rotationZ;
 
     @Builder
-    public CameraTransform(Long position_x, Long position_y, Long position_z, Long rotation_x, Long rotation_y, Long rotation_z) {
-        this.position_x = position_x;
-        this.position_y = position_y;
-        this.position_z = position_z;
-        this.rotation_x = rotation_x;
-        this.rotation_y = rotation_y;
-        this.rotation_z = rotation_z;
+    public CameraTransform(Long positionX, Long positionY, Long positionZ, Long rotationX, Long rotationY, Long rotationZ) {
+        this.positionX = positionX;
+        this.positionY = positionY;
+        this.positionZ = positionZ;
+        this.rotationX = rotationX;
+        this.rotationY = rotationY;
+        this.rotationZ = rotationZ;
     }
 
     public CameraTransform copy() {
         CameraTransform cameraTransform = new CameraTransform();
-        cameraTransform.position_x = this.position_x;
-        cameraTransform.position_y = this.position_y;
-        cameraTransform.position_z = this.position_z;
-        cameraTransform.rotation_x = this.rotation_x;
-        cameraTransform.rotation_y = this.rotation_y;
-        cameraTransform.rotation_z = this.rotation_z;
+        cameraTransform.positionX = this.positionX;
+        cameraTransform.positionY = this.positionY;
+        cameraTransform.positionZ = this.positionZ;
+        cameraTransform.rotationX = this.rotationX;
+        cameraTransform.rotationY = this.rotationY;
+        cameraTransform.rotationZ = this.rotationZ;
         return cameraTransform;
     }
 }

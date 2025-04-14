@@ -9,9 +9,9 @@ import java.util.List;
 
 @Getter
 public class DesignLongResponse {
-    private Long id;
-    private Boolean shared;
-    private List<SlideWithElementResponse> slideList = new ArrayList<>();
+    private final Long id;
+    private final Boolean shared;
+    private final List<SlideWithElementResponse> slideList = new ArrayList<>();
 
     public DesignLongResponse(Design design) {
         this.id = design.getId();

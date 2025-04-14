@@ -31,4 +31,9 @@ public class Shape extends Element {
         shapeCopy.path = this.path;
         shapeCopy.color = this.color;
     }
+
+    public void update(String path, String color) {
+        this.path = path;
+        this.color = color;
+    }
 }
