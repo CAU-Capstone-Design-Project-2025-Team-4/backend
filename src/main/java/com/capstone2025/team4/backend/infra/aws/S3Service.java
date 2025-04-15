@@ -33,11 +33,13 @@ public class S3Service {
         }
 
         String originalFilename = multipartFile.getOriginalFilename();
-        String key = UUID.randomUUID().toString();
+        String fileFormat = getFileFormat(originalFilename);
+        String key = UUID.randomUUID().toString() + "." + fileFormat;
 
         try (InputStream is = multipartFile.getInputStream()) {
+            ObjectMetadata objectMetadata = ObjectMetadata.builder().contentType(multipartFile.getContentType()).build();
             S3Resource s3Resource = s3Operations.upload(BUCKET, key, is,
-                    ObjectMetadata.builder().contentType(multipartFile.getContentType()).build());
+                    objectMetadata);
 
             String url = s3Resource.getURL().toString();
             S3Entity s3Entity = S3Entity.builder()
@@ -52,6 +54,12 @@ public class S3Service {
             log.error("Upload to S3 failed", e);
             throw new RuntimeException(e);
         }
+    }
+
+    private String getFileFormat(String originalFilename) {
+        assert originalFilename != null;
+        int index = originalFilename.lastIndexOf(".");
+        return originalFilename.substring(index+1);
     }
 
     @Transactional
