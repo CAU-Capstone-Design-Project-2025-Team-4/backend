@@ -3,10 +3,7 @@ package com.capstone2025.team4.backend.service.design;
 import com.capstone2025.team4.backend.domain.User;
 import com.capstone2025.team4.backend.domain.Workspace;
 import com.capstone2025.team4.backend.domain.design.*;
-import com.capstone2025.team4.backend.domain.element.Element;
-import com.capstone2025.team4.backend.domain.element.Image;
-import com.capstone2025.team4.backend.domain.element.Shape;
-import com.capstone2025.team4.backend.domain.element.TextBox;
+import com.capstone2025.team4.backend.domain.element.*;
 import com.capstone2025.team4.backend.domain.element.border.BorderRef;
 import com.capstone2025.team4.backend.domain.element.border.BorderType;
 import com.capstone2025.team4.backend.domain.element.spatial.CameraMode;
@@ -20,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -60,7 +58,7 @@ class ElementServiceTest {
         em.clear();
 
         //when
-        TextBox textBox = elementService.addTextBoxElementToSlide(testUser.getId(), testSlide.getId(), borderRef, 0L, 0L, 0L, 0.0, 10L, 10L, "testText", 100L, 100L);
+        TextBox textBox = elementService.addTextBoxElementToSlide(testUser.getId(), testSlide.getId(), borderRef, 0L, 0L, 0L, 0.0, 10L, 10L, "testText", 100L, 100L, TextAlign.JUSTIFY, "tempFontFamily");
 
         //then
         assertThat(textBox).isNotNull();
@@ -70,6 +68,8 @@ class ElementServiceTest {
         assertThat(textBox.getBorderRef().getBorderType()).isEqualTo(BorderType.NONE);
         assertThat(textBox.getBorderRef().getThickness()).isEqualTo(10L);
         assertThat(textBox.getBorderRef().getColor()).isEqualTo("red");
+        assertThat(textBox.getAlign()).isEqualTo(TextAlign.JUSTIFY);
+        assertThat(textBox.getFontFamily()).isEqualTo("tempFontFamily");
     }
 
     @Test
@@ -105,7 +105,7 @@ class ElementServiceTest {
         em.clear();
 
         //when
-        TextBox textBox = elementService.updateTextBox(testUser.getId(), e.getId(), "updated", 10L, 10L);
+        TextBox textBox = elementService.updateTextBox(testUser.getId(), e.getId(), "updated", 10L, 10L, "tempFontFamily", TextAlign.JUSTIFY);
 
         // then
         assertThat(textBox).isNotNull();
@@ -113,6 +113,8 @@ class ElementServiceTest {
         assertThat(textBox.getText()).isEqualTo("updated");
         assertThat(textBox.getSize()).isEqualTo(10);
         assertThat(textBox.getWeight()).isEqualTo(10);
+        assertThat(textBox.getFontFamily()).isEqualTo("tempFontFamily");
+        assertThat(textBox.getAlign()).isEqualTo(TextAlign.JUSTIFY);
     }
 
     @Test

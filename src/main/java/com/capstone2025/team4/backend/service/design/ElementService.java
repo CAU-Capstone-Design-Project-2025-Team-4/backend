@@ -3,10 +3,7 @@ package com.capstone2025.team4.backend.service.design;
 import com.capstone2025.team4.backend.domain.User;
 import com.capstone2025.team4.backend.domain.Workspace;
 import com.capstone2025.team4.backend.domain.design.*;
-import com.capstone2025.team4.backend.domain.element.Element;
-import com.capstone2025.team4.backend.domain.element.Image;
-import com.capstone2025.team4.backend.domain.element.Shape;
-import com.capstone2025.team4.backend.domain.element.TextBox;
+import com.capstone2025.team4.backend.domain.element.*;
 import com.capstone2025.team4.backend.domain.element.border.BorderRef;
 import com.capstone2025.team4.backend.domain.element.spatial.CameraMode;
 import com.capstone2025.team4.backend.domain.element.spatial.CameraTransform;
@@ -46,7 +43,9 @@ public class ElementService {
             Long width, Long height,
             String text,
             Long size,
-            Long weight
+            Long weight,
+            TextAlign align,
+            String fontFamily
     ) {
         User user = getUser(userId);
         Slide slide = getSlide(slideId, false);
@@ -66,7 +65,10 @@ public class ElementService {
                 .height(height)
                 .text(text)
                 .size(size)
-                .weight(weight).build();
+                .weight(weight)
+                .align(align)
+                .fontFamily(fontFamily)
+                .build();
 
         return elementRepository.save(element);
     }
@@ -198,7 +200,9 @@ public class ElementService {
             Long elementId,
             String text,
             long size,
-            long weight
+            long weight,
+            String fontFamily,
+            TextAlign textAlign
     ) {
         Optional<TextBox> optionalElement = elementRepository.findTextBoxByIdAndUserId(elementId, userId);
         if (optionalElement.isEmpty()) {
@@ -206,7 +210,7 @@ public class ElementService {
         }
         TextBox textBox = optionalElement.get();
 
-        textBox.update(text, size, weight);
+        textBox.update(text, size, weight, fontFamily, textAlign);
         return textBox;
     }
 

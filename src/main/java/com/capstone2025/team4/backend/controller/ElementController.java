@@ -46,7 +46,7 @@ public class ElementController {
                 .color(request.getBorderColor())
                 .thickness(request.getBorderThickness())
                 .build();
-        TextBox textBox = elementService.addTextBoxElementToSlide(request.getUserId(), request.getSlideId(), borderRef, request.getX(), request.getY(), request.getZ(), request.getAngle(), request.getWidth(), request.getHeight(), request.getText(), request.getSize(), request.getWeight());
+        TextBox textBox = elementService.addTextBoxElementToSlide(request.getUserId(), request.getSlideId(), borderRef, request.getX(), request.getY(), request.getZ(), request.getAngle(), request.getWidth(), request.getHeight(), request.getText(), request.getSize(), request.getWeight(), request.getTextAlign(), request.getFontFamily());
         return ApiResponse.success(ElementResponse.create(textBox));
     }
 
@@ -110,7 +110,7 @@ public class ElementController {
     //특정 요소의 속성 업데이트
     @PatchMapping("/textbox")
     public ApiResponse<ElementResponse> updateTextBox(@Valid @RequestBody UpdateTextBoxRequest request) {
-        TextBox textBox = elementService.updateTextBox(request.getUserId(), request.getElementId(), request.getText(), request.getSize(), request.getWeight());
+        TextBox textBox = elementService.updateTextBox(request.getUserId(), request.getElementId(), request.getText(), request.getSize(), request.getWeight(), request.getFontFamily(), request.getTextAlign());
         return ApiResponse.success(ElementResponse.create(textBox));
     }
 

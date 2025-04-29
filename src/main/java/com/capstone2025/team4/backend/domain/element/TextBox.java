@@ -23,6 +23,8 @@ public class TextBox extends Element {
     @Enumerated(value = EnumType.STRING)
     private TextAlign align;
 
+    private String fontFamily;
+
     @Override
     protected Element createNewInstance() {
         return new TextBox();
@@ -34,11 +36,14 @@ public class TextBox extends Element {
         textBoxCopy.text = this.text;
         textBoxCopy.size = this.size;
         textBoxCopy.weight = this.weight;
+        textBoxCopy.fontFamily = this.fontFamily;
     }
 
-    public void update(String text, Long size, Long weight) {
+    public void update(String text, Long size, Long weight, String fontFamily, TextAlign align) {
         this.text = text;
         this.size = size;
         this.weight = weight;
+        this.fontFamily = fontFamily;
+        this.align = align;
     }
 }
