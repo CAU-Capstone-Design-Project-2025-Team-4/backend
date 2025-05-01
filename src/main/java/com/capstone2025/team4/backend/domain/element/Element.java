@@ -42,7 +42,11 @@ public class Element {
     public final Element copy(Slide destSlide) {
         Element copy = createNewInstance();
         copy.slide = destSlide;
-        copy.borderRef = this.getBorderRef().copy();
+        if (this.getBorderRef() == null) {
+            copy.borderRef = null;
+        } else {
+            copy.borderRef = this.getBorderRef().copy();
+        }
         copy.x = this.x;
         copy.y = this.y;
         copy.z = this.z;
@@ -66,5 +70,10 @@ public class Element {
         this.width = width;
         this.height = height;
         this.angle = angle;
+    }
+
+    public void addToSlide(Slide slide) {
+        slide.getSlideElementList().add(this);
+        this.slide = slide;
     }
 }
