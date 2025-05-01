@@ -49,6 +49,15 @@ public class Matching {
         this.sender = sender;
         this.receiver = receiver;
         this.post = post;
-        this.status = Status.ING;
+        this.status = Status.WAITING;
+    }
+
+    public void reject() {
+        this.status = Status.REJECTED;
+        this.finishedAt = LocalDateTime.now();
+    }
+
+    public void accept() {
+        this.status = Status.ACCEPTED;
     }
 }
