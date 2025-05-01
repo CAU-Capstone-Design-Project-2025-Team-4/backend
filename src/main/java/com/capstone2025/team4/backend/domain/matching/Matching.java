@@ -3,12 +3,15 @@ package com.capstone2025.team4.backend.domain.matching;
 import com.capstone2025.team4.backend.domain.User;
 import com.capstone2025.team4.backend.domain.post.Post;
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
+@Getter
 public class Matching {
 
     @Id
@@ -39,5 +42,13 @@ public class Matching {
     @PrePersist
     public void prePersist() {
         createdAt = LocalDateTime.now();
+    }
+
+    @Builder
+    public Matching(User sender, User receiver, Post post) {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.post = post;
+        this.status = Status.ING;
     }
 }
