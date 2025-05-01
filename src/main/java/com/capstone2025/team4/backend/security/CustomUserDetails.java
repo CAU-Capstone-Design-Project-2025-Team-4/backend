@@ -1,4 +1,4 @@
-package com.capstone2025.team4.backend.infra.security;
+package com.capstone2025.team4.backend.security;
 
 import com.capstone2025.team4.backend.domain.User;
 import org.springframework.security.core.GrantedAuthority;

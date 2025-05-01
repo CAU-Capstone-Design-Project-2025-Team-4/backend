@@ -3,10 +3,9 @@ package com.capstone2025.team4.backend.controller;
 import com.capstone2025.team4.backend.controller.api.ApiResponse;
 import com.capstone2025.team4.backend.controller.dto.design.NewDesignRequest;
 import com.capstone2025.team4.backend.domain.design.Design;
-import com.capstone2025.team4.backend.domain.design.Slide;
-import com.capstone2025.team4.backend.infra.security.CustomUserDetailService;
-import com.capstone2025.team4.backend.infra.security.config.SecurityConfig;
-import com.capstone2025.team4.backend.infra.security.jwt.JwtService;
+import com.capstone2025.team4.backend.security.CustomUserDetailService;
+import com.capstone2025.team4.backend.config.SecurityConfig;
+import com.capstone2025.team4.backend.security.jwt.JwtService;
 import com.capstone2025.team4.backend.mock.WithCustomMockUser;
 import com.capstone2025.team4.backend.service.design.DesignService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,7 +20,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.lang.reflect.Field;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

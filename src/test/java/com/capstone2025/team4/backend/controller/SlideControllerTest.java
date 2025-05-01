@@ -2,9 +2,9 @@ package com.capstone2025.team4.backend.controller;
 
 import com.capstone2025.team4.backend.controller.dto.design.NewSlideRequest;
 import com.capstone2025.team4.backend.domain.design.Slide;
-import com.capstone2025.team4.backend.infra.security.CustomUserDetailService;
-import com.capstone2025.team4.backend.infra.security.config.SecurityConfig;
-import com.capstone2025.team4.backend.infra.security.jwt.JwtService;
+import com.capstone2025.team4.backend.security.CustomUserDetailService;
+import com.capstone2025.team4.backend.config.SecurityConfig;
+import com.capstone2025.team4.backend.security.jwt.JwtService;
 import com.capstone2025.team4.backend.mock.WithCustomMockUser;
 import com.capstone2025.team4.backend.service.design.DesignService;
 import com.capstone2025.team4.backend.service.design.SlideService;

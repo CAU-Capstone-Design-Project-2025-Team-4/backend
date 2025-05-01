@@ -1,6 +1,6 @@
-package com.capstone2025.team4.backend.infra.security.config;
+package com.capstone2025.team4.backend.config;
 
-import com.capstone2025.team4.backend.infra.security.jwt.JwtAuthenticationFilter;
+import com.capstone2025.team4.backend.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

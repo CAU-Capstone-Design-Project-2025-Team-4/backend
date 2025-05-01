@@ -6,7 +6,7 @@ import com.capstone2025.team4.backend.controller.dto.user.UserLoginResponse;
 import com.capstone2025.team4.backend.controller.dto.user.UserRegisterRequest;
 import com.capstone2025.team4.backend.controller.dto.user.UserRegisterResponse;
 import com.capstone2025.team4.backend.domain.User;
-import com.capstone2025.team4.backend.infra.security.jwt.JwtService;
+import com.capstone2025.team4.backend.security.jwt.JwtService;
 import com.capstone2025.team4.backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

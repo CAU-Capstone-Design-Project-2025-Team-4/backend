@@ -1,7 +1,7 @@
-package com.capstone2025.team4.backend.infra.security.jwt;
+package com.capstone2025.team4.backend.security.jwt;
 
-import com.capstone2025.team4.backend.infra.security.CustomUserDetailService;
-import com.capstone2025.team4.backend.infra.security.CustomUserDetails;
+import com.capstone2025.team4.backend.security.CustomUserDetailService;
+import com.capstone2025.team4.backend.security.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

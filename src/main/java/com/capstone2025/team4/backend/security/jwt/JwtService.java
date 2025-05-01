@@ -1,4 +1,4 @@
-package com.capstone2025.team4.backend.infra.security.jwt;
+package com.capstone2025.team4.backend.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
