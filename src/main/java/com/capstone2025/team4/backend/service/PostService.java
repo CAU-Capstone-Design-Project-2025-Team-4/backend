@@ -3,6 +3,7 @@ package com.capstone2025.team4.backend.service;
 import com.capstone2025.team4.backend.domain.User;
 import com.capstone2025.team4.backend.domain.post.Category;
 import com.capstone2025.team4.backend.domain.post.Post;
+import com.capstone2025.team4.backend.exception.post.PostNotFound;
 import com.capstone2025.team4.backend.repository.PostRepository;
 import com.capstone2025.team4.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -47,4 +48,12 @@ public class PostService {
         return postRepository.save(newPost);
     }
 
+    public Post getPost(Long postId) {
+        Optional<Post> optionalPost = postRepository.findById(postId);
+        if (optionalPost.isEmpty()) {
+            throw new PostNotFound();
+        }
+
+        return optionalPost.get();
+    }
 }
