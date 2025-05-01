@@ -140,7 +140,11 @@ public class DesignService {
     }
 
     public Design findDesign(Long designId) {
-        return null;
+        Optional<Design> optionalDesign = designRepository.findById(designId);
+        if (optionalDesign.isEmpty()) {
+            throw new DesignNotFound();
+        }
+        return optionalDesign.get();
     }
 
 }
