@@ -5,6 +5,7 @@ import com.capstone2025.team4.backend.domain.Workspace;
 import com.capstone2025.team4.backend.domain.design.*;
 import com.capstone2025.team4.backend.domain.element.Element;
 import com.capstone2025.team4.backend.exception.design.DesignNotFound;
+import com.capstone2025.team4.backend.exception.design.DesignNotShared;
 import com.capstone2025.team4.backend.exception.design.DesignSourceNotFound;
 import com.capstone2025.team4.backend.exception.user.UserNotFoundException;
 import com.capstone2025.team4.backend.repository.*;
@@ -43,6 +44,11 @@ public class DesignService {
                 throw new DesignSourceNotFound();
             }
             Design source = sourceDesignOptional.get();
+
+            if (!source.getShared()) {
+                throw new DesignNotShared();
+            }
+
             log.debug("[CREATING NEW DESIGN] From Source(id = {})", source.getId());
             Design newDesignFromSource = createNewDesignFromSource(creator, workspace, source);
             designRepository.save(newDesignFromSource);

@@ -5,10 +5,12 @@ import com.capstone2025.team4.backend.domain.Workspace;
 import com.capstone2025.team4.backend.domain.design.*;
 import com.capstone2025.team4.backend.domain.element.Element;
 import com.capstone2025.team4.backend.domain.element.TextBox;
+import com.capstone2025.team4.backend.exception.design.DesignNotShared;
 import com.capstone2025.team4.backend.service.design.DesignService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
@@ -77,6 +79,7 @@ class DesignServiceTest {
                 .user(testUser)
                 .workspace(testWorkspace)
                 .slideList(slideList)
+                .shared(true)
                 .build();
 
         Slide s1 = Slide.builder().slideElementList(slideElementList).design(sourceDesign).build();
@@ -101,6 +104,34 @@ class DesignServiceTest {
         assertThat(newDesign.getSlideList().size()).isEqualTo(sourceDesign.getSlideList().size());
         assertThat(newDesign.getSlideList().getFirst().getId()).isNotEqualTo(s1.getId());
         assertThat(newDesign.getSlideList().getFirst().getSlideElementList().size()).isEqualTo(sourceDesign.getSlideList().getFirst().getSlideElementList().size());
+    }
+
+    @Test
+    void newDesignFromSourceError(){
+        //given
+        User testUser = User.builder()
+                .email("test@example.com")
+                .build();
+
+        Workspace testWorkspace = new Workspace(testUser);
+
+        Design sourceDesign = Design.builder()
+                .user(testUser)
+                .workspace(testWorkspace)
+                .shared(false)
+                .build();
+
+        em.persist(testUser);
+        em.persist(testWorkspace);
+        em.persist(sourceDesign);
+
+        em.flush();
+        em.clear();
+
+        //when
+
+        //then
+        assertThrowsExactly(DesignNotShared.class, () -> {designService.createNewDesign(testUser.getId(), sourceDesign.getId(), false);});
     }
 
     @Test
