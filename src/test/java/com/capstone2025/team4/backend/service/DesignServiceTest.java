@@ -221,4 +221,62 @@ class DesignServiceTest {
         assertThat(idList).contains(design1.getId(), design2.getId(), design3.getId());
 
     }
+
+    @Test
+    void copySlide(){
+        //given
+        User testUser = User.builder()
+                .email("test@example.com")
+                .build();
+
+        Workspace testWorkspace = new Workspace(testUser);
+
+        TextBox e1 = TextBox.builder().text("temp1").build();
+        TextBox e2 = TextBox.builder().text("temp2").build();
+
+        ArrayList<Element> slideElementList = new ArrayList<>();
+
+        List<Slide> slideList = new ArrayList<>();
+
+        Design sourceDesign = Design.builder()
+                .user(testUser)
+                .workspace(testWorkspace)
+                .slideList(slideList)
+                .shared(true)
+                .build();
+
+        Slide s1 = Slide.builder().slideElementList(slideElementList).design(sourceDesign).build();
+        slideList.add(s1);
+        e1.addToSlide(s1);
+        e2.addToSlide(s1);
+
+        ArrayList<Slide> destSlideList = new ArrayList<>();
+        Design destDesign = Design.builder()
+                .user(testUser)
+                .workspace(testWorkspace)
+                .slideList(destSlideList)
+                .build();
+        Slide destSlide = Slide.builder().design(destDesign).build();
+        destSlideList.add(destSlide);
+
+        em.persist(e1);
+        em.persist(e2);
+        em.persist(testUser);
+        em.persist(testWorkspace);
+        em.persist(s1);
+        em.persist(sourceDesign);
+        em.persist(destDesign);
+        em.persist(destSlide);
+
+        em.flush();
+        em.clear();
+
+        //when
+        Slide destSlideCopied = designService.copySlide(destSlide.getId(), s1.getId(), testUser.getId());
+
+        //then
+        assertThat(destSlideCopied.getSlideElementList()).isNotNull();
+        assertThat(destSlideCopied.getSlideElementList().size()).isEqualTo(s1.getSlideElementList().size());
+        assertThat(destSlideCopied.getSlideElementList()).doesNotContain(e1, e2);
+    }
 }

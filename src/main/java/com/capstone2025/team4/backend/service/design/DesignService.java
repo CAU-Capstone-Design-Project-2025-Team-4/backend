@@ -7,9 +7,12 @@ import com.capstone2025.team4.backend.domain.element.Element;
 import com.capstone2025.team4.backend.exception.design.DesignNotFound;
 import com.capstone2025.team4.backend.exception.design.DesignNotShared;
 import com.capstone2025.team4.backend.exception.design.DesignSourceNotFound;
+import com.capstone2025.team4.backend.exception.slide.SlideNotFound;
+import com.capstone2025.team4.backend.exception.user.UserNotAllowedDesign;
 import com.capstone2025.team4.backend.exception.user.UserNotFoundException;
 import com.capstone2025.team4.backend.repository.*;
 import com.capstone2025.team4.backend.repository.design.DesignRepository;
+import com.capstone2025.team4.backend.repository.element.ElementRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,6 +33,7 @@ public class DesignService {
     private final WorkspaceRepository workspaceRepository;
     private final SlideRepository slideRepository;
     private final UserRepository userRepository;
+    private final ElementRepository elementRepository;
 
     // 디자인을 만들때, 공유된걸 가지고 만든다면 공유 불가
     public Design createNewDesign(Long creatorId, Long sourceDesignId, boolean shared) {
@@ -92,8 +96,7 @@ public class DesignService {
                     .slideElementList(newSlideElementList)
                     .build();
             for (Element slideElement : sourceSlide.getSlideElementList()) {
-                Element copy = slideElement.copy(newSlide);
-                newSlideElementList.add(copy);
+                slideElement.copy(newSlide);
             }
             newSlideList.add(newSlide);
         }
@@ -121,6 +124,34 @@ public class DesignService {
                 .build();
 
         return slideRepository.save(slide);
+    }
+
+    /**
+     * srcSlide의 모든 요소를 destSrc에 복제  
+     */
+    public Slide copySlide(Long destSlideId, Long srcSlideId, Long userId) {
+        Optional<Slide> srcOptional = slideRepository.findWithSlideElementListById(srcSlideId);
+        Optional<Slide> destOptional = slideRepository.findWithSlideElementListById(destSlideId);
+        if (srcOptional.isEmpty() || destOptional.isEmpty()) {
+            throw new SlideNotFound();
+        }
+
+        Slide srcSlide = srcOptional.get();
+        if (!srcSlide.getDesign().getShared()) {
+            throw new DesignNotShared();
+        }
+
+        Slide destSlide = destOptional.get();
+        if (destSlide.getDesign().getUser().getId() != userId) {
+            throw new UserNotAllowedDesign();
+        }
+
+        for (Element element : srcSlide.getSlideElementList()) {
+            Element copy = element.copy(destSlide);
+            elementRepository.save(copy);
+        }
+
+        return destSlide;
     }
 
     private Workspace getWorkspace(User creator) {

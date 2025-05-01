@@ -42,6 +42,7 @@ public class Element {
     public final Element copy(Slide destSlide) {
         Element copy = createNewInstance();
         copy.slide = destSlide;
+        copy.addToSlide(destSlide);
         if (this.getBorderRef() == null) {
             copy.borderRef = null;
         } else {
