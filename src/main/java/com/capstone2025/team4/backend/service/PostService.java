@@ -49,7 +49,7 @@ public class PostService {
     }
 
     public Post getPost(Long postId) {
-        Optional<Post> optionalPost = postRepository.findById(postId);
+        Optional<Post> optionalPost = postRepository.findByIdWithDesigner(postId);
         if (optionalPost.isEmpty()) {
             throw new PostNotFound();
         }
