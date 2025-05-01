@@ -7,6 +7,7 @@ import com.capstone2025.team4.backend.infra.security.config.SecurityConfig;
 import com.capstone2025.team4.backend.infra.security.jwt.JwtService;
 import com.capstone2025.team4.backend.mock.WithCustomMockUser;
 import com.capstone2025.team4.backend.service.design.DesignService;
+import com.capstone2025.team4.backend.service.design.SlideService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ class SlideControllerTest {
     @MockitoBean
     DesignService designService;
 
+    @MockitoBean
+    SlideService slideService;
+
     @Autowired
     MockMvc mockMvc;
 
@@ -47,7 +51,7 @@ class SlideControllerTest {
     void newSlideSuccess() throws Exception {
         //given
         NewSlideRequest request = new NewSlideRequest(1L, 2L, 0);
-        given(designService.newSlide(1L, 2L, 0)).willReturn(createSlide());
+        given(slideService.newSlide(1L, 2L, 0)).willReturn(createSlide());
 
         //when
         ResultActions resultActions = mockMvc.perform(

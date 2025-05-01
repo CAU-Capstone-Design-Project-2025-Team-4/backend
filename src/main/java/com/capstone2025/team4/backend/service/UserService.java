@@ -63,5 +63,11 @@ public class UserService {
         return newUser;
     }
 
-
+    public User getUser(Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+        return optionalUser.get();
+    }
 }
