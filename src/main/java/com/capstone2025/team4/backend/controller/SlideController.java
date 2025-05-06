@@ -39,7 +39,7 @@ public class SlideController {
     }
 
     @GetMapping
-    public ApiResponse<AllSlidesInDesignResponse> allInDesign(@RequestParam Long designId, Long userId) {
+    public ApiResponse<AllSlidesInDesignResponse> allInDesign(@RequestParam Long designId, @RequestParam Long userId) {
         List<Slide> slides = slideService.findAllInDesign(userId, designId);
 
         AllSlidesInDesignResponse result = new AllSlidesInDesignResponse(slides);
