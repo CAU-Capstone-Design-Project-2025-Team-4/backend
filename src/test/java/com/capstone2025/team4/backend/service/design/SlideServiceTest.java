@@ -49,7 +49,7 @@ class SlideServiceTest {
         em.clear();
 
         //when
-        Slide slide = slideService.newSlide(testUser.getId(), testDesign.getId(), 0);
+        Slide slide = slideService.newSlide(testUser, testDesign, testWorkspace, 2);
 
         //then
         assertThat(slide.getOrder()).isEqualTo(0);

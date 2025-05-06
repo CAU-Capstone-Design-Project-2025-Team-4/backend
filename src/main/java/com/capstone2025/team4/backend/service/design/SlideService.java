@@ -10,7 +10,6 @@ import com.capstone2025.team4.backend.exception.slide.SlideNotFound;
 import com.capstone2025.team4.backend.exception.user.UserNotAllowedDesign;
 import com.capstone2025.team4.backend.repository.SlideRepository;
 import com.capstone2025.team4.backend.repository.element.ElementRepository;
-import com.capstone2025.team4.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,16 +24,9 @@ import static com.capstone2025.team4.backend.service.design.DesignUtil.checkUWDS
 @Transactional
 public class SlideService {
     private final SlideRepository slideRepository;
-    private final UserService userService;
-    private final DesignService designService;
     private final ElementRepository elementRepository;
 
-    public Slide newSlide(Long userId, Long designId, Integer order) {
-        User user = userService.getUser(userId);
-
-        Workspace workspace = designService.getWorkspace(user);
-
-        Design design = designService.getDesign(designId);
+    public Slide newSlide(User user, Design design, Workspace workspace, int order) {
 
         checkUWDS(user, workspace, design, null);
 
