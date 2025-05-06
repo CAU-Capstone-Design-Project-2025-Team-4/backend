@@ -29,6 +29,7 @@ public enum ExceptionCode {
     FILE_IS_EMPTY(HttpStatus.BAD_REQUEST, "빈 파일입니다"),
 
     SLIDE_NOT_FOUND(HttpStatus.NOT_FOUND, "슬라이드를 찾을 수 없습니다"),
+    SLIDE_ORDER_DUPLICATE(HttpStatus.CONFLICT, "슬라이드 순서 중복이 일어났습니다"),
 
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 포스트를 찾을 수 없습니다"),
 

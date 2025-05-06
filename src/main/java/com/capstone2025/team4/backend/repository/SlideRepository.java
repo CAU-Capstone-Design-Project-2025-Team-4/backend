@@ -15,4 +15,6 @@ public interface SlideRepository extends JpaRepository<Slide, Long> {
 
     @Query("SELECT s FROM Slide s LEFT JOIN FETCH s.slideElementList JOIN FETCH s.design d WHERE d.id = :designId AND d.user.id = :userId")
     List<Slide> findAllByDesignIdAndUserId(Long designId, Long userId);
+
+    boolean existsByDesignIdAndOrder(Long designId, Integer order);
 }

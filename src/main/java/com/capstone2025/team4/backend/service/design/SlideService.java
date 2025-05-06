@@ -7,6 +7,7 @@ import com.capstone2025.team4.backend.domain.design.Slide;
 import com.capstone2025.team4.backend.domain.element.Element;
 import com.capstone2025.team4.backend.exception.design.DesignNotShared;
 import com.capstone2025.team4.backend.exception.slide.SlideNotFound;
+import com.capstone2025.team4.backend.exception.slide.SlideOrderDuplicate;
 import com.capstone2025.team4.backend.exception.user.UserNotAllowedDesign;
 import com.capstone2025.team4.backend.repository.SlideRepository;
 import com.capstone2025.team4.backend.repository.element.ElementRepository;
@@ -29,6 +30,11 @@ public class SlideService {
     public Slide newSlide(User user, Design design, Workspace workspace, int order) {
 
         checkUWDS(user, workspace, design, null);
+
+        boolean duplicateExists = slideRepository.existsByDesignIdAndOrder(design.getId(), order);
+        if (duplicateExists) {
+            throw new SlideOrderDuplicate();
+        }
 
         Slide slide = Slide.builder()
                 .order(order)

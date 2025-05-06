@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(name = "SLIDE_DESIGN_ORDER_UNIQUE", columnNames = {"design_id", "slide_order"})})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Slide {

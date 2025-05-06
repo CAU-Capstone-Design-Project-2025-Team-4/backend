@@ -6,13 +6,15 @@ import com.capstone2025.team4.backend.domain.design.Design;
 import com.capstone2025.team4.backend.domain.design.Slide;
 import com.capstone2025.team4.backend.domain.element.Element;
 import com.capstone2025.team4.backend.domain.element.TextBox;
+import com.capstone2025.team4.backend.exception.slide.SlideOrderDuplicate;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.dao.DataIntegrityViolationException;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +58,7 @@ class SlideServiceTest {
         assertThat(slide.getDesign().getId()).isEqualTo(testDesign.getId());
         assertThat(slide.getSlideElementList()).isNull();
         assertThat(slide.getId()).isNotNull();
+        assertThrows(SlideOrderDuplicate.class, () -> slideService.newSlide(testUser, testDesign, testWorkspace, 2));
     }
 
     @Test
