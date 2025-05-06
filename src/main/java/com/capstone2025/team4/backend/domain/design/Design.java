@@ -52,7 +52,9 @@ public class Design {
         this.user = user;
         this.shared = shared;
         this.source = source;
-        this.slideList = slideList;
+        if (slideList != null) {
+            this.slideList = slideList;
+        }
     }
 
 }

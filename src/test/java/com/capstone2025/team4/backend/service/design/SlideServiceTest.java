@@ -52,7 +52,7 @@ class SlideServiceTest {
         Slide slide = slideService.newSlide(testUser, testDesign, testWorkspace, 2);
 
         //then
-        assertThat(slide.getOrder()).isEqualTo(0);
+        assertThat(slide.getOrder()).isEqualTo(2);
         assertThat(slide.getDesign().getId()).isEqualTo(testDesign.getId());
         assertThat(slide.getSlideElementList()).isNull();
         assertThat(slide.getId()).isNotNull();

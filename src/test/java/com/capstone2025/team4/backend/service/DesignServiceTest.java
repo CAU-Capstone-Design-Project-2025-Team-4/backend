@@ -154,7 +154,7 @@ class DesignServiceTest {
         //then
         assertThat(succeed.getId()).isNotNull();
         assertThat(succeed.getWorkspace().getId()).isEqualTo(testWorkspace.getId());
-        assertThat(succeed.getSlideList()).isNull();
+        assertThat(succeed.getSlideList().size()).isEqualTo(1);
     }
 
     @Test
