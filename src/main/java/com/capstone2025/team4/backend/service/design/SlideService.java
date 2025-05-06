@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.capstone2025.team4.backend.service.design.DesignUtil.checkUWDS;
@@ -45,6 +46,17 @@ public class SlideService {
         return slideRepository.save(slide);
     }
 
+    protected void addInitSlide(Design design) {
+        Slide slide = Slide.builder()
+                .design(design)
+                .order(1)
+                .build();
+
+        design.getSlideList().add(slide);
+
+        slideRepository.save(slide);
+    }
+
 
     /**
      * srcSlide의 모든 요소를 destSrc에 복제
@@ -72,5 +84,9 @@ public class SlideService {
         }
 
         return destSlide;
+    }
+
+    public List<Slide> findAllInDesign(Long userId, Long designId) {
+        return slideRepository.findAllByDesignIdAndUserId(designId, userId);
     }
 }

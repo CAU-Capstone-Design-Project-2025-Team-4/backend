@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,5 +114,38 @@ class SlideServiceTest {
         assertThat(destSlideCopied.getSlideElementList()).isNotNull();
         assertThat(destSlideCopied.getSlideElementList().size()).isEqualTo(s1.getSlideElementList().size());
         assertThat(destSlideCopied.getSlideElementList()).doesNotContain(e1, e2);
+    }
+
+    @Test
+    void findAllInDesign(){
+        //given
+        User user = User.builder().build();
+        Design design = Design.builder()
+                .user(user)
+                .build();
+
+        Slide s1 = Slide.builder()
+                .design(design)
+                .build();
+
+        Slide s2 = Slide.builder()
+                .design(design)
+                .build();
+
+        em.persist(user);
+        em.persist(design);
+        em.persist(s1);
+        em.persist(s2);
+
+        em.flush();
+        em.clear();
+
+        //when
+        List<Slide> allInDesign = slideService.findAllInDesign(user.getId(), design.getId());
+
+        //then
+        assertThat(allInDesign).isNotNull();
+        assertThat(allInDesign).isNotEmpty();
+        assertThat(allInDesign.size()).isEqualTo(2);
     }
 }

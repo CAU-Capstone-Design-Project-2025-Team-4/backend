@@ -27,6 +27,7 @@ public class DesignService {
     private final DesignRepository designRepository;
     private final WorkspaceRepository workspaceRepository;
     private final UserService userService;
+    private final SlideService slideService;
 
     // 디자인을 만들때, 공유된걸 가지고 만든다면 공유 불가
     public Design createNewDesign(Long creatorId, Long sourceDesignId, boolean shared) {
@@ -64,7 +65,10 @@ public class DesignService {
                 .workspace(workspace)
                 .shared(shared)
                 .build();
-        return designRepository.save(newDesign);
+        designRepository.save(newDesign);
+        slideService.addInitSlide(newDesign);
+
+        return newDesign;
     }
 
     private Design createNewDesignFromSource(User creator, Workspace workspace, Design source) {

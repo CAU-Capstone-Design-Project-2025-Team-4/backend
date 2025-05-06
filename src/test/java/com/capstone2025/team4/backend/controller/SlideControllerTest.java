@@ -19,8 +19,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -112,5 +114,21 @@ class SlideControllerTest {
         id.setAccessible(true);
         id.set(slide, 1L);
         return slide;
+    }
+
+    @Test
+    void allInDesign() throws Exception {
+        //given
+        given(slideService.findAllInDesign(1L, 1L)).willReturn(new ArrayList<>());
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get("/slide").param("designId", "1").param("userId", "1")
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        resultActions
+                .andExpect(status().isOk());
     }
 }
