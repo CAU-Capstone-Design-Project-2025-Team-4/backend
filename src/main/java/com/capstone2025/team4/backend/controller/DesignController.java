@@ -30,4 +30,10 @@ public class DesignController {
         List<DesignShortResponse> result = all.stream().map(DesignShortResponse::new).toList();
         return ApiResponse.success(result);
     }
+
+    @DeleteMapping
+    public ApiResponse<String> delete(@RequestParam Long userId, @RequestParam Long designId) {
+        designService.delete(userId, designId);
+        return ApiResponse.success("OK");
+    }
 }

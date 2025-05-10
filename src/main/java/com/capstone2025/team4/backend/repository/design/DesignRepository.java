@@ -9,5 +9,12 @@ import java.util.List;
 public interface DesignRepository extends JpaRepository<Design, Long>, DesignRepositoryCustom {
     List<Design> findAllByUserId(Long userId);
 
-    @Query("SELECT count(d) > 0 FROM Design d JOIN d.user u WHERE d.id = :designId AND u.id = :userId ")
+    @Query("""
+            SELECT EXISTS(
+                SELECT 1
+                FROM Design d
+                JOIN d.user u
+                WHERE d.id = :designId AND u.id = :userId
+            )
+            """)
     boolean exists(Long designId, Long userId);}

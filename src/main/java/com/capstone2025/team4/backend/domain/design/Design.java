@@ -37,7 +37,7 @@ public class Design {
 
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "design", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "design", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @OrderColumn(name = "slide_order")
     private List<Slide> slideList = new ArrayList<>();
 
