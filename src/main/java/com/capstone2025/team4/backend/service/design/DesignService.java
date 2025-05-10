@@ -121,7 +121,7 @@ public class DesignService {
 
     @Transactional(readOnly = true)
     public List<Design> findAll(Long userId) {
-        return designRepository.findAllByUser_Id(userId);
+        return designRepository.findAllByUserId(userId);
     }
 
     public Design findDesign(Long designId) {
@@ -132,4 +132,13 @@ public class DesignService {
         return optionalDesign.get();
     }
 
+    public void delete(Long userId, Long designId) {
+        boolean exists = designRepository.exists(designId, userId);
+
+        if (!exists) {
+            throw new DesignNotFound();
+        }
+
+        designRepository.deleteById(designId);
+    }
 }

@@ -5,6 +5,7 @@ import com.capstone2025.team4.backend.domain.Workspace;
 import com.capstone2025.team4.backend.domain.design.*;
 import com.capstone2025.team4.backend.domain.element.Element;
 import com.capstone2025.team4.backend.domain.element.TextBox;
+import com.capstone2025.team4.backend.exception.design.DesignNotFound;
 import com.capstone2025.team4.backend.exception.design.DesignNotShared;
 import com.capstone2025.team4.backend.service.design.DesignService;
 import jakarta.persistence.EntityManager;
@@ -189,5 +190,30 @@ class DesignServiceTest {
         assertThat(all.size()).isEqualTo(3);
         assertThat(idList).contains(design1.getId(), design2.getId(), design3.getId());
 
+    }
+
+
+    @Test
+    void deleteDesign(){
+        //given
+        User testUser = User.builder()
+                .email("test@example.com")
+                .build();
+
+        Design design = Design.builder()
+                .user(testUser)
+                .build();
+
+        em.persist(testUser);
+        em.persist(design);
+
+        em.flush();
+        em.clear();
+
+        //when
+        designService.delete(testUser.getId(), design.getId());
+
+        //then
+        assertThrowsExactly(DesignNotFound.class, () -> designService.findDesign(design.getId()));
     }
 }
