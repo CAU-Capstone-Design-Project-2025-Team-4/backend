@@ -185,4 +185,10 @@ public class ElementController {
 
         return ApiResponse.success(result);
     }
+
+    @DeleteMapping
+    public ApiResponse<String> delete(@RequestParam Long userId, @RequestParam Long elementId) {
+        elementService.delete(userId, elementId);
+        return ApiResponse.success("OK");
+    }
 }

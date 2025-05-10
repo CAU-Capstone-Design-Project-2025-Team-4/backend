@@ -11,6 +11,7 @@ import com.capstone2025.team4.backend.domain.element.spatial.Spatial;
 import com.capstone2025.team4.backend.exception.element.ElementNotFound;
 import com.capstone2025.team4.backend.exception.slide.SlideNotFound;
 import com.capstone2025.team4.backend.exception.user.UserNotAllowedAddElement;
+import com.capstone2025.team4.backend.infra.aws.S3Service;
 import com.capstone2025.team4.backend.repository.element.*;
 import com.capstone2025.team4.backend.repository.SlideRepository;
 import com.capstone2025.team4.backend.repository.UserRepository;
@@ -33,6 +34,7 @@ public class ElementService {
     private final ElementRepository elementRepository;
     private final SlideRepository slideRepository;
     private final UserRepository userRepository;
+    private final S3Service s3Service;
 
     public TextBox addTextBoxElementToSlide(
             Long userId,
@@ -274,5 +276,28 @@ public class ElementService {
         checkUWDS(user, null, design, slide);
 
         return slide.getSlideElementList();
+    }
+
+    public void delete(Long userId, Long elementId) {
+        Optional<Element> optionalElement = elementRepository.findElementById(elementId, userId);
+        if (optionalElement.isEmpty()) {
+            throw new ElementNotFound();
+        }
+        Element element = optionalElement.get();
+        String s3Url = getS3Url(element);
+        if (s3Url != null) {
+            s3Service.delete(s3Url);
+        }
+        elementRepository.delete(element);
+    }
+
+    private String getS3Url(Element element) {
+        String s3Url = null;
+        if (element instanceof Spatial spatial) {
+            s3Url = spatial.getContent();
+        } else if (element instanceof Image image) {
+            s3Url = image.getContent();
+        }
+        return s3Url;
     }
 }
