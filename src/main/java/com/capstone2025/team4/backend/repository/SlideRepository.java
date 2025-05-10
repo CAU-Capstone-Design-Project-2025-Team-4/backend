@@ -17,4 +17,14 @@ public interface SlideRepository extends JpaRepository<Slide, Long> {
     List<Slide> findAllByDesignIdAndUserId(Long designId, Long userId);
 
     boolean existsByDesignIdAndOrder(Long designId, Integer order);
+
+    @Query("""
+            SELECT EXISTS(
+                SELECT 1
+                FROM Slide s
+                JOIN s.design d
+                WHERE s.id = :slideId AND d.user.id = :userId
+            )
+            """)
+    boolean exists(Long slideId, Long userId);
 }

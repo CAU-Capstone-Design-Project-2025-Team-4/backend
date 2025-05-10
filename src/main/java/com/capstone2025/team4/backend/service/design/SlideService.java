@@ -87,4 +87,14 @@ public class SlideService {
     public List<Slide> findAllInDesign(Long userId, Long designId) {
         return slideRepository.findAllByDesignIdAndUserId(designId, userId);
     }
+
+    public void delete(Long userId, Long slideId) {
+        boolean exists = slideRepository.exists(slideId, userId);
+
+        if (!exists) {
+            throw new SlideNotFound();
+        }
+
+        slideRepository.deleteById(slideId);
+    }
 }

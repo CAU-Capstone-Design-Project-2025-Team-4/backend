@@ -45,4 +45,10 @@ public class SlideController {
         AllSlidesInDesignResponse result = new AllSlidesInDesignResponse(slides);
         return ApiResponse.success(result);
     }
+
+    @DeleteMapping
+    public ApiResponse<String> delete(@RequestParam Long slideId, @RequestParam Long userId) {
+        slideService.delete(userId, slideId);
+        return ApiResponse.success("OK");
+    }
 }
