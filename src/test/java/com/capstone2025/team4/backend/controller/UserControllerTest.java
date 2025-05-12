@@ -7,6 +7,7 @@ import com.capstone2025.team4.backend.domain.User;
 import com.capstone2025.team4.backend.security.CustomUserDetailService;
 import com.capstone2025.team4.backend.config.SecurityConfig;
 import com.capstone2025.team4.backend.security.jwt.JwtService;
+import com.capstone2025.team4.backend.security.jwt.UserRefreshTokenRepository;
 import com.capstone2025.team4.backend.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.lang.reflect.Field;
+import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -35,6 +37,8 @@ class UserControllerTest {
     UserService userService;
     @MockitoBean
     JwtService jwtService;
+    @MockitoBean
+    UserRefreshTokenRepository refreshTokenRepository;
     @MockitoBean
     CustomUserDetailService customUserDetailService;
     @Autowired
@@ -118,7 +122,8 @@ class UserControllerTest {
         setUserId(mockUser, 1L);
         given(userService.login(request.getEmail(), request.getPassword()))
                 .willReturn(mockUser);
-        given(jwtService.generateToken("email@email.com")).willReturn("jwtToken");
+        given(jwtService.generateJwtToken("email@email.com")).willReturn("jwtToken");
+        given(refreshTokenRepository.findByUserEmail("emai@email.com")).willReturn(Optional.empty());
 
         //when
         ResultActions resultActions = mockMvc.perform(
@@ -146,7 +151,8 @@ class UserControllerTest {
         setUserId(mockUser, 1L);
         given(userService.login(badEmailRequest.getEmail(), badEmailRequest.getPassword()))
                 .willReturn(mockUser);
-        given(jwtService.generateToken("email@email.com")).willReturn("jwtToken");
+        given(jwtService.generateJwtToken("email@email.com")).willReturn("jwtToken");
+        given(refreshTokenRepository.findByUserEmail("emai@email.com")).willReturn(Optional.empty());
 
         //when
         ResultActions badResultActions = mockMvc.perform(
@@ -182,7 +188,8 @@ class UserControllerTest {
         setUserId(mockUser, 1L);
         given(userService.login(badEmailRequest.getEmail(), badEmailRequest.getPassword()))
                 .willReturn(mockUser);
-        given(jwtService.generateToken("email@email.com")).willReturn("jwtToken");
+        given(jwtService.generateJwtToken("email@email.com")).willReturn("jwtToken");
+        given(refreshTokenRepository.findByUserEmail("emai@email.com")).willReturn(Optional.empty());
 
         //when
         ResultActions resultActions = mockMvc.perform(
