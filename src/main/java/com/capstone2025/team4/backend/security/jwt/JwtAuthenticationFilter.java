@@ -54,20 +54,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         } catch (ExpiredJwtException e) {
-            try {
-                String email = e.getClaims().getSubject();
-                reissueAccessToken(request, response, email, jwt);
-            } catch (Exception ex) {
-                throw ex;
-            }
-        } catch (Exception ex) {
-            throw ex;
+            String email = e.getClaims().getSubject();
+            reissueAccessToken(request, response, email, jwt);
         }
         filterChain.doFilter(request, response);
     }
 
     private void reissueAccessToken(HttpServletRequest request, HttpServletResponse response, String email, String curJwt) {
-        String refreshToken = getRefreshToken(request);
+        log.debug("Reissue!!!");
+        String refreshToken = request.getHeader("Refresh-Token");
 
         if (refreshToken == null) return;
         jwtService.validateRefreshToken(refreshToken, email);
@@ -80,14 +75,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authToken);
-    }
-
-    private String getRefreshToken(HttpServletRequest request) {
-        String refreshToken = request.getHeader("Refresh-Token");
-
-        if (refreshToken == null) {
-            return null;
-        }
-        return refreshToken;
     }
 }

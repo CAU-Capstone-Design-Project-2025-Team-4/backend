@@ -40,24 +40,31 @@ public class UserController {
     public ApiResponse<UserLoginResponse> login(@Valid @RequestBody UserLoginRequest request) {
         User user = userService.login(request.getEmail(), request.getPassword());
 
-        String token = jwtService.generateJwtToken(user.getEmail());
+        String jwtToken = jwtService.generateJwtToken(user.getEmail());
 
-        String refreshToken = getRefreshToken(user, request.getJwtToken());
+        String refreshToken = getRefreshToken(user);
 
-        return ApiResponse.success(new UserLoginResponse(user, token, refreshToken));
+        return ApiResponse.success(new UserLoginResponse(user, jwtToken, refreshToken));
     }
 
-    private String getRefreshToken(User user, String prevJwt) {
-        return refreshTokenRepository.findByUserEmail(user.getEmail())
-                .map(rt -> {                     // 이미 저장돼 있으면
-                    rt.updatePrevJwt(prevJwt);   //   이전 AT 만 기록
-                    return rt.getRefreshToken(); //   RT 는 재사용
-                })
-                .orElseGet(() -> {               // 없을 때만 새 RT 발급
-                    String newRt = jwtService.generateRefreshToken();
-                    refreshTokenRepository.save(
-                            new UserRefreshToken(user, newRt, prevJwt));
-                    return newRt;
-                });
+    private String getRefreshToken(User user) {
+//        return refreshTokenRepository.findByUserEmail(user.getEmail())
+//                .map(rt -> {                     // 이미 저장돼 있으면
+//                    rt.updatePrevJwt(prevJwt);   //   이전 AT 만 기록
+//                    return rt.getRefreshToken(); //   RT 는 재사용
+//                })
+//                .orElseGet(() -> {               // 없을 때만 새 RT 발급
+//                    String newRt = jwtService.generateRefreshToken();
+//                    refreshTokenRepository.save(
+//                            new UserRefreshToken(user, newRt, prevJwt));
+//                    return newRt;
+//                });
+        String newRefreshToken = jwtService.generateRefreshToken();
+        refreshTokenRepository.findByUserEmail(user.getEmail())
+                .ifPresentOrElse(
+                        refreshToken -> refreshToken.updateRefreshToken(newRefreshToken),
+                        ()-> refreshTokenRepository.save(new UserRefreshToken(user, newRefreshToken))
+               );
+        return newRefreshToken;
     }
 }

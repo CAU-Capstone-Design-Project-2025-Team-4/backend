@@ -21,7 +21,8 @@ public class JwtService {
 
     private final String SECRET_KEY;
     // 토큰 만료시간
-    public final long TOKEN_TIME = 30 * 60 * 1000L; // 30 분
+//    public final long TOKEN_TIME = 30 * 60 * 1000L; // 30 분
+    public final long TOKEN_TIME = 1000L; // 30 분
     public final long REFRESH_TIME = 24 * 60 * 60 * 1000L; // 24시간 (밀리초 단위)
     private final UserRefreshTokenRepository userRefreshTokenRepository;
 
@@ -94,19 +95,9 @@ public class JwtService {
 
     @Transactional
     public String recreateJwtToken(String email, String curJwt) {
-        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserEmail(email)
+        userRefreshTokenRepository.findByUserEmail(email)
                 .orElseThrow(() -> new ExpiredJwtException(null, null, "Refresh Token Expired"));
 
-        ensureNotOldJwt(curJwt, userRefreshToken);
-
-        userRefreshToken.updatePrevJwt(curJwt);
         return generateJwtToken(email);
-    }
-
-    private void ensureNotOldJwt(String curJwt, UserRefreshToken userRefreshToken) {
-        String prevJwtToken = userRefreshToken.getPrevJwtToken();
-        if (hasText(prevJwtToken)&& prevJwtToken.equals(curJwt)) {
-            throw new JwtException("오래된 jwt입니다. 가장 최근에 받은 jwt를 사용하세요");
-        }
     }
 }
