@@ -79,17 +79,19 @@ public class ElementController {
     }
 
     @PostMapping("/spatial")
-    public ApiResponse<ElementResponse> addSpatialElement(@Valid @ModelAttribute AddSpatialRequest request) {
-        if (request.getFile().isEmpty()) {
-            throw new FileIsEmpty();
-        }
-
+    public ApiResponse<ElementResponse> addSpatialElement(@Valid @ModelAttribute AddSpatialWithModelRequest request) {
         BorderRef borderRef = BorderRef.builder()
                 .borderType(request.getBorderType())
                 .color(request.getBorderColor())
                 .thickness(request.getBorderThickness())
                 .build();
-        String url = s3Service.upload(request.getFile());
+
+        String url;
+        if (request.getFile() == null || request.getFile().isEmpty()) {
+            url = null;
+        } else {
+            url = s3Service.upload(request.getFile());
+        }
         Spatial spatial = elementService.addSpatialElementToSlide(request.getUserId(), request.getSlideId(), borderRef, request.getX(), request.getY(), request.getZ(), request.getAngle(), request.getWidth(), request.getHeight(), request.getCameraMode(), request.getCameraTransform(), url, request.getBackgroundColor());
         return ApiResponse.success(ElementResponse.create(spatial));
     }

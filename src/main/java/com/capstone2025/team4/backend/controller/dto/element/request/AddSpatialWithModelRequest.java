@@ -10,14 +10,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 @AllArgsConstructor
 @Getter
-public class AddSpatialRequest extends ElementRequest {
+public class AddSpatialWithModelRequest extends ElementRequest {
     @NotNull(message = "카메라 모드는 필수입니다")
     private CameraMode cameraMode;
 
     @NotNull(message = "카메라 위치 및 회정 정보는 필수입니다")
     private CameraTransform cameraTransform;
 
-    @NotNull(message = "파일은 필수입니다")
     private MultipartFile file;
 
     @NotNull(message = "배경색은 필수입니다")
