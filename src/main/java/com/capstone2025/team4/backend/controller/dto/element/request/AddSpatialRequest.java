@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @AllArgsConstructor
 @Getter
-public class AddSpatialWithModelRequest extends ElementRequest {
+public class AddSpatialRequest extends ElementRequest {
     @NotNull(message = "카메라 모드는 필수입니다")
     private CameraMode cameraMode;
 

@@ -79,7 +79,7 @@ public class ElementController {
     }
 
     @PostMapping("/spatial")
-    public ApiResponse<ElementResponse> addSpatialElement(@Valid @ModelAttribute AddSpatialWithModelRequest request) {
+    public ApiResponse<ElementResponse> addSpatialElement(@Valid @ModelAttribute AddSpatialRequest request) {
         BorderRef borderRef = BorderRef.builder()
                 .borderType(request.getBorderType())
                 .color(request.getBorderColor())
