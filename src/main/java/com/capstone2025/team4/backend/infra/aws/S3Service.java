@@ -1,6 +1,7 @@
 package com.capstone2025.team4.backend.infra.aws;
 
 import com.capstone2025.team4.backend.exception.element.ElementFileNotFound;
+import com.capstone2025.team4.backend.service.dto.FileDTO;
 import io.awspring.cloud.s3.ObjectMetadata;
 import io.awspring.cloud.s3.S3Operations;
 import io.awspring.cloud.s3.S3Resource;
@@ -37,11 +38,8 @@ public class S3Service {
         String key = UUID.randomUUID().toString() + "." + fileFormat;
 
         try (InputStream is = multipartFile.getInputStream()) {
-            ObjectMetadata objectMetadata = ObjectMetadata.builder().contentType(multipartFile.getContentType()).build();
-            S3Resource s3Resource = s3Operations.upload(BUCKET, key, is,
-                    objectMetadata);
-
-            String url = s3Resource.getURL().toString();
+            String contentType = multipartFile.getContentType();
+            String url = storeFileInS3(contentType, key, is);
             S3Entity s3Entity = S3Entity.builder()
                     .s3Key(key)
                     .url(url)
@@ -56,6 +54,14 @@ public class S3Service {
         }
     }
 
+    protected String storeFileInS3(String contentType, String key, InputStream is) throws IOException {
+        ObjectMetadata objectMetadata = ObjectMetadata.builder().contentType(contentType).build();
+        S3Resource s3Resource = s3Operations.upload(BUCKET, key, is,
+                objectMetadata);
+
+        return s3Resource.getURL().toString();
+    }
+
     private String getFileFormat(String originalFilename) {
         assert originalFilename != null;
         int index = originalFilename.lastIndexOf(".");
@@ -63,16 +69,20 @@ public class S3Service {
     }
 
     @Transactional(readOnly = true)
-    public S3Entity findByUrl(String url) {
+    public FileDTO findByUrl(String url) {
         Optional<S3Entity> optionalS3Entity = s3Repository.findByUrl(url);
         if (optionalS3Entity.isEmpty()) {
             throw new ElementFileNotFound();
         }
 
-        return optionalS3Entity.get();
+        S3Entity s3Entity = optionalS3Entity.get();
+        byte[] fileBytes = download(s3Entity);
+        return FileDTO.builder()
+                .fileName(s3Entity.getOriginalFileName())
+                .fileBytes(fileBytes).build();
     }
 
-    public byte[] download(S3Entity s3Entity) {
+    private byte[] download(S3Entity s3Entity) {
         try {
             return s3Operations.download(BUCKET, s3Entity.getS3Key()).getContentAsByteArray();
         } catch (IOException e) {
@@ -88,5 +98,6 @@ public class S3Service {
         }
         S3Entity s3Entity = optionalS3Entity.get();
         s3Operations.deleteObject(BUCKET, s3Entity.getS3Key());
+        s3Repository.delete(s3Entity);
     }
 }

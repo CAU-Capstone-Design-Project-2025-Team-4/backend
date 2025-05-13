@@ -1,7 +1,7 @@
 package com.capstone2025.team4.backend.controller;
 
 import com.capstone2025.team4.backend.controller.api.ApiResponse;
-import com.capstone2025.team4.backend.controller.dto.design.NewDesignRequest;
+import com.capstone2025.team4.backend.controller.api.design.NewDesignRequest;
 import com.capstone2025.team4.backend.domain.design.Design;
 import com.capstone2025.team4.backend.security.CustomUserDetailService;
 import com.capstone2025.team4.backend.config.SecurityConfig;

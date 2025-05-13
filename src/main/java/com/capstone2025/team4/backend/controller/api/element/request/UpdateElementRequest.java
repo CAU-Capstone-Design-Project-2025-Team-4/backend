@@ -1,6 +1,5 @@
 package com.capstone2025.team4.backend.controller.api.element.request;
 
-import com.capstone2025.team4.backend.domain.element.border.BorderRef;
 import com.capstone2025.team4.backend.domain.element.border.BorderType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

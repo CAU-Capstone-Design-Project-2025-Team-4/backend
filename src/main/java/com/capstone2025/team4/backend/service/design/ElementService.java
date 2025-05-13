@@ -7,14 +7,14 @@ import com.capstone2025.team4.backend.domain.element.*;
 import com.capstone2025.team4.backend.domain.element.border.BorderRef;
 import com.capstone2025.team4.backend.domain.element.spatial.CameraMode;
 import com.capstone2025.team4.backend.domain.element.spatial.CameraTransform;
+import com.capstone2025.team4.backend.domain.element.spatial.Model;
 import com.capstone2025.team4.backend.domain.element.spatial.Spatial;
 import com.capstone2025.team4.backend.exception.element.ElementNotFound;
 import com.capstone2025.team4.backend.exception.slide.SlideNotFound;
-import com.capstone2025.team4.backend.exception.user.UserNotAllowedAddElement;
 import com.capstone2025.team4.backend.infra.aws.S3Service;
 import com.capstone2025.team4.backend.repository.element.*;
 import com.capstone2025.team4.backend.repository.SlideRepository;
-import com.capstone2025.team4.backend.repository.UserRepository;
+import com.capstone2025.team4.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,8 @@ public class ElementService {
 
     private final ElementRepository elementRepository;
     private final SlideRepository slideRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
+    private final ModelService modelService;
     private final S3Service s3Service;
 
     public TextBox addTextBoxElementToSlide(
@@ -49,7 +50,7 @@ public class ElementService {
             TextAlign align,
             String fontFamily
     ) {
-        User user = getUser(userId);
+        User user = userService.getUser(userId);
         Slide slide = getSlide(slideId, false);
         Design design = slide.getDesign();
         Workspace workspace = design.getWorkspace();
@@ -85,7 +86,7 @@ public class ElementService {
             String path,
             String color
     ) {
-        User user = getUser(userId);
+        User user = userService.getUser(userId);
         Slide slide = getSlide(slideId, false);
         Design design = slide.getDesign();
         Workspace workspace = design.getWorkspace();
@@ -117,7 +118,7 @@ public class ElementService {
             Long width, Long height,
             String s3Url
     ) {
-        User user = getUser(userId);
+        User user = userService.getUser(userId);
         Slide slide = getSlide(slideId, false);
         Design design = slide.getDesign();
         Workspace workspace = design.getWorkspace();
@@ -133,7 +134,7 @@ public class ElementService {
                 .angle(angle)
                 .width(width)
                 .height(height)
-                .content(s3Url)
+                .url(s3Url)
                 .build();
 
         return elementRepository.save(image);
@@ -151,7 +152,7 @@ public class ElementService {
             String content,
             String backgroundColor
     ) {
-        User user = getUser(userId);
+        User user = userService.getUser(userId);
         Slide slide = getSlide(slideId, false);
         Design design = slide.getDesign();
         Workspace workspace = design.getWorkspace();
@@ -169,9 +170,13 @@ public class ElementService {
                 .height(height)
                 .cameraMode(cameraMode)
                 .cameraTransform(cameraTransform)
-                .content(content)
                 .backgroundColor(backgroundColor)
                 .build();
+
+        if (content != null) {
+            Model model = modelService.createNewModel(content);
+            spatial.addModel(model);
+        }
 
         return elementRepository.save(spatial);
     }
@@ -187,14 +192,6 @@ public class ElementService {
             throw new SlideNotFound();
         }
         return slideOptional.get();
-    }
-
-    private User getUser(Long userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
-            throw new UserNotAllowedAddElement();
-        }
-        return userOptional.get();
     }
 
     public TextBox updateTextBox(
@@ -237,7 +234,6 @@ public class ElementService {
             Long elementId,
             CameraMode cameraMode,
             CameraTransform cameraTransform,
-            String content,
             String backgroundColor
     ){
         Optional<Spatial> optionalSpatial = elementRepository.findSpatialById(elementId, userId);
@@ -246,7 +242,7 @@ public class ElementService {
         }
 
         Spatial spatial = optionalSpatial.get();
-        spatial.update(cameraMode, cameraTransform, content, backgroundColor);
+        spatial.update(cameraMode, cameraTransform, backgroundColor);
         return spatial;
     }
 
@@ -271,7 +267,7 @@ public class ElementService {
     @Transactional(readOnly = true)
     public List<Element> findAllElementsInSlide(Long userId, Long slideId) {
         Slide slide = getSlide(slideId, true);
-        User user = getUser(userId);
+        User user = userService.getUser(userId);
         Design design = slide.getDesign();
         checkUWDS(user, null, design, slide);
 
@@ -284,20 +280,21 @@ public class ElementService {
             throw new ElementNotFound();
         }
         Element element = optionalElement.get();
-        String s3Url = getS3Url(element);
-        if (s3Url != null) {
-            s3Service.delete(s3Url);
-        }
+        deleteS3(element);
         elementRepository.delete(element);
     }
 
-    private String getS3Url(Element element) {
-        String s3Url = null;
+    protected void deleteS3(Element element) {
         if (element instanceof Spatial spatial) {
-            s3Url = spatial.getContent();
+            for (Model model : spatial.getModels()) {
+                String url = model.getUrl();
+                if (url != null) {
+                    s3Service.delete(url);
+                }
+            }
         } else if (element instanceof Image image) {
-            s3Url = image.getContent();
+            String content = image.getUrl();
+            s3Service.delete(content);
         }
-        return s3Url;
     }
 }

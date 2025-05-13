@@ -1,6 +1,6 @@
 package com.capstone2025.team4.backend.controller;
 
-import com.capstone2025.team4.backend.controller.dto.design.NewSlideRequest;
+import com.capstone2025.team4.backend.controller.api.design.NewSlideRequest;
 import com.capstone2025.team4.backend.domain.User;
 import com.capstone2025.team4.backend.domain.Workspace;
 import com.capstone2025.team4.backend.domain.design.Design;

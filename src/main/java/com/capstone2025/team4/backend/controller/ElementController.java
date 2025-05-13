@@ -1,33 +1,23 @@
 package com.capstone2025.team4.backend.controller;
 
 import com.capstone2025.team4.backend.controller.api.ApiResponse;
-import com.capstone2025.team4.backend.controller.dto.element.request.*;
-import com.capstone2025.team4.backend.controller.dto.element.response.ElementResponse;
+import com.capstone2025.team4.backend.controller.api.element.request.*;
+import com.capstone2025.team4.backend.controller.api.element.response.ElementResponse;
 import com.capstone2025.team4.backend.domain.element.Element;
 import com.capstone2025.team4.backend.domain.element.Image;
 import com.capstone2025.team4.backend.domain.element.Shape;
 import com.capstone2025.team4.backend.domain.element.TextBox;
 import com.capstone2025.team4.backend.domain.element.border.BorderRef;
 import com.capstone2025.team4.backend.domain.element.spatial.Spatial;
-import com.capstone2025.team4.backend.exception.element.ElementFileNotFound;
-import com.capstone2025.team4.backend.exception.element.ElementNotFileType;
-import com.capstone2025.team4.backend.exception.element.ElementNotFound;
 import com.capstone2025.team4.backend.exception.file.FileIsEmpty;
-import com.capstone2025.team4.backend.infra.aws.S3Entity;
 import com.capstone2025.team4.backend.infra.aws.S3Service;
-import com.capstone2025.team4.backend.repository.element.ElementRepository;
 import com.capstone2025.team4.backend.service.design.ElementService;
-import com.capstone2025.team4.backend.utils.StringChecker;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -37,7 +27,6 @@ import java.util.stream.Collectors;
 public class ElementController {
     private final ElementService elementService;
     private final S3Service s3Service;
-    private final ElementRepository elementRepository;
 
     @PostMapping("/textbox")
     public ApiResponse<ElementResponse> addNewTextBoxElement(@Valid @RequestBody AddTextRequest request) {
@@ -124,57 +113,8 @@ public class ElementController {
 
     @PatchMapping("/spatial")
     public ApiResponse<ElementResponse> updateSpatial(@Valid @RequestBody UpdateSpatialRequest request) {
-        Spatial spatial = elementService.updateSpatial(request.getUserId(), request.getElementId(), request.getCameraMode(), request.getCameraTransform(), request.getContent(), request.getBackgroundColor());
+        Spatial spatial = elementService.updateSpatial(request.getUserId(), request.getElementId(), request.getCameraMode(), request.getCameraTransform(), request.getBackgroundColor());
         return ApiResponse.success(ElementResponse.create(spatial));
-    }
-
-    @GetMapping("/file/{elementId}")
-    public ResponseEntity<byte[]> getFile(@PathVariable Long elementId) {
-        Optional<Element> optionalElement = elementRepository.findById(elementId);
-        if (optionalElement.isEmpty()) {
-            throw new ElementNotFound();
-        }
-
-        Element element = optionalElement.get();
-        String s3Url;
-        if (element instanceof Image image) {
-            s3Url = image.getContent();
-        } else if (element instanceof Spatial spatial) {
-            s3Url = spatial.getContent();
-        } else {
-            throw new ElementNotFileType();
-        }
-
-        if (StringChecker.stringsAreEmpty(s3Url)) {
-            throw new ElementFileNotFound();
-        }
-
-        S3Entity s3Entity = s3Service.findByUrl(s3Url);
-
-        byte[] fileBytes = s3Service.download(s3Entity);
-        String fileName = s3Entity.getOriginalFileName();
-        String contentType = URLConnection.guessContentTypeFromName(fileName);
-        if (contentType == null) {
-            // GLB/GLTF 등 특수 타입 수동 지정
-            if (fileName.endsWith(".glb")) {
-                contentType = "model/gltf-binary";
-            } else if (fileName.endsWith(".gltf")) {
-                contentType = "model/gltf+json";
-            } else if (fileName.endsWith(".wasm")) {
-                contentType = "application/wasm";
-//            }
-//            else if (fileName.endsWith(".assetbundle")) {
-//                contentType = "application/octet-stream"; // Unity 용도
-            } else {
-                contentType = "application/octet-stream"; // fallback
-            }
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(contentType));
-        headers.setContentDisposition(ContentDisposition.inline().filename(fileName, StandardCharsets.UTF_8).build());
-
-        return new ResponseEntity<>(fileBytes, headers, HttpStatus.OK);
     }
 
     @GetMapping

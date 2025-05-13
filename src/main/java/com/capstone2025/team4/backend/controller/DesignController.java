@@ -1,7 +1,9 @@
 package com.capstone2025.team4.backend.controller;
 
 import com.capstone2025.team4.backend.controller.api.ApiResponse;
-import com.capstone2025.team4.backend.controller.dto.design.*;
+import com.capstone2025.team4.backend.controller.api.design.DesignLongResponse;
+import com.capstone2025.team4.backend.controller.api.design.DesignShortResponse;
+import com.capstone2025.team4.backend.controller.api.design.NewDesignRequest;
 import com.capstone2025.team4.backend.domain.design.Design;
 import com.capstone2025.team4.backend.service.design.DesignService;
 import jakarta.validation.Valid;

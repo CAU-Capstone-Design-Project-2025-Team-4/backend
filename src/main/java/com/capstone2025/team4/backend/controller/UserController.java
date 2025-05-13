@@ -1,10 +1,10 @@
 package com.capstone2025.team4.backend.controller;
 
 import com.capstone2025.team4.backend.controller.api.ApiResponse;
-import com.capstone2025.team4.backend.controller.dto.user.UserLoginRequest;
-import com.capstone2025.team4.backend.controller.dto.user.UserLoginResponse;
-import com.capstone2025.team4.backend.controller.dto.user.UserRegisterRequest;
-import com.capstone2025.team4.backend.controller.dto.user.UserRegisterResponse;
+import com.capstone2025.team4.backend.controller.api.user.UserLoginRequest;
+import com.capstone2025.team4.backend.controller.api.user.UserLoginResponse;
+import com.capstone2025.team4.backend.controller.api.user.UserRegisterRequest;
+import com.capstone2025.team4.backend.controller.api.user.UserRegisterResponse;
 import com.capstone2025.team4.backend.domain.User;
 import com.capstone2025.team4.backend.security.jwt.JwtService;
 import com.capstone2025.team4.backend.security.jwt.UserRefreshToken;

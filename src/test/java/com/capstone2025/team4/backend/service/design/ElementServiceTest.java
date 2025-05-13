@@ -8,6 +8,7 @@ import com.capstone2025.team4.backend.domain.element.border.BorderRef;
 import com.capstone2025.team4.backend.domain.element.border.BorderType;
 import com.capstone2025.team4.backend.domain.element.spatial.CameraMode;
 import com.capstone2025.team4.backend.domain.element.spatial.CameraTransform;
+import com.capstone2025.team4.backend.domain.element.spatial.Model;
 import com.capstone2025.team4.backend.domain.element.spatial.Spatial;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
@@ -15,9 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -241,7 +242,7 @@ class ElementServiceTest {
         assertThat(image.getBorderRef().getBorderType()).isEqualTo(BorderType.NONE);
         assertThat(image.getBorderRef().getThickness()).isEqualTo(10L);
         assertThat(image.getBorderRef().getColor()).isEqualTo("red");
-        assertThat(image.getContent()).isEqualTo("s3Url");
+        assertThat(image.getUrl()).isEqualTo("s3Url");
     }
 
     @Test
@@ -298,7 +299,6 @@ class ElementServiceTest {
         assertThat(spatial.getBorderRef().getBorderType()).isEqualTo(BorderType.NONE);
         assertThat(spatial.getCameraMode()).isEqualTo(CameraMode.FREE);
         assertThat(spatial.getCameraTransform()).isNotNull();
-        assertThat(spatial.getContent()).isEqualTo("3D content");
         assertThat(spatial.getBackgroundColor()).isEqualTo("#ffffff");
     }
 
@@ -339,7 +339,6 @@ class ElementServiceTest {
                 .angle(0.0)
                 .cameraTransform(cameraTransform)
                 .cameraMode(CameraMode.FREE)
-                .content("testContent")
                 .backgroundColor("testColor")
                 .build();
 
@@ -354,7 +353,7 @@ class ElementServiceTest {
         em.clear();
 
         //when
-        Spatial spatial = elementService.updateSpatial(testUser.getId(), e.getId(), CameraMode.ORBIT, cameraTransformUpdate, "contentUpdate", "updateColor");
+        Spatial spatial = elementService.updateSpatial(testUser.getId(), e.getId(), CameraMode.ORBIT, cameraTransformUpdate, "updateColor");
 
         // then
         assertThat(spatial).isNotNull();
@@ -367,7 +366,6 @@ class ElementServiceTest {
         assertThat(spatial.getCameraTransform().getRotationX()).isEqualTo(10L);
         assertThat(spatial.getCameraTransform().getRotationY()).isEqualTo(10L);
         assertThat(spatial.getCameraTransform().getRotationZ()).isEqualTo(10L);
-        assertThat(spatial.getContent()).isEqualTo("contentUpdate");
         assertThat(spatial.getBackgroundColor()).isEqualTo("updateColor");
     }
 
@@ -419,6 +417,7 @@ class ElementServiceTest {
     @Test
     void getAllElementsInSlide(){
         //given
+        String TEST_URL = "testUrl";
         User testUser = User.builder()
                 .email("test@example.com")
                 .build();
@@ -451,7 +450,7 @@ class ElementServiceTest {
                 .x(20L).y(20L).z(0L)
                 .width(80L).height(80L)
                 .angle(0.0)
-                .content("imageUrl")
+                .url("imageUrl")
                 .build();
 
         CameraTransform cameraTransform = CameraTransform.builder()
@@ -459,6 +458,7 @@ class ElementServiceTest {
                 .rotationX(0L).rotationY(0L).rotationZ(0L)
                 .build();
 
+        Model model = Model.builder().url(TEST_URL).build();
         Spatial spatial = Spatial.builder()
                 .slide(testSlide)
                 .x(30L).y(30L).z(0L)
@@ -466,9 +466,9 @@ class ElementServiceTest {
                 .angle(0.0)
                 .cameraMode(CameraMode.FREE)
                 .cameraTransform(cameraTransform)
-                .content("3D model")
                 .backgroundColor("#ffffff")
                 .build();
+        spatial.addModel(model);
 
         em.persist(testUser);
         em.persist(testWorkspace);
@@ -478,6 +478,7 @@ class ElementServiceTest {
         em.persist(shape);
         em.persist(image);
         em.persist(spatial);
+        em.persist(model);
 
         em.flush();
         em.clear();
@@ -502,9 +503,19 @@ class ElementServiceTest {
                 .extracting(e -> ((Shape) e).getPath()).containsExactly("shapePath");
 
         assertThat(allElementsInSlide).filteredOn(e -> e instanceof Image)
-                .extracting(e -> ((Image) e).getContent()).containsExactly("imageUrl");
+                .extracting(e -> ((Image) e).getUrl()).containsExactly("imageUrl");
 
-        assertThat(allElementsInSlide).filteredOn(e -> e instanceof Spatial)
-                .extracting(e -> ((Spatial) e).getContent()).containsExactly("3D model");
+        List<Model> modelsInSlide = allElementsInSlide.stream()
+                .filter(e -> e instanceof Spatial)
+                .map(e -> (Spatial) e)
+                .findFirst()
+                .orElseThrow()
+                .getModels();
+
+        assertThat(modelsInSlide)
+                .hasSize(1)
+                .allSatisfy(m -> {
+                    assertThat(m.getUrl()).isEqualTo(TEST_URL);
+                });
     }
 }

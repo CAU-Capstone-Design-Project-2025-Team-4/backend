@@ -3,9 +3,13 @@ package com.capstone2025.team4.backend.domain.element.spatial;
 import com.capstone2025.team4.backend.domain.element.Element;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @DiscriminatorValue("SPATIAL_ELEMENT")
@@ -21,7 +25,9 @@ public class Spatial extends Element {
     @Embedded
     private CameraTransform cameraTransform;
 
-    private String content;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "spatial", cascade = CascadeType.REMOVE)
+    @Builder.Default
+    private List<Model> models = new ArrayList<>();
 
     private String backgroundColor;
 
@@ -30,19 +36,27 @@ public class Spatial extends Element {
         return new Spatial();
     }
 
+    /**
+     * spatial의 속성만 copy한다.
+     * 모델 copy는 별도로 진행해야 된다
+     * @param copy
+     */
     @Override
     protected void copyElementFields(Element copy) {
         Spatial spatialCopy = (Spatial) copy;
         spatialCopy.cameraMode = this.cameraMode;
         spatialCopy.cameraTransform = this.cameraTransform.copy();
-        spatialCopy.content = this.content;
         spatialCopy.backgroundColor = this.backgroundColor;
     }
 
-    public void update(CameraMode cameraMode, CameraTransform cameraTransform, String content, String backgroundColor) {
+    public void update(CameraMode cameraMode, CameraTransform cameraTransform, String backgroundColor) {
         this.cameraMode = cameraMode;
         this.cameraTransform = cameraTransform;
-        this.content = content;
         this.backgroundColor = backgroundColor;
+    }
+
+    public void addModel(Model model) {
+        this.models.add(model);
+        model.setSpatial(this);
     }
 }

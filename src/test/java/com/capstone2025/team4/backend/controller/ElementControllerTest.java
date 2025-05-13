@@ -11,7 +11,6 @@ import com.capstone2025.team4.backend.domain.element.border.BorderType;
 import com.capstone2025.team4.backend.domain.element.spatial.CameraTransform;
 import com.capstone2025.team4.backend.domain.element.spatial.Spatial;
 import com.capstone2025.team4.backend.domain.element.spatial.CameraMode;
-import com.capstone2025.team4.backend.infra.aws.S3Entity;
 import com.capstone2025.team4.backend.infra.aws.S3Service;
 import com.capstone2025.team4.backend.security.CustomUserDetailService;
 import com.capstone2025.team4.backend.config.SecurityConfig;
@@ -19,7 +18,6 @@ import com.capstone2025.team4.backend.security.jwt.JwtService;
 import com.capstone2025.team4.backend.mock.WithCustomMockUser;
 import com.capstone2025.team4.backend.repository.element.ElementRepository;
 import com.capstone2025.team4.backend.service.design.ElementService;
-import com.capstone2025.team4.backend.service.dto.FileDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +31,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.io.FileInputStream;
 import java.lang.reflect.Field;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
@@ -198,39 +193,6 @@ class ElementControllerTest {
 
     }
 
-    @Test
-    void getFileSuccess() throws Exception {
-        //given
-        given(elementRepository.findById(1L)).willReturn(Optional.of(createFileElement(true)));
-        given(s3Service.findByUrl("tempUrl")).willReturn(FileDTO.builder().fileBytes("tempFile".getBytes(StandardCharsets.UTF_8)).fileName("fileName").build());
-
-        //when
-        ResultActions resultActions = mockMvc.perform(
-                get("/element/file/1")
-        );
-
-        //then
-        resultActions
-                .andExpect(status().isOk());
-
-    }
-
-    @Test
-    void getFileBadArg() throws Exception {
-        //given
-        given(elementRepository.findById(1L)).willReturn(Optional.of(createFileElement(true)));
-        given(s3Service.findByUrl("tempUrl")).willReturn(FileDTO.builder().fileBytes("tempFile".getBytes(StandardCharsets.UTF_8)).fileName("fileName").build());
-
-        //when
-        ResultActions resultActions = mockMvc.perform(
-                get("/element/file/S")
-        );
-
-        //then
-        resultActions
-                .andExpect(status().is4xxClientError());
-
-    }
 
     @Test
     void getAllElementsInSlideSuccess() throws Exception {
@@ -291,7 +253,6 @@ class ElementControllerTest {
 
         // then
         resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.content").value("tempUrl"))
                 .andExpect(jsonPath("$.data.cameraMode").value("FREE"));
     }
 

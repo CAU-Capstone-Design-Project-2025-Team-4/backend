@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class Image extends Element {
 
-    private String content;
+    private String url;
 
     @Override
     protected Element createNewInstance() {
@@ -22,6 +22,6 @@ public class Image extends Element {
 
     @Override
     protected void copyElementFields(Element copy) {
-        ((Image) copy).content = this.content;
+        ((Image) copy).url = this.url;
     }
 }
