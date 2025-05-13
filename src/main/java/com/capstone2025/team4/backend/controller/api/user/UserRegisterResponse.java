@@ -1,4 +1,4 @@
-package com.capstone2025.team4.backend.controller.dto.user;
+package com.capstone2025.team4.backend.controller.api.user;
 
 import com.capstone2025.team4.backend.domain.User;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.capstone2025.team4.backend.controller.dto.design;
+package com.capstone2025.team4.backend.controller.api.design;
 
 import com.capstone2025.team4.backend.domain.design.Slide;
 import lombok.Getter;

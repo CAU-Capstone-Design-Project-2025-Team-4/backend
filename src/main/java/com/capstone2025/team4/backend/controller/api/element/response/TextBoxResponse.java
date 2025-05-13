@@ -1,6 +1,6 @@
-package com.capstone2025.team4.backend.controller.dto.element.response;
+package com.capstone2025.team4.backend.controller.api.element.response;
 
-import com.capstone2025.team4.backend.controller.dto.element.ElementType;
+import com.capstone2025.team4.backend.controller.api.element.ElementType;
 import com.capstone2025.team4.backend.domain.element.TextAlign;
 import com.capstone2025.team4.backend.domain.element.TextBox;
 import lombok.AccessLevel;

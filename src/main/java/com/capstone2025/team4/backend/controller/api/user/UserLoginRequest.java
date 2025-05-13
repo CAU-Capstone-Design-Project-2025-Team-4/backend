@@ -1,4 +1,4 @@
-package com.capstone2025.team4.backend.controller.dto.user;
+package com.capstone2025.team4.backend.controller.api.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

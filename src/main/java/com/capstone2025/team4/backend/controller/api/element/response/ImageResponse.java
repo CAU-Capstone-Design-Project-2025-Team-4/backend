@@ -1,6 +1,6 @@
-package com.capstone2025.team4.backend.controller.dto.element.response;
+package com.capstone2025.team4.backend.controller.api.element.response;
 
-import com.capstone2025.team4.backend.controller.dto.element.ElementType;
+import com.capstone2025.team4.backend.controller.api.element.ElementType;
 import com.capstone2025.team4.backend.domain.element.Image;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ public class ImageResponse extends ElementResponse {
 
     public static ImageResponse createFrom(Image image) {
         ImageResponse imageDTO = new ImageResponse();
-        imageDTO.content = image.getContent();
+        imageDTO.content = image.getUrl();
         return imageDTO;
     }
 }

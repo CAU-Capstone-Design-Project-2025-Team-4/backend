@@ -1,4 +1,4 @@
-package com.capstone2025.team4.backend.controller.dto.element.request;
+package com.capstone2025.team4.backend.controller.api.element.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

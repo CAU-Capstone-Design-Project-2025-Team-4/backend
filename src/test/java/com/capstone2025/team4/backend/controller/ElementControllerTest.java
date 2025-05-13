@@ -1,8 +1,8 @@
 package com.capstone2025.team4.backend.controller;
 
 import com.capstone2025.team4.backend.controller.api.ApiResponse;
-import com.capstone2025.team4.backend.controller.dto.element.request.UpdateElementRequest;
-import com.capstone2025.team4.backend.controller.dto.element.request.UpdateSpatialRequest;
+import com.capstone2025.team4.backend.controller.api.element.request.UpdateElementRequest;
+import com.capstone2025.team4.backend.controller.api.element.request.UpdateSpatialRequest;
 import com.capstone2025.team4.backend.domain.element.Element;
 import com.capstone2025.team4.backend.domain.element.Image;
 import com.capstone2025.team4.backend.domain.element.TextBox;
@@ -19,6 +19,7 @@ import com.capstone2025.team4.backend.security.jwt.JwtService;
 import com.capstone2025.team4.backend.mock.WithCustomMockUser;
 import com.capstone2025.team4.backend.repository.element.ElementRepository;
 import com.capstone2025.team4.backend.service.design.ElementService;
+import com.capstone2025.team4.backend.service.dto.FileDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.io.FileInputStream;
 import java.lang.reflect.Field;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -199,7 +202,7 @@ class ElementControllerTest {
     void getFileSuccess() throws Exception {
         //given
         given(elementRepository.findById(1L)).willReturn(Optional.of(createFileElement(true)));
-        given(s3Service.findByUrl("tempUrl")).willReturn(S3Entity.builder().url("tempUrl").s3Key("s3Key").originalFileName("fileName").build());
+        given(s3Service.findByUrl("tempUrl")).willReturn(FileDTO.builder().fileBytes("tempFile".getBytes(StandardCharsets.UTF_8)).fileName("fileName").build());
 
         //when
         ResultActions resultActions = mockMvc.perform(
@@ -216,7 +219,7 @@ class ElementControllerTest {
     void getFileBadArg() throws Exception {
         //given
         given(elementRepository.findById(1L)).willReturn(Optional.of(createFileElement(true)));
-        given(s3Service.findByUrl("tempUrl")).willReturn(S3Entity.builder().url("tempUrl").s3Key("s3Key").originalFileName("fileName").build());
+        given(s3Service.findByUrl("tempUrl")).willReturn(FileDTO.builder().fileBytes("tempFile".getBytes(StandardCharsets.UTF_8)).fileName("fileName").build());
 
         //when
         ResultActions resultActions = mockMvc.perform(
@@ -262,11 +265,9 @@ class ElementControllerTest {
                 .build();
 
         Spatial spatial = mock(Spatial.class);
-        given(spatial.getContent()).willReturn("tempUrl");
         given(spatial.getCameraMode()).willReturn(CameraMode.FREE);
 
         given(elementService.updateSpatial(
-                any(),
                 any(),
                 any(),
                 any(),
@@ -279,7 +280,6 @@ class ElementControllerTest {
         request.setElementId(1L);
         request.setCameraMode(CameraMode.FREE);
         request.setCameraTransform(cameraTransform);
-        request.setContent("tempUrl");
         request.setBackgroundColor("#ffffff");
 
         // when
@@ -312,7 +312,6 @@ class ElementControllerTest {
         request.setElementId(1L);
         request.setCameraMode(CameraMode.FREE);
         request.setCameraTransform(cameraTransform);
-        request.setContent("tempUrl");
         request.setBackgroundColor("#ffffff");
 
         // when
@@ -338,7 +337,7 @@ class ElementControllerTest {
     private Element createFileElement(boolean isFIle) {
         if (isFIle) {
             return Image.builder()
-                    .content("tempUrl")
+                    .url("tempUrl")
                     .build();
         } else {
             return TextBox.builder()

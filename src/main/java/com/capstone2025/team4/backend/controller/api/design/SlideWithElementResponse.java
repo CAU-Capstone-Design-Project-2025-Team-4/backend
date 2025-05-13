@@ -1,6 +1,6 @@
-package com.capstone2025.team4.backend.controller.dto.design;
+package com.capstone2025.team4.backend.controller.api.design;
 
-import com.capstone2025.team4.backend.controller.dto.element.response.ElementResponse;
+import com.capstone2025.team4.backend.controller.api.element.response.ElementResponse;
 import com.capstone2025.team4.backend.domain.design.Slide;
 import com.capstone2025.team4.backend.domain.element.Element;
 import lombok.Getter;
