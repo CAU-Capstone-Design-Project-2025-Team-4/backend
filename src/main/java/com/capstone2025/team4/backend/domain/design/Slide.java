@@ -28,7 +28,7 @@ public class Slide {
     @JoinColumn(name = "design_id")
     private Design design;
 
-    @OneToMany(mappedBy = "slide", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "slide", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Element> slideElementList = new ArrayList<>();
 
     @Builder

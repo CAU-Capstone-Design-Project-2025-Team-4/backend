@@ -4,10 +4,3 @@ spring:
 
   config:
     import: classpath:private/dev_config.yml
-
-  jpa:
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        format_sql: true
