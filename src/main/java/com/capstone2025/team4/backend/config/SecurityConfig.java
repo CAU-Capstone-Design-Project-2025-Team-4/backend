@@ -50,11 +50,10 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         //리소스를 허용할 URL 지정
-        ArrayList<String> allowedOriginPatterns = new ArrayList<>();
-        allowedOriginPatterns.add("http://localhost:5000");
-        allowedOriginPatterns.add("http://your-frontend-domain.com");
-        configuration.setAllowedOrigins(allowedOriginPatterns);
-        configuration.setAllowedOrigins(allowedOriginPatterns);
+        ArrayList<String> allowedOrigins = new ArrayList<>();
+        allowedOrigins.add("http://localhost:5173");
+//        allowedOrigins.add("http://your-frontend-domain.com");
+        configuration.setAllowedOrigins(allowedOrigins);
 
         //허용하는 HTTP METHOD 지정
         ArrayList<String> allowedHttpMethods = new ArrayList<>();
