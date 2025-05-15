@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class ModelResponse {
     private Long id;
     private String url;
+    private String name;
     private ModelShader shader;
     private ModelTransform modelTransform;
 
@@ -21,6 +22,7 @@ public class ModelResponse {
    public static ModelResponse createForm(Model model) {
        ModelResponse modelResponse = new ModelResponse();
        modelResponse.id = model.getId();
+       modelResponse.name = model.getName();
        modelResponse.url = model.getUrl();
        modelResponse.shader = model.getShader();
        modelResponse.modelTransform = model.getModelTransform();

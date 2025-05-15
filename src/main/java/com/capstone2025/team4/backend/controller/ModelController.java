@@ -3,6 +3,7 @@ package com.capstone2025.team4.backend.controller;
 import com.capstone2025.team4.backend.controller.api.ApiResponse;
 import com.capstone2025.team4.backend.controller.api.model.AddModelRequest;
 import com.capstone2025.team4.backend.controller.api.model.ModelResponse;
+import com.capstone2025.team4.backend.controller.api.model.UpdateModelRequest;
 import com.capstone2025.team4.backend.domain.element.model.Model;
 import com.capstone2025.team4.backend.service.design.ModelService;
 import com.capstone2025.team4.backend.service.dto.FileDTO;
@@ -55,7 +56,7 @@ public class ModelController {
     @PostMapping
     public ApiResponse<ModelResponse> addModel(@Valid @ModelAttribute AddModelRequest request) {
         Model model = modelService.addModel(request.getSpatialId(), request.getUserId(), request.getFile(), request.getName(), request.getShader(), request.getModelTransform());
-        return ApiResponse.success(new ModelResponse(model.getId(), model.getUrl()));
+        return ApiResponse.success(ModelResponse.createForm(model));
     }
 
     @DeleteMapping("/{modelId}")
@@ -65,5 +66,8 @@ public class ModelController {
     }
 
     @PatchMapping
-    public ApiResponse<ModelResponse>
+    public ApiResponse<ModelResponse> update(@Valid @RequestBody UpdateModelRequest request) {
+        Model model = modelService.update(request.getModelId(), request.getSpatialId(), request.getUserId(), request.getName(), request.getShader(), request.getModelTransform());
+        return ApiResponse.success(ModelResponse.createForm(model));
+    }
 }
