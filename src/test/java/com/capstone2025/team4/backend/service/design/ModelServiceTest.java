@@ -8,7 +8,7 @@ import com.capstone2025.team4.backend.domain.element.model.ModelShader;
 import com.capstone2025.team4.backend.domain.element.model.ModelTransform;
 import com.capstone2025.team4.backend.domain.element.spatial.Spatial;
 import com.capstone2025.team4.backend.infra.aws.S3Service;
-import com.capstone2025.team4.backend.repository.ModelRepository;
+import com.capstone2025.team4.backend.repository.model.ModelRepository;
 import com.capstone2025.team4.backend.repository.element.ElementRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;

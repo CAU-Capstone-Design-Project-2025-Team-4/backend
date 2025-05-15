@@ -7,7 +7,7 @@ import com.capstone2025.team4.backend.domain.element.spatial.Spatial;
 import com.capstone2025.team4.backend.exception.element.ElementFileNotFound;
 import com.capstone2025.team4.backend.exception.element.ElementNotFound;
 import com.capstone2025.team4.backend.infra.aws.S3Service;
-import com.capstone2025.team4.backend.repository.ModelRepository;
+import com.capstone2025.team4.backend.repository.model.ModelRepository;
 import com.capstone2025.team4.backend.repository.element.ElementRepository;
 import com.capstone2025.team4.backend.service.dto.FileDTO;
 import com.capstone2025.team4.backend.utils.StringChecker;
