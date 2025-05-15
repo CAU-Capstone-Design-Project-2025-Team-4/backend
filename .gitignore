@@ -38,3 +38,6 @@ out/
 
 ### Profile files ###
 /src/main/resources/private/
+
+### .env ###
+.env
