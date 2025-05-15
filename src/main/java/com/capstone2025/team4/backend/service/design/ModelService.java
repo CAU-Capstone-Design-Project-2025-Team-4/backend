@@ -6,6 +6,7 @@ import com.capstone2025.team4.backend.domain.element.model.ModelTransform;
 import com.capstone2025.team4.backend.domain.element.spatial.Spatial;
 import com.capstone2025.team4.backend.exception.element.ElementFileNotFound;
 import com.capstone2025.team4.backend.exception.element.ElementNotFound;
+import com.capstone2025.team4.backend.exception.model.ModelNotFound;
 import com.capstone2025.team4.backend.infra.aws.S3Service;
 import com.capstone2025.team4.backend.repository.model.ModelRepository;
 import com.capstone2025.team4.backend.repository.element.ElementRepository;
@@ -71,5 +72,12 @@ public class ModelService {
         String url = model.getUrl();
         s3Service.delete(url);
         modelRepository.delete(model);
+    }
+
+    public Model update(Long modelId, Long spatialId, Long userId, String name, ModelShader shader, ModelTransform modelTransform) {
+        Model model = modelRepository.findByIdAndSpatialAndUser(modelId, spatialId, userId)
+                .orElseThrow(ModelNotFound::new);
+        model.update(name, shader, modelTransform);
+        return model;
     }
 }

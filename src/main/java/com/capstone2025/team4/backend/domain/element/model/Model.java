@@ -41,4 +41,9 @@ public class Model {
         return copy;
     }
 
+    public void update(String name, ModelShader shader, ModelTransform modelTransform) {
+        this.name = name;
+        this.shader = shader;
+        this.modelTransform = modelTransform;
+    }
 }
