@@ -63,4 +63,7 @@ public class ModelController {
         modelService.delete(modelId);
         return ApiResponse.success("OK");
     }
+
+    @PatchMapping
+    public ApiResponse<ModelResponse>
 }
