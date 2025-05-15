@@ -7,7 +7,7 @@ import com.capstone2025.team4.backend.domain.element.*;
 import com.capstone2025.team4.backend.domain.element.border.BorderRef;
 import com.capstone2025.team4.backend.domain.element.spatial.CameraMode;
 import com.capstone2025.team4.backend.domain.element.spatial.CameraTransform;
-import com.capstone2025.team4.backend.domain.element.spatial.Model;
+import com.capstone2025.team4.backend.domain.element.model.Model;
 import com.capstone2025.team4.backend.domain.element.spatial.Spatial;
 import com.capstone2025.team4.backend.exception.element.ElementNotFound;
 import com.capstone2025.team4.backend.exception.slide.SlideNotFound;

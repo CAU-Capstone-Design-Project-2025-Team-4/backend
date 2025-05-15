@@ -3,7 +3,7 @@ package com.capstone2025.team4.backend.controller;
 import com.capstone2025.team4.backend.controller.api.ApiResponse;
 import com.capstone2025.team4.backend.controller.api.model.AddModelRequest;
 import com.capstone2025.team4.backend.controller.api.model.ModelResponse;
-import com.capstone2025.team4.backend.domain.element.spatial.Model;
+import com.capstone2025.team4.backend.domain.element.model.Model;
 import com.capstone2025.team4.backend.service.design.ModelService;
 import com.capstone2025.team4.backend.service.dto.FileDTO;
 import jakarta.validation.Valid;
@@ -54,7 +54,7 @@ public class ModelController {
 
     @PostMapping
     public ApiResponse<ModelResponse> addModel(@Valid @ModelAttribute AddModelRequest request) {
-        Model model = modelService.addModel(request.getSpatialId(), request.getUserId(), request.getFile());
+        Model model = modelService.addModel(request.getSpatialId(), request.getUserId(), request.getFile(), request.getName(), request.getShader(), request.getModelTransform());
         return ApiResponse.success(new ModelResponse(model.getId(), model.getUrl()));
     }
 

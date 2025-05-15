@@ -1,6 +1,7 @@
 package com.capstone2025.team4.backend.domain.element.spatial;
 
 import com.capstone2025.team4.backend.domain.element.Element;
+import com.capstone2025.team4.backend.domain.element.model.Model;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

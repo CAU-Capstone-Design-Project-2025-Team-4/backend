@@ -1,6 +1,6 @@
 package com.capstone2025.team4.backend.controller.api.model;
 
-import com.capstone2025.team4.backend.domain.element.spatial.Model;
+import com.capstone2025.team4.backend.domain.element.model.Model;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

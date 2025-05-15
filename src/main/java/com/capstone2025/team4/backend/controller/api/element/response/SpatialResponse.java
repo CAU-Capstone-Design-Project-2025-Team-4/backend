@@ -4,7 +4,7 @@ import com.capstone2025.team4.backend.controller.api.model.ModelResponse;
 import com.capstone2025.team4.backend.controller.api.element.ElementType;
 import com.capstone2025.team4.backend.domain.element.spatial.CameraMode;
 import com.capstone2025.team4.backend.domain.element.spatial.CameraTransform;
-import com.capstone2025.team4.backend.domain.element.spatial.Model;
+import com.capstone2025.team4.backend.domain.element.model.Model;
 import com.capstone2025.team4.backend.domain.element.spatial.Spatial;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

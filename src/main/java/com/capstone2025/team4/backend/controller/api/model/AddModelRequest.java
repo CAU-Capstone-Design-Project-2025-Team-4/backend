@@ -1,5 +1,7 @@
 package com.capstone2025.team4.backend.controller.api.model;
 
+import com.capstone2025.team4.backend.domain.element.model.ModelShader;
+import com.capstone2025.team4.backend.domain.element.model.ModelTransform;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,4 +19,12 @@ public class AddModelRequest {
     private Long userId;
     @NotNull(message = "파일은 필수입니다")
     private MultipartFile file;
+
+    private String name;
+
+    @NotNull(message = "세이더 정보는 필수입니다")
+    private ModelShader shader;
+
+    @NotNull(message = "모델의 위치, 회전, 크기 정보는 필수입니다")
+    private ModelTransform modelTransform;
 }

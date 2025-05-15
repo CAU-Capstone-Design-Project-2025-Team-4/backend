@@ -1,6 +1,8 @@
 package com.capstone2025.team4.backend.service.design;
 
-import com.capstone2025.team4.backend.domain.element.spatial.Model;
+import com.capstone2025.team4.backend.domain.element.model.Model;
+import com.capstone2025.team4.backend.domain.element.model.ModelShader;
+import com.capstone2025.team4.backend.domain.element.model.ModelTransform;
 import com.capstone2025.team4.backend.domain.element.spatial.Spatial;
 import com.capstone2025.team4.backend.exception.element.ElementFileNotFound;
 import com.capstone2025.team4.backend.exception.element.ElementNotFound;
@@ -32,6 +34,7 @@ public class ModelService {
         return model;
     }
 
+    @Transactional(readOnly = true)
     public FileDTO getFile(Long modelId) {
         Optional<Model> optionalModel = modelRepository.findById(modelId);
         if (optionalModel.isEmpty()) {
@@ -47,12 +50,15 @@ public class ModelService {
         return s3Service.findByUrl(s3Url);
     }
 
-    public Model addModel(Long spatialId, Long userId, MultipartFile file) {
+    public Model addModel(Long spatialId, Long userId, MultipartFile file, String name, ModelShader shader, ModelTransform modelTransform) {
         Spatial spatialElement = elementRepository.findSpatialById(spatialId, userId)
                 .orElseThrow(ElementNotFound::new);
         String s3Url = s3Service.upload(file);
         Model model = Model.builder()
                 .url(s3Url)
+                .name(name)
+                .modelTransform(modelTransform)
+                .shader(shader)
                 .build();
         spatialElement.addModel(model);
 
