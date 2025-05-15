@@ -1,6 +1,25 @@
 spring:
   application:
     name: backend
-
   config:
-    import: classpath:private/dev_config.yml
+    import:
+      - optional:file:./.env[.properties]
+      - classpath:dev/dev_config.yml
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  cloud:
+    aws:
+      credentials:
+        access-key: ${AWS_ACCESS_KEY}
+        secret-key: ${AWS_SECRET_KEY}
+      region:
+        static: ${AWS_REGION_STATIC}
+      s3:
+        bucket: ${AWS_S3_BUCKET}
+
+jwt:
+  secret:
+    key: ${JWT_SECRET_KEY}
