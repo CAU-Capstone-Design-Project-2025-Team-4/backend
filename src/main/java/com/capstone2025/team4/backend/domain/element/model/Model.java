@@ -38,6 +38,10 @@ public class Model {
     public Model copy() {
         Model copy = new Model();
         copy.url = this.url;
+        copy.name = this.name;
+        copy.url = this.url;
+        copy.shader = this.shader;
+        copy.modelTransform = this.modelTransform.copy();
         return copy;
     }
 

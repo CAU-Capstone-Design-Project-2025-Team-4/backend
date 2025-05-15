@@ -39,4 +39,12 @@ public class ModelTransform {
         this.rotation = rotation;
         this.scale = scale;
     }
+
+    public ModelTransform copy() {
+        ModelTransform copy = new ModelTransform();
+        copy.position = this.position.copy();
+        copy.rotation = this.rotation.copy();
+        copy.scale = this.scale.copy();
+        return copy;
+    }
 }

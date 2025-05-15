@@ -18,4 +18,12 @@ public class Vector3 {
         this.y = y;
         this.z = z;
     }
+
+    public Vector3 copy() {
+        Vector3 copy = new Vector3();
+        copy.x = this.x;
+        copy.y = this.y;
+        copy.z = this.z;
+        return copy;
+    }
 }

@@ -37,17 +37,15 @@ public class Spatial extends Element {
         return new Spatial();
     }
 
-    /**
-     * spatial의 속성만 copy한다.
-     * 모델 copy는 별도로 진행해야 된다
-     * @param copy
-     */
     @Override
     protected void copyElementFields(Element copy) {
         Spatial spatialCopy = (Spatial) copy;
         spatialCopy.cameraMode = this.cameraMode;
         spatialCopy.cameraTransform = this.cameraTransform.copy();
         spatialCopy.backgroundColor = this.backgroundColor;
+        for (Model model : models) {
+            spatialCopy.models.add(model.copy());
+        }
     }
 
     public void update(CameraMode cameraMode, CameraTransform cameraTransform, String backgroundColor) {
