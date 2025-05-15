@@ -1,15 +1,18 @@
 spring:
   application:
     name: backend
+
   config:
     import:
       - optional:file:./.env[.properties]
       - classpath:dev/dev_config.yml
+
   datasource:
     url: ${DATABASE_URL}
     username: ${DATABASE_USER}
     password: ${DATABASE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   cloud:
     aws:
       credentials:
@@ -23,3 +26,6 @@ spring:
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}
+
+server:
+  port: ${SERVER_PORT}
