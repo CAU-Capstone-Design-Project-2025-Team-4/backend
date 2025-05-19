@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -30,11 +31,15 @@ public class DesignService {
     private final SlideService slideService;
 
     // 디자인을 만들때, 공유된걸 가지고 만든다면 공유 불가
-    public Design createNewDesign(Long creatorId, Long sourceDesignId, boolean shared) {
+    public Design createNewDesign(String designName, Long creatorId, Long sourceDesignId, boolean shared) {
         User creator = userService.getUser(creatorId);
 
         Workspace workspace = getWorkspace(creator);
         log.debug("[CREATING NEW DESIGN] Workspace id = {}, user = {}", workspace.getId(), creator.getEmail());
+
+        if (designName == null) {
+            designName = UUID.randomUUID().toString();
+        }
 
         if (sourceDesignId != null) {
             Optional<Design> sourceDesignOptional = designRepository.findById(sourceDesignId);
@@ -48,19 +53,20 @@ public class DesignService {
             }
 
             log.debug("[CREATING NEW DESIGN] From Source(id = {})", source.getId());
-            Design newDesignFromSource = createNewDesignFromSource(creator, workspace, source);
+            Design newDesignFromSource = createNewDesignFromSource(designName, creator, workspace, source);
             designRepository.save(newDesignFromSource);
             log.debug("[CREATING NEW DESIGN] From Source(id = {}) Success!", source.getId());
             return newDesignFromSource;
         }
 
-        return newDesignScratch(creator, workspace, shared);
+        return newDesignScratch(designName, creator, workspace, shared);
     }
 
-    private Design newDesignScratch(User creator, Workspace workspace, Boolean shared) {
+    private Design newDesignScratch(String designName, User creator, Workspace workspace, Boolean shared) {
 
         log.debug("[CREATING NEW DESIGN] Success!");
         Design newDesign = Design.builder()
+                .name(designName)
                 .user(creator)
                 .workspace(workspace)
                 .shared(shared)
@@ -71,11 +77,12 @@ public class DesignService {
         return newDesign;
     }
 
-    private Design createNewDesignFromSource(User creator, Workspace workspace, Design source) {
+    private Design createNewDesignFromSource(String designName, User creator, Workspace workspace, Design source) {
 
         List<Slide> newSlideList = new ArrayList<>();
 
         Design newDesign = Design.builder()
+                .name(designName)
                 .user(creator)
                 .workspace(workspace)
                 .source(source)

@@ -21,6 +21,8 @@ public class Design {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;
@@ -54,7 +56,8 @@ public class Design {
     }
 
     @Builder
-    private Design(Workspace workspace, User user, Boolean shared, Design source, List<Slide> slideList) {
+    private Design(String name, Workspace workspace, User user, Boolean shared, Design source, List<Slide> slideList) {
+        this.name = name;
         this.workspace = workspace;
         this.user = user;
         this.shared = shared;

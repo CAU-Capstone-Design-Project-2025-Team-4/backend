@@ -48,8 +48,8 @@ class DesignControllerTest {
     @Test
     void newDesignBadArgs() throws Exception {
         //given
-        NewDesignRequest noUserIdRequest = new NewDesignRequest(null, null, false);
-        NewDesignRequest noShareFlagRequest = new NewDesignRequest(1L, null, null);
+        NewDesignRequest noUserIdRequest = new NewDesignRequest(null, "designName", null, false);
+        NewDesignRequest noShareFlagRequest = new NewDesignRequest(1L, "designName", null, null);
 
         //when
         ResultActions noUserIdResultActions = mockMvc.perform(
@@ -79,8 +79,8 @@ class DesignControllerTest {
     @Test
     void newDesignSuccess() throws Exception {
         //given
-        NewDesignRequest request= new NewDesignRequest(1L, null, false);
-        given(designService.createNewDesign(1L, null, false)).willReturn(createDesign());
+        NewDesignRequest request= new NewDesignRequest(1L, "designName", null, false);
+        given(designService.createNewDesign("designName", 1L, null, false)).willReturn(createDesign());
 
         //when
         ResultActions resultActions = mockMvc.perform(

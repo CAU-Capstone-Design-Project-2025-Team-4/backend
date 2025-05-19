@@ -21,7 +21,7 @@ public class DesignController {
 
     @PostMapping
     public ApiResponse<DesignLongResponse> newDesign(@Valid @RequestBody NewDesignRequest request) {
-        Design newDesign = designService.createNewDesign(request.getUserId(), request.getSourceId(), request.getIsShared());
+        Design newDesign = designService.createNewDesign(request.getName(), request.getUserId(), request.getSourceId(), request.getIsShared());
 
         return ApiResponse.success(new DesignLongResponse(newDesign));
     }

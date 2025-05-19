@@ -10,6 +10,8 @@ public class NewDesignRequest {
     @NotNull(message = "유저 정보는 필수입니다")
     private Long userId;
 
+    private String name;
+
     private Long sourceId;
 
     @NotNull(message = "공유인지 아닌지 선택해주세요")

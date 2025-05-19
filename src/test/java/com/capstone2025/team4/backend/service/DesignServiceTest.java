@@ -51,12 +51,12 @@ class DesignServiceTest {
         em.clear();
 
         // when
-        Design succeed = designService.createNewDesign(userWithWorkspace.getId(), null, false);
+        Design succeed = designService.createNewDesign("designName", userWithWorkspace.getId(), null, false);
 
         // then
         assertThat(succeed.getId()).isNotNull();
 
-        assertThrowsExactly(RuntimeException.class, () -> designService.createNewDesign(userWithoutWorkspace.getId(), null, false), "워크스페이스 없는 사용자가 디자인을 생성했으나 예외가 발생하지 않음");
+        assertThrowsExactly(RuntimeException.class, () -> designService.createNewDesign("designName", userWithoutWorkspace.getId(), null, false), "워크스페이스 없는 사용자가 디자인을 생성했으나 예외가 발생하지 않음");
     }
 
     @Test
@@ -76,6 +76,7 @@ class DesignServiceTest {
         List<Slide> slideList = new ArrayList<>();
 
         Design sourceDesign = Design.builder()
+                .name("sourceName")
                 .user(testUser)
                 .workspace(testWorkspace)
                 .slideList(slideList)
@@ -98,12 +99,13 @@ class DesignServiceTest {
         em.clear();
 
         //when
-        Design newDesign = designService.createNewDesign(testUser.getId(), sourceDesign.getId(), false);
+        Design newDesign = designService.createNewDesign("designName", testUser.getId(), sourceDesign.getId(), false);
 
         //then
         assertThat(newDesign.getSlideList().size()).isEqualTo(sourceDesign.getSlideList().size());
         assertThat(newDesign.getSlideList().getFirst().getId()).isNotEqualTo(s1.getId());
         assertThat(newDesign.getSlideList().getFirst().getSlideElementList().size()).isEqualTo(sourceDesign.getSlideList().getFirst().getSlideElementList().size());
+        assertThat(newDesign.getName()).isEqualTo("designName");
     }
 
     @Test
@@ -116,6 +118,7 @@ class DesignServiceTest {
         Workspace testWorkspace = new Workspace(testUser);
 
         Design sourceDesign = Design.builder()
+                .name("sourceName")
                 .user(testUser)
                 .workspace(testWorkspace)
                 .shared(false)
@@ -131,7 +134,7 @@ class DesignServiceTest {
         //when
 
         //then
-        assertThrowsExactly(DesignNotShared.class, () -> {designService.createNewDesign(testUser.getId(), sourceDesign.getId(), false);});
+        assertThrowsExactly(DesignNotShared.class, () -> {designService.createNewDesign("designName", testUser.getId(), sourceDesign.getId(), false);});
     }
 
     @Test
@@ -150,12 +153,13 @@ class DesignServiceTest {
         em.clear();
 
         //when
-        Design succeed = designService.createNewDesign(testUser.getId(), null, false);
+        Design succeed = designService.createNewDesign("designName", testUser.getId(), null, false);
 
         //then
         assertThat(succeed.getId()).isNotNull();
         assertThat(succeed.getWorkspace().getId()).isEqualTo(testWorkspace.getId());
         assertThat(succeed.getSlideList().size()).isEqualTo(1);
+        assertThat(succeed.getName()).isEqualTo("designName");
     }
 
     @Test
