@@ -37,6 +37,8 @@ public class Design {
 
     private LocalDateTime createdAt;
 
+    private LocalDateTime updatedAt;
+
     @OneToMany(mappedBy = "design", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @OrderColumn(name = "slide_order")
     private List<Slide> slideList = new ArrayList<>();
@@ -44,6 +46,11 @@ public class Design {
     @PrePersist
     public void prePersist() {
         createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 
     @Builder
