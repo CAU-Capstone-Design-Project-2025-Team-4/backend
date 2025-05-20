@@ -10,6 +10,7 @@ public class NewDesignRequest {
     @NotNull(message = "유저 정보는 필수입니다")
     private Long userId;
 
+    @NotNull(message = "디자인 이름은 필수입니다")
     private String name;
 
     private Long sourceId;

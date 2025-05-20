@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -36,10 +35,6 @@ public class DesignService {
 
         Workspace workspace = getWorkspace(creator);
         log.debug("[CREATING NEW DESIGN] Workspace id = {}, user = {}", workspace.getId(), creator.getEmail());
-
-        if (designName == null) {
-            designName = UUID.randomUUID().toString();
-        }
 
         if (sourceDesignId != null) {
             Optional<Design> sourceDesignOptional = designRepository.findById(sourceDesignId);
