@@ -6,6 +6,7 @@ import com.capstone2025.team4.backend.domain.design.Design;
 import com.capstone2025.team4.backend.domain.design.Slide;
 import com.capstone2025.team4.backend.domain.element.Element;
 import com.capstone2025.team4.backend.exception.design.DesignNotShared;
+import com.capstone2025.team4.backend.exception.file.FileIsEmpty;
 import com.capstone2025.team4.backend.exception.slide.SlideNotFound;
 import com.capstone2025.team4.backend.exception.slide.SlideOrderDuplicate;
 import com.capstone2025.team4.backend.exception.user.UserNotAllowedDesign;
@@ -81,6 +82,8 @@ public class SlideService {
             elementRepository.save(copy);
         }
 
+        destSlide.changeThumbnail(srcSlide.getThumbnail());
+
         return destSlide;
     }
 
@@ -96,5 +99,21 @@ public class SlideService {
         }
 
         slideRepository.deleteById(slideId);
+    }
+
+    public Slide changeThumbnail(Long userId, Long designId, Long slideId, byte[] image) {
+        Optional<Slide> optionalSlide = slideRepository.findByIdAndDesignIdAndUserId(slideId, designId, userId);
+        if (optionalSlide.isEmpty()) {
+            throw new SlideNotFound();
+        }
+
+        Slide slide = optionalSlide.get();
+
+        if (image.length == 0) {
+            throw new FileIsEmpty();
+        }
+
+        slide.changeThumbnail(image);
+        return slide;
     }
 }

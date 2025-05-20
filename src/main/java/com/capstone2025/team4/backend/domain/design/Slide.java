@@ -31,11 +31,18 @@ public class Slide {
     @OneToMany(mappedBy = "slide", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Element> slideElementList = new ArrayList<>();
 
+    @Lob
+    private byte[] thumbnail;
+
     @Builder
-    private Slide(Integer order, Design design, List<Element> slideElementList) {
+    private Slide(Integer order, Design design, List<Element> slideElementList, byte[] thumbnail) {
         this.order = order;
         this.design = design;
         this.slideElementList = slideElementList;
+        this.thumbnail = thumbnail;
     }
 
+    public void changeThumbnail(byte[] image) {
+        this.thumbnail = image;
+    }
 }

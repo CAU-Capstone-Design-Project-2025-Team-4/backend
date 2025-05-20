@@ -84,7 +84,7 @@ class SlideServiceTest {
                 .shared(true)
                 .build();
 
-        Slide s1 = Slide.builder().slideElementList(slideElementList).design(sourceDesign).build();
+        Slide s1 = Slide.builder().slideElementList(slideElementList).design(sourceDesign).thumbnail(new byte[]{0,1,0}).build();
         slideList.add(s1);
         e1.addToSlide(s1);
         e2.addToSlide(s1);
@@ -117,6 +117,7 @@ class SlideServiceTest {
         assertThat(destSlideCopied.getSlideElementList()).isNotNull();
         assertThat(destSlideCopied.getSlideElementList().size()).isEqualTo(s1.getSlideElementList().size());
         assertThat(destSlideCopied.getSlideElementList()).doesNotContain(e1, e2);
+        assertThat(destSlideCopied.getThumbnail()).containsExactly(0, 1, 0);
     }
 
     @Test
@@ -150,5 +151,37 @@ class SlideServiceTest {
         assertThat(allInDesign).isNotNull();
         assertThat(allInDesign).isNotEmpty();
         assertThat(allInDesign.size()).isEqualTo(2);
+    }
+
+    @Test
+    void changeThumbnail(){
+        //given
+        User user = User.builder().build();
+
+        Design design = Design.builder()
+                .user(user)
+                .build();
+
+        Slide s1 = Slide.builder()
+                .design(design)
+                .thumbnail(new byte[]{0,1,2})
+                .build();
+
+        em.persist(user);
+        em.persist(design);
+        em.persist(s1);
+
+        em.flush();
+        em.clear();
+
+        //when
+        Slide updatedSlide = slideService.changeThumbnail(user.getId(), design.getId(), s1.getId(), new byte[]{7, 7, 7});
+        em.flush();
+        em.clear();
+        Slide foundSlide = em.find(Slide.class, updatedSlide.getId());
+
+        //then
+        assertThat(updatedSlide.getThumbnail()).containsExactly(7, 7, 7);
+        assertThat(foundSlide.getThumbnail()).containsExactly(7, 7, 7);
     }
 }
