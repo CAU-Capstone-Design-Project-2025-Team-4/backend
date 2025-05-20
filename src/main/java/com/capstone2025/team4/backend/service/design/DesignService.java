@@ -7,6 +7,7 @@ import com.capstone2025.team4.backend.domain.element.Element;
 import com.capstone2025.team4.backend.exception.design.DesignNotFound;
 import com.capstone2025.team4.backend.exception.design.DesignNotShared;
 import com.capstone2025.team4.backend.exception.design.DesignSourceNotFound;
+import com.capstone2025.team4.backend.exception.file.FileIsEmpty;
 import com.capstone2025.team4.backend.repository.*;
 import com.capstone2025.team4.backend.repository.design.DesignRepository;
 import com.capstone2025.team4.backend.service.UserService;
@@ -153,6 +154,22 @@ public class DesignService {
         Design design = optionalDesign.get();
         design.changeName(name);
 
+        return design;
+    }
+
+    public Design changeThumbnail(Long userId, Long designId, byte[] image) {
+        Optional<Design> optionalDesign = designRepository.findByIdAndUserId(designId, userId);
+        if (optionalDesign.isEmpty()) {
+            throw new DesignNotFound();
+        }
+
+        Design design = optionalDesign.get();
+
+        if (image.length == 0) {
+            throw new FileIsEmpty();
+        }
+
+        design.changeThumbnail(image);
         return design;
     }
 }

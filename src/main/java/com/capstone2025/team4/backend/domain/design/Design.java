@@ -45,6 +45,9 @@ public class Design {
     @OrderColumn(name = "slide_order")
     private List<Slide> slideList = new ArrayList<>();
 
+    @Lob
+    private byte[] thumbnail;
+
     @PrePersist
     public void prePersist() {
         createdAt = LocalDateTime.now();
@@ -69,5 +72,9 @@ public class Design {
 
     public void changeName(String name) {
         this.name = name;
+    }
+
+    public void changeThumbnail(byte[] image) {
+        this.thumbnail = image;
     }
 }

@@ -14,6 +14,7 @@ public class DesignShortResponse {
     private LocalDateTime createdAt;
     private String name;
     private LocalDateTime updatedAt;
+    private byte[] thumbnail;
 
     public DesignShortResponse(Design design) {
         this.id = design.getId();
@@ -21,5 +22,6 @@ public class DesignShortResponse {
         this.createdAt = design.getCreatedAt();
         this.name = design.getName();
         this.updatedAt = design.getUpdatedAt();
+        this.thumbnail = design.getThumbnail();
     }
 }

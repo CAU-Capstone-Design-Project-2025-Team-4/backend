@@ -251,4 +251,34 @@ class DesignServiceTest {
         assertThat(updatedDesign.getName()).isEqualTo(newName);
         assertThat(foundAfterUpdate.getName()).isEqualTo(newName);
     }
+
+    @Test
+    void changeThumbnail(){
+        //given
+        byte[] bytes = new byte[]{0,1,0};
+        User testUser = User.builder()
+                .email("test@example.com")
+                .build();
+
+        Design design = Design.builder()
+                .name("originalName")
+                .user(testUser)
+                .build();
+
+        em.persist(testUser);
+        em.persist(design);
+
+        em.flush();
+        em.clear();
+
+        //when
+        Design updated = designService.changeThumbnail(testUser.getId(), design.getId(), bytes);
+        em.flush();
+        em.clear();
+        Design foundAfterUpdate = designService.findDesign(updated.getId());
+
+        //then
+        assertThat(updated.getThumbnail()).containsExactly(0, 1, 0);
+        assertThat(foundAfterUpdate.getThumbnail()).containsExactly(0, 1, 0);
+    }
 }

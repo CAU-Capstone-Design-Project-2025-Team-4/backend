@@ -1,19 +1,20 @@
 package com.capstone2025.team4.backend.controller;
 
 import com.capstone2025.team4.backend.controller.api.ApiResponse;
-import com.capstone2025.team4.backend.controller.api.design.ChangeDesignNameRequest;
-import com.capstone2025.team4.backend.controller.api.design.DesignLongResponse;
-import com.capstone2025.team4.backend.controller.api.design.DesignShortResponse;
-import com.capstone2025.team4.backend.controller.api.design.NewDesignRequest;
+import com.capstone2025.team4.backend.controller.api.design.*;
+import com.capstone2025.team4.backend.controller.api.model.UpdateModelRequest;
 import com.capstone2025.team4.backend.domain.design.Design;
 import com.capstone2025.team4.backend.service.design.DesignService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 
+@Slf4j
 @RestController
 @RequestMapping("/design")
 @RequiredArgsConstructor
@@ -40,9 +41,20 @@ public class DesignController {
         return ApiResponse.success("OK");
     }
 
-    @PatchMapping
+    @PatchMapping("/name")
     public ApiResponse<DesignShortResponse> changeName(@RequestBody ChangeDesignNameRequest request) {
         Design design = designService.changeName(request.getUserId(), request.getDesignId(), request.getName());
         return ApiResponse.success(new DesignShortResponse(design));
+    }
+
+    @PatchMapping("/thumbnail")
+    public ApiResponse<DesignShortResponse> updateThumbnail(@Valid @ModelAttribute UpdateDesignThumbnailRequest request) {
+        try {
+            Design design = designService.changeThumbnail(request.getUserId(), request.getDesignId(), request.getImage().getBytes());
+            return ApiResponse.success(new DesignShortResponse(design));
+        } catch (IOException e) {
+            log.error("이미지 바이트 배열을 처리하지 못함");
+            throw new RuntimeException(e);
+        }
     }
 }
