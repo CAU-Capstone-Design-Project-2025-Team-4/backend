@@ -1,6 +1,7 @@
 package com.capstone2025.team4.backend.repository.design;
 
 import com.capstone2025.team4.backend.domain.design.Design;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -21,4 +22,7 @@ public interface DesignRepository extends JpaRepository<Design, Long>, DesignRep
     boolean exists(Long designId, Long userId);
 
     Optional<Design> findByIdAndUserId(Long id, Long userId);
+
+    @EntityGraph(attributePaths = {"user"})
+    Optional<Design> findWithUserById(Long id);
 }

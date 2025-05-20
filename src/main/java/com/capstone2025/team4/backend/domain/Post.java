@@ -1,6 +1,6 @@
-package com.capstone2025.team4.backend.domain.post;
+package com.capstone2025.team4.backend.domain;
 
-import com.capstone2025.team4.backend.domain.User;
+import com.capstone2025.team4.backend.domain.design.Design;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,16 +19,17 @@ public class Post {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "designer_id")
-    private User designer;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private String title;
 
     @Lob
-    private String description;
+    private String content;
 
-    @Enumerated(EnumType.STRING)
-    private Category category;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "design_id")
+    private Design design;
 
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -39,10 +40,10 @@ public class Post {
     }
 
     @Builder
-    private Post(User designer, String title, String description, Category category) {
-        this.designer = designer;
+    private Post(User user, String title, String content, Design design) {
+        this.user = user;
         this.title = title;
-        this.description = description;
-        this.category = category;
+        this.content = content;
+        this.design = design;
     }
 }

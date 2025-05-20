@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface SlideRepository extends JpaRepository<Slide, Long> {
 
-    @EntityGraph(attributePaths = {"slideElementList"})
+     @EntityGraph(attributePaths = {"slideElementList"})
     Optional<Slide> findWithSlideElementListById(Long id);
 
     @Query("SELECT s FROM Slide s LEFT JOIN FETCH s.slideElementList JOIN FETCH s.design d WHERE d.id = :designId AND d.user.id = :userId")
