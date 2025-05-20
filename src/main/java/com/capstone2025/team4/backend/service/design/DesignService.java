@@ -143,4 +143,16 @@ public class DesignService {
 
         designRepository.deleteById(designId);
     }
+
+    public Design changeName(Long userId, Long designId, String name) {
+        Optional<Design> optionalDesign = designRepository.findByIdAndUserId(designId, userId);
+        if (optionalDesign.isEmpty()) {
+            throw new DesignNotFound();
+        }
+
+        Design design = optionalDesign.get();
+        design.changeName(name);
+
+        return design;
+    }
 }

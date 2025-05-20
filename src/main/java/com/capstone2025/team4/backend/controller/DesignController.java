@@ -1,6 +1,7 @@
 package com.capstone2025.team4.backend.controller;
 
 import com.capstone2025.team4.backend.controller.api.ApiResponse;
+import com.capstone2025.team4.backend.controller.api.design.ChangeDesignNameRequest;
 import com.capstone2025.team4.backend.controller.api.design.DesignLongResponse;
 import com.capstone2025.team4.backend.controller.api.design.DesignShortResponse;
 import com.capstone2025.team4.backend.controller.api.design.NewDesignRequest;
@@ -37,5 +38,11 @@ public class DesignController {
     public ApiResponse<String> delete(@RequestParam Long userId, @RequestParam Long designId) {
         designService.delete(userId, designId);
         return ApiResponse.success("OK");
+    }
+
+    @PatchMapping
+    public ApiResponse<DesignShortResponse> changeName(@RequestBody ChangeDesignNameRequest request) {
+        Design design = designService.changeName(request.getUserId(), request.getDesignId(), request.getName());
+        return ApiResponse.success(new DesignShortResponse(design));
     }
 }

@@ -12,10 +12,14 @@ public class DesignShortResponse {
     private Long id;
     private Boolean shared;
     private LocalDateTime createdAt;
+    private String name;
+    private LocalDateTime updatedAt;
 
     public DesignShortResponse(Design design) {
         this.id = design.getId();
         this.shared = design.getShared();
         this.createdAt = design.getCreatedAt();
+        this.name = design.getName();
+        this.updatedAt = design.getUpdatedAt();
     }
 }

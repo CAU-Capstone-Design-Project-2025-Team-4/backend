@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface DesignRepository extends JpaRepository<Design, Long>, DesignRepositoryCustom {
     List<Design> findAllByUserId(Long userId);
@@ -17,4 +18,7 @@ public interface DesignRepository extends JpaRepository<Design, Long>, DesignRep
                 WHERE d.id = :designId AND u.id = :userId
             )
             """)
-    boolean exists(Long designId, Long userId);}
+    boolean exists(Long designId, Long userId);
+
+    Optional<Design> findByIdAndUserId(Long id, Long userId);
+}

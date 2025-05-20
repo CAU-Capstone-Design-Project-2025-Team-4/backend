@@ -220,4 +220,35 @@ class DesignServiceTest {
         //then
         assertThrowsExactly(DesignNotFound.class, () -> designService.findDesign(design.getId()));
     }
+
+
+    @Test
+    void changeName(){
+        //given
+        final String newName = "newName";
+        User testUser = User.builder()
+                .email("test@example.com")
+                .build();
+
+        Design design = Design.builder()
+                .name("originalName")
+                .user(testUser)
+                .build();
+
+        em.persist(testUser);
+        em.persist(design);
+
+        em.flush();
+        em.clear();
+
+        //when
+        Design updatedDesign = designService.changeName(testUser.getId(), design.getId(), newName);
+        em.flush();
+        em.clear();
+        Design foundAfterUpdate = designService.findDesign(updatedDesign.getId());
+
+        //then
+        assertThat(updatedDesign.getName()).isEqualTo(newName);
+        assertThat(foundAfterUpdate.getName()).isEqualTo(newName);
+    }
 }
