@@ -22,6 +22,9 @@ spring:
         static: ${AWS_REGION_STATIC}
       s3:
         bucket: ${AWS_S3_BUCKET}
+  servlet:
+    multipart:
+      max-file-size: 50MB
 
 jwt:
   secret:
