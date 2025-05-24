@@ -5,7 +5,8 @@ import com.capstone2025.team4.backend.controller.api.post.AddPostRequest;
 import com.capstone2025.team4.backend.controller.api.post.PostResponse;
 import com.capstone2025.team4.backend.domain.Post;
 import com.capstone2025.team4.backend.service.PostService;
-import com.capstone2025.team4.backend.service.dto.PostDTO;
+import com.capstone2025.team4.backend.service.dto.PostFullDTO;
+import com.capstone2025.team4.backend.service.dto.PostSimpleDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +28,14 @@ public class PostController {
     }
 
     @GetMapping
-    public ApiResponse<Page<PostDTO>> searchPage(@RequestParam(required = false) Long userId, @RequestParam int pageNumber, @RequestParam int pageSize) {
-        Page<PostDTO> page = postService.searchPage(userId, pageNumber, pageSize);
+    public ApiResponse<Page<PostSimpleDTO>> searchPage(@RequestParam(required = false) Long userId, @RequestParam int pageNumber, @RequestParam int pageSize) {
+        Page<PostSimpleDTO> page = postService.searchPage(userId, pageNumber, pageSize);
         return ApiResponse.success(page);
+    }
+
+    @GetMapping("/{postId}")
+    public ApiResponse<PostFullDTO> findPost(@PathVariable Long postId) {
+        PostFullDTO post = postService.findPost(postId);
+        return ApiResponse.success(post);
     }
 }

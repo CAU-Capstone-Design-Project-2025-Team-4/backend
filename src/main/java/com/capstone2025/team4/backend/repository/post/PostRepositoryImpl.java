@@ -1,7 +1,9 @@
 package com.capstone2025.team4.backend.repository.post;
 
-import com.capstone2025.team4.backend.service.dto.PostDTO;
-import com.capstone2025.team4.backend.service.dto.QPostDTO;
+import com.capstone2025.team4.backend.service.dto.PostFullDTO;
+import com.capstone2025.team4.backend.service.dto.PostSimpleDTO;
+import com.capstone2025.team4.backend.service.dto.QPostFullDTO;
+import com.capstone2025.team4.backend.service.dto.QPostSimpleDTO;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -14,6 +16,7 @@ import java.util.List;
 
 import static com.capstone2025.team4.backend.domain.QPost.post;
 import static com.capstone2025.team4.backend.domain.QUser.user;
+import static com.capstone2025.team4.backend.domain.design.QDesign.design;
 
 public class PostRepositoryImpl implements PostRepositoryCustom{
 
@@ -24,9 +27,9 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     }
 
     @Override
-    public Page<PostDTO> searchPage(Pageable pageable, Long userId) {
-        List<PostDTO> posts = queryFactory
-                .select(new QPostDTO(post.id, user.email, post.title, post.createdAt))
+    public Page<PostSimpleDTO> searchPage(Pageable pageable, Long userId) {
+        List<PostSimpleDTO> posts = queryFactory
+                .select(new QPostSimpleDTO(post.id, user.email, post.title, post.createdAt))
                 .from(post)
                 .leftJoin(post.user, user)
                 .where(
@@ -45,5 +48,14 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
     private BooleanExpression userIdEq(Long userId) {
         return userId != null ? user.id.eq(userId) : null;
+    }
+
+    public PostFullDTO findFullPost(Long postId) {
+        return queryFactory
+                .select(new QPostFullDTO(post.id, user.email, design.id, post.createdAt, post.title, post.content))
+                .from(post)
+                .leftJoin(post.user, user)
+                .leftJoin(post.design, design)
+                .fetchOne();
     }
 }

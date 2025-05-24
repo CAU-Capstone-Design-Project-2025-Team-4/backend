@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-public class PostDTO {
+public class PostSimpleDTO {
 
     private Long id;
 
@@ -19,7 +19,7 @@ public class PostDTO {
     private LocalDateTime createdAt;
 
     @QueryProjection
-    public PostDTO(Long id, String userEmail, String title, LocalDateTime createdAt) {
+    public PostSimpleDTO(Long id, String userEmail, String title, LocalDateTime createdAt) {
         this.id = id;
         this.userEmail = userEmail;
         this.title = title;

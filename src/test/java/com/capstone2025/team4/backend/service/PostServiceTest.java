@@ -3,7 +3,8 @@ package com.capstone2025.team4.backend.service;
 import com.capstone2025.team4.backend.domain.Post;
 import com.capstone2025.team4.backend.domain.User;
 import com.capstone2025.team4.backend.domain.design.Design;
-import com.capstone2025.team4.backend.service.dto.PostDTO;
+import com.capstone2025.team4.backend.service.dto.PostFullDTO;
+import com.capstone2025.team4.backend.service.dto.PostSimpleDTO;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -67,11 +68,11 @@ class PostServiceTest {
         em.clear();
 
         //when
-        Page<PostDTO> page = postService.searchPage(user.getId(), 0, PAGE_SIZE);
+        Page<PostSimpleDTO> page = postService.searchPage(user.getId(), 0, PAGE_SIZE);
 
         //then
         assertThat(page.getSize()).isEqualTo(PAGE_SIZE);
-        assertThat(page.getContent()).extracting(PostDTO::getTitle)
+        assertThat(page.getContent()).extracting(PostSimpleDTO::getTitle)
                 .containsExactly("temp0", "temp1", "temp2", "temp3", "temp4");
     }
 
@@ -102,11 +103,35 @@ class PostServiceTest {
         em.clear();
 
         //when
-        Page<PostDTO> page = postService.searchPage(user.getId(), 0, 5);
+        Page<PostSimpleDTO> page = postService.searchPage(user.getId(), 0, 5);
 
         //then
         assertThat(page.getSize()).isEqualTo(PAGE_SIZE);
-        assertThat(page.getContent()).extracting(PostDTO::getTitle)
+        assertThat(page.getContent()).extracting(PostSimpleDTO::getTitle)
                 .containsExactly("temp0", "temp1", "temp2", "temp3", "temp4");
+    }
+
+    @Test
+    void findPost(){
+        //given
+        User user = User.builder()
+                .email("email")
+                .build();
+        Post post = Post.builder()
+                .user(user)
+                .title("temp")
+                .build();
+
+        em.persist(post);
+        em.persist(user);
+        em.flush();
+        em.clear();
+
+        //when
+        PostFullDTO result= postService.findPost(post.getId());
+
+        //then
+        assertThat(result.getId()).isEqualTo(post.getId());
+        assertThat(result.getTitle()).isEqualTo(post.getTitle());
     }
 }
