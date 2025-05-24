@@ -67,7 +67,7 @@ class PostServiceTest {
         em.clear();
 
         //when
-        Page<PostDTO> page = postService.userPosts(user.getId(), 0, PAGE_SIZE);
+        Page<PostDTO> page = postService.searchPage(user.getId(), 0, PAGE_SIZE);
 
         //then
         assertThat(page.getSize()).isEqualTo(PAGE_SIZE);
@@ -102,7 +102,7 @@ class PostServiceTest {
         em.clear();
 
         //when
-        Page<PostDTO> page = postService.searchPage(0, 5);
+        Page<PostDTO> page = postService.searchPage(user.getId(), 0, 5);
 
         //then
         assertThat(page.getSize()).isEqualTo(PAGE_SIZE);

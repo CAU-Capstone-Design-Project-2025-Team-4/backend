@@ -4,7 +4,6 @@ import com.capstone2025.team4.backend.controller.api.ApiResponse;
 import com.capstone2025.team4.backend.controller.api.post.AddPostRequest;
 import com.capstone2025.team4.backend.controller.api.post.PostResponse;
 import com.capstone2025.team4.backend.domain.Post;
-import com.capstone2025.team4.backend.exception.user.UserNotFoundException;
 import com.capstone2025.team4.backend.service.PostService;
 import com.capstone2025.team4.backend.service.dto.PostDTO;
 import jakarta.validation.Valid;
@@ -28,13 +27,8 @@ public class PostController {
     }
 
     @GetMapping
-    public ApiResponse<Page<PostDTO>> userPosts(@RequestParam(required = false) Long userId, @RequestParam int pageNumber, @RequestParam int pageSize) {
-        Page<PostDTO> page;
-        if (userId == null) {
-            page = postService.searchPage(pageNumber, pageSize);
-        } else {
-            page = postService.userPosts(userId, pageNumber, pageSize);
-        }
+    public ApiResponse<Page<PostDTO>> searchPage(@RequestParam(required = false) Long userId, @RequestParam int pageNumber, @RequestParam int pageSize) {
+        Page<PostDTO> page = postService.searchPage(userId, pageNumber, pageSize);
         return ApiResponse.success(page);
     }
 }
