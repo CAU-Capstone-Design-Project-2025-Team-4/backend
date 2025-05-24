@@ -1,6 +1,5 @@
 package com.capstone2025.team4.backend.service.dto;
 
-import com.capstone2025.team4.backend.domain.Post;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
