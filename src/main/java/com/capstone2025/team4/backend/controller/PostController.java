@@ -4,14 +4,14 @@ import com.capstone2025.team4.backend.controller.api.ApiResponse;
 import com.capstone2025.team4.backend.controller.api.post.AddPostRequest;
 import com.capstone2025.team4.backend.controller.api.post.PostResponse;
 import com.capstone2025.team4.backend.domain.Post;
+import com.capstone2025.team4.backend.exception.user.UserNotFoundException;
 import com.capstone2025.team4.backend.service.PostService;
+import com.capstone2025.team4.backend.service.dto.PostDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/post")
@@ -25,5 +25,16 @@ public class PostController {
     public ApiResponse<PostResponse> newPost(@Valid @RequestBody AddPostRequest request) {
         Post newPost = postService.createNewPost(request.getUserId(), request.getDesignId(), request.getTitle(), request.getContent());
         return ApiResponse.success(new PostResponse(newPost));
+    }
+
+    @GetMapping
+    public ApiResponse<Page<PostDTO>> userPosts(@RequestParam(required = false) Long userId, @RequestParam int pageNumber, @RequestParam int pageSize) {
+        Page<PostDTO> page;
+        if (userId == null) {
+            page = postService.searchPage(pageNumber, pageSize);
+        } else {
+            page = postService.userPosts(userId, pageNumber, pageSize);
+        }
+        return ApiResponse.success(page);
     }
 }
