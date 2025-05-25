@@ -48,6 +48,8 @@ public class Design {
     @Lob
     private byte[] thumbnail;
 
+    private Boolean inPost;
+
     @PrePersist
     public void prePersist() {
         createdAt = LocalDateTime.now();
@@ -68,6 +70,7 @@ public class Design {
         if (slideList != null) {
             this.slideList = slideList;
         }
+        this.inPost = false;
     }
 
     public void changeName(String name) {
@@ -76,5 +79,9 @@ public class Design {
 
     public void changeThumbnail(byte[] image) {
         this.thumbnail = image;
+    }
+
+    public void changeInPost(boolean flag) {
+        this.inPost = flag;
     }
 }

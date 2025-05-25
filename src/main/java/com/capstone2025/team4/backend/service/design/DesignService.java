@@ -127,8 +127,14 @@ public class DesignService {
         return designRepository.findAllByUserId(userId);
     }
 
-    public Design findDesign(Long designId) {
-        Optional<Design> optionalDesign = designRepository.findById(designId);
+    public Design findDesign(Long designId, boolean withOthers) {
+        Optional<Design> optionalDesign;
+        if (withOthers) {
+            optionalDesign = designRepository.findLongDesign(designId);
+        }else {
+            optionalDesign = designRepository.findById(designId);
+        }
+
         if (optionalDesign.isEmpty()) {
             throw new DesignNotFound();
         }

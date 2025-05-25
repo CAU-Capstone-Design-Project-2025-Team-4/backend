@@ -44,11 +44,15 @@ class PostServiceTest {
 
         //then
         Post foundPost = em.find(Post.class, newPost.getId());
+        Design foundDesign= em.find(Design.class, design.getId());
         assertThat(foundPost).isNotNull();
         assertThat(foundPost.getTitle()).isEqualTo(TITLE);
         assertThat(foundPost.getContent()).isEqualTo(CONTENT);
         assertThat(foundPost.getUser().getId()).isEqualTo(user.getId());
         assertThat(foundPost.getDesign().getId()).isEqualTo(design.getId());
+        
+        assertThat(foundPost.getDesign().getInPost()).isTrue();
+        assertThat(foundDesign.getInPost()).isTrue();
     }
     
     @Test

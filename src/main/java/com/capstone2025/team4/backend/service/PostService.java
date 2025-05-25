@@ -3,6 +3,7 @@ package com.capstone2025.team4.backend.service;
 import com.capstone2025.team4.backend.domain.User;
 import com.capstone2025.team4.backend.domain.Post;
 import com.capstone2025.team4.backend.domain.design.Design;
+import com.capstone2025.team4.backend.exception.design.DesignAlreadyHasPost;
 import com.capstone2025.team4.backend.exception.design.DesignNotFound;
 import com.capstone2025.team4.backend.exception.post.EmptyPostTitle;
 import com.capstone2025.team4.backend.exception.user.UserNotAllowed;
@@ -49,6 +50,11 @@ public class PostService {
         if (design.getUser() != user) {
             throw new UserNotAllowed();
         }
+
+        if (design.getInPost()) {
+            throw new DesignAlreadyHasPost();
+        }
+        design.changeInPost(true);
 
         Post newPost = Post.builder()
                 .user(user)

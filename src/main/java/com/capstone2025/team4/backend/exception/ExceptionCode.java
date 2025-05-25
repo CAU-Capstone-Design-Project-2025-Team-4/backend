@@ -17,6 +17,7 @@ public enum ExceptionCode {
     DESIGN_SOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, "템플릿 디자인이 존재하지 않습니다"),
     DESIGN_NOT_FOUND(HttpStatus.NOT_FOUND, "디자인이 존재하지 않습니다"),
     DESIGN_NOT_SHARED(HttpStatus.FORBIDDEN, "해당 디자인은 공유되지 않았습니다"),
+    DESIGN_ALREADY_HAS_POST(HttpStatus.CONFLICT, "해당 디자인에 대한 게시글이 이미 존재합니다"),
 
     ELEMENT_DEFAULT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 기본 요소는 없는 요소입니다."),
     ELEMENT_NOT_DEFAULT(HttpStatus.EXPECTATION_FAILED, "해당 요소는 기본 요소가 아닙니다"),

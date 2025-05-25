@@ -16,6 +16,7 @@ public class DesignLongResponse {
     private final String name;
     private final LocalDateTime updatedAt;
     private final byte[] thumbnail;
+    private final boolean inPost;
     private final List<SlideWithElementResponse> slideList = new ArrayList<>();
 
     public DesignLongResponse(Design design) {
@@ -25,6 +26,7 @@ public class DesignLongResponse {
         this.name = design.getName();
         this.updatedAt = design.getUpdatedAt();
         this.thumbnail = design.getThumbnail();
+        this.inPost = design.getInPost();
         if (design.getSlideList() != null) {
             for (Slide slide : design.getSlideList()) {
                 slideList.add(new SlideWithElementResponse(slide));

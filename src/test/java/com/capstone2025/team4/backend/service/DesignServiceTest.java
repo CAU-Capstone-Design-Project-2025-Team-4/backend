@@ -218,7 +218,7 @@ class DesignServiceTest {
         designService.delete(testUser.getId(), design.getId());
 
         //then
-        assertThrowsExactly(DesignNotFound.class, () -> designService.findDesign(design.getId()));
+        assertThrowsExactly(DesignNotFound.class, () -> designService.findDesign(design.getId(), false));
     }
 
 
@@ -245,7 +245,7 @@ class DesignServiceTest {
         Design updatedDesign = designService.changeName(testUser.getId(), design.getId(), newName);
         em.flush();
         em.clear();
-        Design foundAfterUpdate = designService.findDesign(updatedDesign.getId());
+        Design foundAfterUpdate = designService.findDesign(updatedDesign.getId(), false);
 
         //then
         assertThat(updatedDesign.getName()).isEqualTo(newName);
@@ -275,7 +275,7 @@ class DesignServiceTest {
         Design updated = designService.changeThumbnail(testUser.getId(), design.getId(), bytes);
         em.flush();
         em.clear();
-        Design foundAfterUpdate = designService.findDesign(updated.getId());
+        Design foundAfterUpdate = designService.findDesign(updated.getId(), false);
 
         //then
         assertThat(updated.getThumbnail()).containsExactly(0, 1, 0);

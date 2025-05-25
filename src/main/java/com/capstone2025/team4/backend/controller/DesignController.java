@@ -35,6 +35,12 @@ public class DesignController {
         return ApiResponse.success(result);
     }
 
+    @GetMapping("/{designId}")
+    public ApiResponse<DesignLongResponse> findDesign(@PathVariable Long designId) {
+        Design design = designService.findDesign(designId, true);
+        return ApiResponse.success(new DesignLongResponse(design));
+    }
+
     @DeleteMapping
     public ApiResponse<String> delete(@RequestParam Long userId, @RequestParam Long designId) {
         designService.delete(userId, designId);
