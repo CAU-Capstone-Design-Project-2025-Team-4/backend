@@ -29,9 +29,10 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     @Override
     public Page<PostSimpleDTO> searchPage(Pageable pageable, Long userId) {
         List<PostSimpleDTO> posts = queryFactory
-                .select(new QPostSimpleDTO(post.id, user.email, post.title, post.createdAt))
+                .select(new QPostSimpleDTO(post.id,user.name, design.thumbnail, user.email, post.title, post.createdAt))
                 .from(post)
                 .leftJoin(post.user, user)
+                .leftJoin(design, design)
                 .where(
                         userIdEq(userId)
                 )

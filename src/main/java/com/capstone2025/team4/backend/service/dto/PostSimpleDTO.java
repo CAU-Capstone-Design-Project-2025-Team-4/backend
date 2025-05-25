@@ -12,6 +12,10 @@ public class PostSimpleDTO {
 
     private Long id;
 
+    private String username;
+
+    private byte[] thumbnail;
+
     private String userEmail;
 
     private String title;
@@ -19,8 +23,10 @@ public class PostSimpleDTO {
     private LocalDateTime createdAt;
 
     @QueryProjection
-    public PostSimpleDTO(Long id, String userEmail, String title, LocalDateTime createdAt) {
+    public PostSimpleDTO(Long id, String username, byte[] thumbnail,  String userEmail, String title, LocalDateTime createdAt) {
         this.id = id;
+        this.username = username;
+        this.thumbnail = thumbnail;
         this.userEmail = userEmail;
         this.title = title;
         this.createdAt = createdAt;
