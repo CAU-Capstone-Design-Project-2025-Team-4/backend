@@ -13,8 +13,6 @@ public interface ElementRepositoryCustom {
 
     Optional<Shape> findShapeByIdAndUserId(Long id, Long userId);
 
-    boolean updateElementCommonFields(Long elementId, Long userId, BorderRef borderRef, Long x, Long y, Long z, Long width, Long height, Double angle);
-
     Optional<Element> findElementById(Long id, Long userId);
 
     Optional<Spatial> findSpatialById(Long id, Long userId);

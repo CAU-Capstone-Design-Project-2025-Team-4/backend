@@ -52,10 +52,12 @@ public class Spatial extends Element {
         this.cameraMode = cameraMode;
         this.cameraTransform = cameraTransform;
         this.backgroundColor = backgroundColor;
+        this.getSlide().getDesign().preUpdate();
     }
 
     public void addModel(Model model) {
         this.models.add(model);
         model.setSpatial(this);
+        this.getSlide().getDesign().preUpdate();
     }
 }

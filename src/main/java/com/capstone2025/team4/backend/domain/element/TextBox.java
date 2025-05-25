@@ -45,5 +45,6 @@ public class TextBox extends Element {
         this.weight = weight;
         this.fontFamily = fontFamily;
         this.align = align;
+        this.getSlide().getDesign().preUpdate();
     }
 }

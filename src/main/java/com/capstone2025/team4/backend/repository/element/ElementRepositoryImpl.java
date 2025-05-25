@@ -30,8 +30,8 @@ public class ElementRepositoryImpl implements ElementRepositoryCustom{
         QUser user = QUser.user;
 
         TextBox result = queryFactory.selectFrom(textBox)
-                .join(textBox.slide, slide)
-                .join(slide.design, design)
+                .join(textBox.slide, slide).fetchJoin()
+                .join(slide.design, design).fetchJoin()
                 .join(design.user, user)
                 .where(textBox.id.eq(id),user.id.eq(userId))
                 .fetchOne();
@@ -46,55 +46,12 @@ public class ElementRepositoryImpl implements ElementRepositoryCustom{
         QDesign design = QDesign.design;
         QUser user = QUser.user;
         Shape result = queryFactory.selectFrom(shape)
-                .join(shape.slide, slide)
-                .join(slide.design, design)
+                .join(shape.slide, slide).fetchJoin()
+                .join(slide.design, design).fetchJoin()
                 .join(design.user, user)
                 .where(shape.id.eq(id), user.id.eq(userId))
                 .fetchOne();
         return Optional.ofNullable(result);
-    }
-
-    @Override
-    public boolean updateElementCommonFields(
-            Long elementId, Long userId,
-            BorderRef borderRef,
-            Long x, Long y, Long z,
-            Long width, Long height,
-            Double angle
-    ) {
-        QElement element = QElement.element;
-        QSlide slide = QSlide.slide;
-        QDesign design = QDesign.design;
-        QUser user = QUser.user;
-        boolean isOwned = queryFactory
-                .selectOne()
-                .from(element)
-                .join(element.slide, slide)
-                .join(slide.design, design)
-                .join(design.user, user)
-                .where(
-                        element.id.eq(elementId),
-                        user.id.eq(userId)
-                )
-                .fetchFirst() != null;
-
-        if (!isOwned) return false;
-
-        long count = queryFactory.update(element)
-                .set(element.borderRef, borderRef)
-                .set(element.x, x)
-                .set(element.y, y)
-                .set(element.z, z)
-                .set(element.width, width)
-                .set(element.height, height)
-                .set(element.angle, angle)
-                .where(element.id.eq(elementId))
-                .execute();
-
-        em.flush();
-        em.clear();
-
-        return count > 0;
     }
 
     @Override
@@ -105,8 +62,8 @@ public class ElementRepositoryImpl implements ElementRepositoryCustom{
         QUser user = QUser.user;
 
         Element result = queryFactory.selectFrom(element)
-                .join(element.slide, slide)
-                .join(slide.design, design)
+                .join(element.slide, slide).fetchJoin()
+                .join(slide.design, design).fetchJoin()
                 .join(design.user, user)
                 .where(element.id.eq(id), user.id.eq(userId)).fetchOne();
 
@@ -121,8 +78,8 @@ public class ElementRepositoryImpl implements ElementRepositoryCustom{
         QUser user = QUser.user;
 
         Spatial result = queryFactory.selectFrom(spatial)
-                .join(spatial.slide, slide)
-                .join(slide.design, design)
+                .join(spatial.slide, slide).fetchJoin()
+                .join(slide.design, design).fetchJoin()
                 .join(design.user, user)
                 .where(spatial.id.eq(id), user.id.eq(userId)).fetchOne();
 

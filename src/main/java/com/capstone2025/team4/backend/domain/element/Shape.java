@@ -35,5 +35,6 @@ public class Shape extends Element {
     public void update(String path, String color) {
         this.path = path;
         this.color = color;
+        this.getSlide().getDesign().preUpdate();
     }
 }

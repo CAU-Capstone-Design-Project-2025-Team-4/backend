@@ -58,6 +58,27 @@ public class Element {
         return copy;
     }
 
+    @PrePersist
+    public void onPrePersist() {
+        if (slide != null && slide.getDesign() != null) {
+            slide.getDesign().preUpdate();
+        }
+    }
+
+    @PreUpdate
+    public void onPreUpdate() {
+        if (slide != null && slide.getDesign() != null) {
+            slide.getDesign().preUpdate();
+        }
+    }
+
+    @PostRemove
+    public void onPostRemove() {
+        if (slide != null && slide.getDesign() != null) {
+            slide.getDesign().preUpdate();
+        }
+    }
+
     protected Element createNewInstance() {throw new RuntimeException();}
 
     protected void copyElementFields(Element copy) {
