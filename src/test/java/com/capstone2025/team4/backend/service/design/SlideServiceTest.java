@@ -111,6 +111,7 @@ class SlideServiceTest {
         em.clear();
 
         //when
+        System.out.println("------------when start-------------");
         Slide destSlideCopied = slideService.copySlide(destSlide.getId(), s1.getId(), testUser.getId());
 
         //then

@@ -9,8 +9,9 @@ import com.capstone2025.team4.backend.exception.design.DesignNotShared;
 import com.capstone2025.team4.backend.exception.file.FileIsEmpty;
 import com.capstone2025.team4.backend.exception.slide.SlideNotFound;
 import com.capstone2025.team4.backend.exception.slide.SlideOrderDuplicate;
+import com.capstone2025.team4.backend.exception.user.UserNotAllowed;
 import com.capstone2025.team4.backend.exception.user.UserNotAllowedDesign;
-import com.capstone2025.team4.backend.repository.SlideRepository;
+import com.capstone2025.team4.backend.repository.slide.SlideRepository;
 import com.capstone2025.team4.backend.repository.element.ElementRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-
-import static com.capstone2025.team4.backend.service.design.DesignUtil.checkUWDS;
 
 @Service
 @RequiredArgsConstructor
@@ -29,8 +28,9 @@ public class SlideService {
     private final ElementRepository elementRepository;
 
     public Slide newSlide(User user, Design design, Workspace workspace, int order) {
-
-        checkUWDS(user, workspace, design, null);
+        if (design.getUser() != user && design.getWorkspace() != workspace) {
+            throw new UserNotAllowed();
+        }
 
         boolean duplicateExists = slideRepository.existsByDesignIdAndOrder(design.getId(), order);
         if (duplicateExists) {
@@ -61,21 +61,14 @@ public class SlideService {
      * srcSlide의 모든 요소를 destSrc에 복제
      */
     public Slide copySlide(Long destSlideId, Long srcSlideId, Long userId) {
-        Optional<Slide> srcOptional = slideRepository.findWithSlideElementListById(srcSlideId);
-        Optional<Slide> destOptional = slideRepository.findWithSlideElementListById(destSlideId);
+        Optional<Slide> srcOptional = slideRepository.findSlideWithElementsSharedDesign(srcSlideId);
+        Optional<Slide> destOptional = slideRepository.findSlideWithElements(userId, destSlideId);
         if (srcOptional.isEmpty() || destOptional.isEmpty()) {
             throw new SlideNotFound();
         }
 
         Slide srcSlide = srcOptional.get();
-        if (!srcSlide.getDesign().getShared()) {
-            throw new DesignNotShared();
-        }
-
         Slide destSlide = destOptional.get();
-        if (destSlide.getDesign().getUser().getId() != userId) {
-            throw new UserNotAllowedDesign();
-        }
 
         for (Element element : srcSlide.getSlideElementList()) {
             Element copy = element.copy(destSlide);
@@ -115,5 +108,23 @@ public class SlideService {
 
         slide.changeThumbnail(image);
         return slide;
+    }
+
+    public Slide getSlide(Long userId, Long slideId) {
+        Optional<Slide> optionalSlide = slideRepository.findSlide(userId, slideId);
+        if (optionalSlide.isEmpty()) {
+            throw new SlideNotFound();
+        }
+
+        return optionalSlide.get();
+    }
+
+    public Slide getSlideWithElements(Long userId, Long slideId) {
+        Optional<Slide> optionalSlide = slideRepository.findSlideWithElements(userId, slideId);
+        if (optionalSlide.isEmpty()) {
+            throw new SlideNotFound();
+        }
+
+        return optionalSlide.get();
     }
 }

@@ -1,7 +1,5 @@
 package com.capstone2025.team4.backend.service.design;
 
-import com.capstone2025.team4.backend.domain.User;
-import com.capstone2025.team4.backend.domain.Workspace;
 import com.capstone2025.team4.backend.domain.design.*;
 import com.capstone2025.team4.backend.domain.element.*;
 import com.capstone2025.team4.backend.domain.element.border.BorderRef;
@@ -10,11 +8,8 @@ import com.capstone2025.team4.backend.domain.element.spatial.CameraTransform;
 import com.capstone2025.team4.backend.domain.element.model.Model;
 import com.capstone2025.team4.backend.domain.element.spatial.Spatial;
 import com.capstone2025.team4.backend.exception.element.ElementNotFound;
-import com.capstone2025.team4.backend.exception.slide.SlideNotFound;
 import com.capstone2025.team4.backend.infra.aws.S3Service;
 import com.capstone2025.team4.backend.repository.element.*;
-import com.capstone2025.team4.backend.repository.SlideRepository;
-import com.capstone2025.team4.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.capstone2025.team4.backend.service.design.DesignUtil.checkUWDS;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -32,8 +25,7 @@ import static com.capstone2025.team4.backend.service.design.DesignUtil.checkUWDS
 public class ElementService {
 
     private final ElementRepository elementRepository;
-    private final SlideRepository slideRepository;
-    private final UserService userService;
+    private final SlideService slideService;
     private final ModelService modelService;
     private final S3Service s3Service;
 
@@ -50,12 +42,7 @@ public class ElementService {
             TextAlign align,
             String fontFamily
     ) {
-        User user = userService.getUser(userId);
-        Slide slide = getSlide(slideId, false);
-        Design design = slide.getDesign();
-        Workspace workspace = design.getWorkspace();
-        // 해당 유저가 해당 워크스페이스, 디자인의 소유자인지 확인
-        checkUWDS(user, workspace, design, slide);
+        Slide slide = slideService.getSlide(userId, slideId);
 
         TextBox element = TextBox.builder()
                 .slide(slide)
@@ -86,12 +73,7 @@ public class ElementService {
             String path,
             String color
     ) {
-        User user = userService.getUser(userId);
-        Slide slide = getSlide(slideId, false);
-        Design design = slide.getDesign();
-        Workspace workspace = design.getWorkspace();
-        // 해당 유저가 해당 워크스페이스, 디자인의 소유자인지 확인
-        checkUWDS(user, workspace, design, slide);
+        Slide slide = slideService.getSlide(userId, slideId);
 
         Shape shape = Shape.builder()
                 .slide(slide)
@@ -118,12 +100,7 @@ public class ElementService {
             Long width, Long height,
             String s3Url
     ) {
-        User user = userService.getUser(userId);
-        Slide slide = getSlide(slideId, false);
-        Design design = slide.getDesign();
-        Workspace workspace = design.getWorkspace();
-        // 해당 유저가 해당 워크스페이스, 디자인의 소유자인지 확인
-        checkUWDS(user, workspace, design, slide);
+        Slide slide = slideService.getSlide(userId, slideId);
 
         Image image = Image.builder()
                 .slide(slide)
@@ -152,12 +129,7 @@ public class ElementService {
             String content,
             String backgroundColor
     ) {
-        User user = userService.getUser(userId);
-        Slide slide = getSlide(slideId, false);
-        Design design = slide.getDesign();
-        Workspace workspace = design.getWorkspace();
-        // 해당 유저가 해당 워크스페이스, 디자인의 소유자인지 확인
-        checkUWDS(user, workspace, design, slide);
+        Slide slide = slideService.getSlide(userId, slideId);
 
         Spatial spatial = Spatial.builder()
                 .slide(slide)
@@ -179,19 +151,6 @@ public class ElementService {
         }
 
         return elementRepository.save(spatial);
-    }
-
-    private Slide getSlide(Long slideId, boolean withElementsFlag) {
-        Optional<Slide> slideOptional;
-        if (withElementsFlag) {
-            slideOptional = slideRepository.findWithSlideElementListById(slideId);
-        } else {
-             slideOptional = slideRepository.findById(slideId);
-        }
-        if (slideOptional.isEmpty()) {
-            throw new SlideNotFound();
-        }
-        return slideOptional.get();
     }
 
     public TextBox updateTextBox(
@@ -266,10 +225,7 @@ public class ElementService {
 
     @Transactional(readOnly = true)
     public List<Element> findAllElementsInSlide(Long userId, Long slideId) {
-        Slide slide = getSlide(slideId, true);
-        User user = userService.getUser(userId);
-        Design design = slide.getDesign();
-        checkUWDS(user, null, design, slide);
+        Slide slide = slideService.getSlideWithElements(userId, slideId);
 
         return slide.getSlideElementList();
     }
