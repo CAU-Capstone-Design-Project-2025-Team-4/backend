@@ -10,6 +10,7 @@ import com.capstone2025.team4.backend.config.SecurityConfig;
 import com.capstone2025.team4.backend.security.jwt.JwtService;
 import com.capstone2025.team4.backend.mock.WithCustomMockUser;
 import com.capstone2025.team4.backend.service.UserService;
+import com.capstone2025.team4.backend.service.WorkspaceService;
 import com.capstone2025.team4.backend.service.design.DesignService;
 import com.capstone2025.team4.backend.service.design.SlideService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,13 +59,16 @@ class SlideControllerTest {
     @MockitoBean
     CustomUserDetailService customUserDetailService;
 
+    @MockitoBean
+    private WorkspaceService workspaceService;
+
     @Test
     void newSlideSuccess() throws Exception {
         //given
         NewSlideRequest request = new NewSlideRequest(1L, 2L, 0);
         User user = User.builder().build();
         given(userService.getUser(1L)).willReturn(user);
-        given(designService.getWorkspace(any(User.class))).willReturn(new Workspace(user));
+        given(workspaceService.getWorkspace(any(User.class))).willReturn(new Workspace(user));
         given(designService.getDesign(2L)).willReturn(Design.builder().build());
         given(slideService.newSlide(any(User.class), any(Design.class), any(Workspace.class), anyInt())).willAnswer(invocation -> createSlide());
 

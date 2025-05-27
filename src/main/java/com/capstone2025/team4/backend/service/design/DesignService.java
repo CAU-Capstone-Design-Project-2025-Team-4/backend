@@ -11,6 +11,7 @@ import com.capstone2025.team4.backend.exception.file.FileIsEmpty;
 import com.capstone2025.team4.backend.repository.*;
 import com.capstone2025.team4.backend.repository.design.DesignRepository;
 import com.capstone2025.team4.backend.service.UserService;
+import com.capstone2025.team4.backend.service.WorkspaceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,15 +27,15 @@ import java.util.Optional;
 @Transactional
 public class DesignService {
     private final DesignRepository designRepository;
-    private final WorkspaceRepository workspaceRepository;
     private final UserService userService;
     private final SlideService slideService;
+    private final WorkspaceService workspaceService;
 
     // 디자인을 만들때, 공유된걸 가지고 만든다면 공유 불가
     public Design createNewDesign(String designName, Long creatorId, Long sourceDesignId, boolean shared) {
         User creator = userService.getUser(creatorId);
 
-        Workspace workspace = getWorkspace(creator);
+        Workspace workspace = workspaceService.getWorkspace(creator);
         log.debug("[CREATING NEW DESIGN] Workspace id = {}, user = {}", workspace.getId(), creator.getEmail());
 
         if (sourceDesignId != null) {
@@ -102,16 +103,6 @@ public class DesignService {
         }
 
         return newDesign;
-    }
-
-
-    public Workspace getWorkspace(User creator) {
-        Optional<Workspace> optionalWorkspace = workspaceRepository.findByUser(creator);
-        if (optionalWorkspace.isEmpty()) {
-            log.error("No workspace for user = {}, id = {} ", creator.getEmail(), creator.getId());
-            throw new RuntimeException("워크스페이스 없는 사용자입니다.");
-        }
-        return optionalWorkspace.get();
     }
 
     public Design getDesign(Long designId) {
