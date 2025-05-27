@@ -8,7 +8,6 @@ import com.capstone2025.team4.backend.exception.design.DesignNotFound;
 import com.capstone2025.team4.backend.exception.design.DesignNotShared;
 import com.capstone2025.team4.backend.exception.design.DesignSourceNotFound;
 import com.capstone2025.team4.backend.exception.file.FileIsEmpty;
-import com.capstone2025.team4.backend.repository.*;
 import com.capstone2025.team4.backend.repository.design.DesignRepository;
 import com.capstone2025.team4.backend.service.UserService;
 import com.capstone2025.team4.backend.service.WorkspaceService;
@@ -36,7 +35,6 @@ public class DesignService {
         User creator = userService.getUser(creatorId);
 
         Workspace workspace = workspaceService.getWorkspace(creator);
-        log.debug("[CREATING NEW DESIGN] Workspace id = {}, user = {}", workspace.getId(), creator.getEmail());
 
         if (sourceDesignId != null) {
             Optional<Design> sourceDesignOptional = designRepository.findById(sourceDesignId);
@@ -49,17 +47,13 @@ public class DesignService {
                 throw new DesignNotShared();
             }
 
-            log.debug("[CREATING NEW DESIGN] From Source(id = {})", source.getId());
-            Design newDesignFromSource = createNewDesignFromSource(designName, creator, workspace, source);
-            designRepository.save(newDesignFromSource);
-            log.debug("[CREATING NEW DESIGN] From Source(id = {}) Success!", source.getId());
-            return newDesignFromSource;
+            return createNewDesignFromSource(designName, creator, workspace, source);
         }
 
-        return newDesignScratch(designName, creator, workspace, shared);
+        return createNewDesignFromScratch(designName, creator, workspace, shared);
     }
 
-    private Design newDesignScratch(String designName, User creator, Workspace workspace, Boolean shared) {
+    private Design createNewDesignFromScratch(String designName, User creator, Workspace workspace, Boolean shared) {
 
         log.debug("[CREATING NEW DESIGN] Success!");
         Design newDesign = Design.builder()
@@ -102,6 +96,7 @@ public class DesignService {
             newSlideList.add(newSlide);
         }
 
+        designRepository.save(newDesign);
         return newDesign;
     }
 
