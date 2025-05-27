@@ -1,7 +1,6 @@
 package com.capstone2025.team4.backend.repository.slide;
 
 import com.capstone2025.team4.backend.domain.design.Slide;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
