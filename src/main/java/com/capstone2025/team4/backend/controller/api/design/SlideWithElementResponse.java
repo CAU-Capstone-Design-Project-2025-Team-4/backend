@@ -14,10 +14,12 @@ public class SlideWithElementResponse {
     private final Long id;
     private final Integer order;
     private final List<ElementResponse> slideElements = new ArrayList<>();
+    private final byte[] thumbnail;
 
     public SlideWithElementResponse(Slide slide) {
         this.id = slide.getId();
         this.order = slide.getOrder();
+        this.thumbnail = slide.getThumbnail();
         if (slide.getSlideElementList() != null) {
             for (Element slideElement : slide.getSlideElementList()) {
                 slideElements.add(ElementResponse.create(slideElement));
