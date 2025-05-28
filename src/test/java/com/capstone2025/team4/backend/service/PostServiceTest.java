@@ -120,6 +120,7 @@ class PostServiceTest {
         //given
         User user = User.builder()
                 .email("email")
+                .name("name")
                 .build();
         Post post = Post.builder()
                 .user(user)
@@ -137,6 +138,7 @@ class PostServiceTest {
         //then
         assertThat(result.getId()).isEqualTo(post.getId());
         assertThat(result.getTitle()).isEqualTo(post.getTitle());
+        assertThat(result.getUsername()).isEqualTo(user.getName());
     }
 
     @Test

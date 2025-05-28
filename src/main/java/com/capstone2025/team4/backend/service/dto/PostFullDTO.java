@@ -13,6 +13,8 @@ public class PostFullDTO {
 
     private String userEmail;
 
+    private String username;
+
     private Long designId;
 
     private LocalDateTime createdAt;
@@ -22,9 +24,10 @@ public class PostFullDTO {
     private String content;
 
     @QueryProjection
-    public PostFullDTO(Long id, String userEmail, Long designId, LocalDateTime createdAt, String title, String content) {
+    public PostFullDTO(Long id, String userEmail, String username, Long designId, LocalDateTime createdAt, String title, String content) {
         this.id = id;
         this.userEmail = userEmail;
+        this.username = username;
         this.designId = designId;
         this.createdAt = createdAt;
         this.title = title;
