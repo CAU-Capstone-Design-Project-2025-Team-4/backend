@@ -36,6 +36,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                 .where(
                         userIdEq(userId)
                 )
+                .orderBy(post.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();

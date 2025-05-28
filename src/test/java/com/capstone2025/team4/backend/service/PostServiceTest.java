@@ -138,4 +138,39 @@ class PostServiceTest {
         assertThat(result.getId()).isEqualTo(post.getId());
         assertThat(result.getTitle()).isEqualTo(post.getTitle());
     }
+
+    @Test
+    void postOrder(){
+        //given
+        int PAGE_SIZE = 3;
+
+        User user = User.builder()
+                .email("email")
+                .build();
+
+        em.persist(user);
+
+        for (int i = 0; i < PAGE_SIZE; i++) {
+            Post post= Post.builder()
+                    .user(user)
+                    .title("post" + i)
+                    .build();
+
+            em.persist(post);
+            em.flush();
+            em.clear();
+        }
+
+        em.flush();
+        em.clear();
+
+        //when
+        Page<PostSimpleDTO> page = postService.searchPage(user.getId(), 0, PAGE_SIZE);
+
+        //then
+        assertThat(page.getContent())
+                .extracting(PostSimpleDTO::getTitle)
+                .containsExactly("post2", "post1", "post0");
+
+    }
 }
