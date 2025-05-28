@@ -58,6 +58,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                 .from(post)
                 .leftJoin(post.user, user)
                 .leftJoin(post.design, design)
+                .where(post.id.eq(postId))
                 .fetchOne();
     }
 }
