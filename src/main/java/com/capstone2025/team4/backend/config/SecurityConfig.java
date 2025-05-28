@@ -40,7 +40,8 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authReq) -> authReq
                         .requestMatchers("/user/login", "/user/register").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/post", "/post/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/post/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/design/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
