@@ -2,7 +2,6 @@ package com.capstone2025.team4.backend.controller;
 
 import com.capstone2025.team4.backend.controller.api.ApiResponse;
 import com.capstone2025.team4.backend.controller.api.design.*;
-import com.capstone2025.team4.backend.controller.api.model.UpdateModelRequest;
 import com.capstone2025.team4.backend.domain.design.Design;
 import com.capstone2025.team4.backend.service.design.DesignService;
 import jakarta.validation.Valid;
@@ -62,5 +61,11 @@ public class DesignController {
             log.error("이미지 바이트 배열을 처리하지 못함");
             throw new RuntimeException(e);
         }
+    }
+
+    @PostMapping("/share")
+    public ApiResponse<DesignShortResponse> toggleShare(@RequestBody ToggleDesignSharedFlagRequest request) {
+        Design design = designService.toggleShared(request.getUserId(), request.getDesignId(), request.getFlag());
+        return ApiResponse.success(new DesignShortResponse(design));
     }
 }

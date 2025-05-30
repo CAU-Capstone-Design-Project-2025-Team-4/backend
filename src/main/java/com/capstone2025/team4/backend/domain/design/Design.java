@@ -84,4 +84,8 @@ public class Design {
     public void changeInPost(boolean flag) {
         this.inPost = flag;
     }
+
+    public void changeShared(boolean flag) {
+        this.shared = flag;
+    }
 }

@@ -138,30 +138,36 @@ public class DesignService {
     }
 
     public Design changeName(Long userId, Long designId, String name) {
-        Optional<Design> optionalDesign = designRepository.findByIdAndUserId(designId, userId);
-        if (optionalDesign.isEmpty()) {
-            throw new DesignNotFound();
-        }
-
-        Design design = optionalDesign.get();
+        Design design = getDesignByIdAndUserId(userId, designId);
         design.changeName(name);
 
         return design;
     }
 
     public Design changeThumbnail(Long userId, Long designId, byte[] image) {
-        Optional<Design> optionalDesign = designRepository.findByIdAndUserId(designId, userId);
-        if (optionalDesign.isEmpty()) {
-            throw new DesignNotFound();
-        }
-
-        Design design = optionalDesign.get();
+        Design design = getDesignByIdAndUserId(userId, designId);
 
         if (image.length == 0) {
             throw new FileIsEmpty();
         }
 
         design.changeThumbnail(image);
+        return design;
+    }
+
+    private Design getDesignByIdAndUserId(Long userId, Long designId) {
+        Optional<Design> optionalDesign = designRepository.findByIdAndUserId(designId, userId);
+        if (optionalDesign.isEmpty()) {
+            throw new DesignNotFound();
+        }
+
+        return optionalDesign.get();
+    }
+
+    public Design toggleShared(Long userId, Long designId, Boolean flag) {
+        Design design = getDesignByIdAndUserId(userId, designId);
+
+        design.changeShared(flag);
         return design;
     }
 }
