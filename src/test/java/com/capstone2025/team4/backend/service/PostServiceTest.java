@@ -77,7 +77,7 @@ class PostServiceTest {
         //then
         assertThat(page.getSize()).isEqualTo(PAGE_SIZE);
         assertThat(page.getContent()).extracting(PostSimpleDTO::getTitle)
-                .containsExactly("temp0", "temp1", "temp2", "temp3", "temp4");
+                .containsExactly("temp99", "temp98", "temp97", "temp96", "temp95");
     }
 
     private void make100Posts(User user) {
@@ -112,7 +112,7 @@ class PostServiceTest {
         //then
         assertThat(page.getSize()).isEqualTo(PAGE_SIZE);
         assertThat(page.getContent()).extracting(PostSimpleDTO::getTitle)
-                .containsExactly("temp0", "temp1", "temp2", "temp3", "temp4");
+                .containsExactly("temp99", "temp98", "temp97", "temp96", "temp95");
     }
 
     @Test

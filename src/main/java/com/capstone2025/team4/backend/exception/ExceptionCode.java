@@ -38,7 +38,9 @@ public enum ExceptionCode {
 
     MODEL_NOT_FOUNT(HttpStatus.NOT_FOUND, "해당 모델을 찾을 수 없습니다"),
 
-    POST_TITLE_EMPTY(HttpStatus.BAD_REQUEST, "제목이 비어있습니다")
+    POST_TITLE_EMPTY(HttpStatus.BAD_REQUEST, "제목이 비어있습니다"),
+
+    TEMPLATE_NOT_FOUND(HttpStatus.NOT_FOUND, "템필릿을 찾을 수 없습니다")
     ;
 
     private final HttpStatus httpStatus;
