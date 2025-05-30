@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 public class PostFullDTO {
     private Long id;
 
+    private Long userId;
+
     private String userEmail;
 
     private String username;
@@ -24,8 +26,9 @@ public class PostFullDTO {
     private String content;
 
     @QueryProjection
-    public PostFullDTO(Long id, String userEmail, String username, Long designId, LocalDateTime createdAt, String title, String content) {
+    public PostFullDTO(Long id, Long userId, String userEmail, String username, Long designId, LocalDateTime createdAt, String title, String content) {
         this.id = id;
+        this.userId = userId;
         this.userEmail = userEmail;
         this.username = username;
         this.designId = designId;

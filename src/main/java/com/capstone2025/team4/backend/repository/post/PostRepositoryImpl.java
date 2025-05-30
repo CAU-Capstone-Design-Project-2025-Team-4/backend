@@ -54,7 +54,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
     public PostFullDTO findFullPost(Long postId) {
         return queryFactory
-                .select(new QPostFullDTO(post.id, user.email,user.name, design.id, post.createdAt, post.title, post.content))
+                .select(new QPostFullDTO(post.id, user.id, user.email,user.name, design.id, post.createdAt, post.title, post.content))
                 .from(post)
                 .leftJoin(post.user, user)
                 .leftJoin(post.design, design)

@@ -139,6 +139,7 @@ class PostServiceTest {
         assertThat(result.getId()).isEqualTo(post.getId());
         assertThat(result.getTitle()).isEqualTo(post.getTitle());
         assertThat(result.getUsername()).isEqualTo(user.getName());
+        assertThat(result.getUserId()).isEqualTo(user.getId());
     }
 
     @Test
