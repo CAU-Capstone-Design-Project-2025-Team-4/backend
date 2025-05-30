@@ -188,12 +188,13 @@ class DesignServiceTest {
         //when
         List<Design> all = designService.findAll(user.getId());
         List<Long> idList = all.stream().map(Design::getId).toList();
+        List<Boolean> inPosts = all.stream().map(Design::getInPost).toList();
 
         //then
         assertThat(all).isNotEmpty();
         assertThat(all.size()).isEqualTo(3);
-        assertThat(idList).contains(design1.getId(), design2.getId(), design3.getId());
-
+        assertThat(idList).containsExactly(design1.getId(), design2.getId(), design3.getId());
+        assertThat(inPosts).containsOnly(false, false, false);
     }
 
 

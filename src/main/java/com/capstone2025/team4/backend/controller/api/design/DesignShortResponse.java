@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 public class DesignShortResponse {
     private Long id;
     private Boolean shared;
+    private Boolean inPost;
     private LocalDateTime createdAt;
     private String name;
     private LocalDateTime updatedAt;
@@ -19,6 +20,7 @@ public class DesignShortResponse {
     public DesignShortResponse(Design design) {
         this.id = design.getId();
         this.shared = design.getShared();
+        this.inPost = design.getInPost();
         this.createdAt = design.getCreatedAt();
         this.name = design.getName();
         this.updatedAt = design.getUpdatedAt();
