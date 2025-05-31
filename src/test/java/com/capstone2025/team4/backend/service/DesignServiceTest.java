@@ -62,11 +62,16 @@ class DesignServiceTest {
     @Test
     void newDesignFromSource(){
         //given
-        User testUser = User.builder()
+        User srcUser = User.builder()
                 .email("test@example.com")
                 .build();
 
-        Workspace testWorkspace = new Workspace(testUser);
+        User destUser = User.builder()
+                .email("test2@example.com")
+                .build();
+
+        Workspace srcWorkspace = new Workspace(srcUser);
+        Workspace destWorkspace = new Workspace(destUser);
 
         TextBox e1 = TextBox.builder().text("temp1").build();
         TextBox e2 = TextBox.builder().text("temp2").build();
@@ -77,8 +82,8 @@ class DesignServiceTest {
 
         Design sourceDesign = Design.builder()
                 .name("sourceName")
-                .user(testUser)
-                .workspace(testWorkspace)
+                .user(srcUser)
+                .workspace(srcWorkspace)
                 .slideList(slideList)
                 .shared(true)
                 .build();
@@ -90,8 +95,10 @@ class DesignServiceTest {
 
         em.persist(e1);
         em.persist(e2);
-        em.persist(testUser);
-        em.persist(testWorkspace);
+        em.persist(srcUser);
+        em.persist(destUser);
+        em.persist(srcWorkspace);
+        em.persist(destWorkspace);
         em.persist(s1);
         em.persist(sourceDesign);
 
@@ -99,7 +106,7 @@ class DesignServiceTest {
         em.clear();
 
         //when
-        Design newDesign = designService.createNewDesign("designName", testUser.getId(), sourceDesign.getId(), false);
+        Design newDesign = designService.createNewDesign("designName", destUser.getId(), sourceDesign.getId(), false);
 
         //then
         assertThat(newDesign.getSlideList().size()).isEqualTo(sourceDesign.getSlideList().size());

@@ -253,4 +253,10 @@ public class ElementService {
             s3Service.delete(content);
         }
     }
+
+    public void copyAndSaveElement(Element slideElement, Slide newSlide) {
+        Element copy = slideElement.copy(newSlide);
+        elementRepository.save(copy);
+    }
+
 }

@@ -9,6 +9,7 @@ import com.capstone2025.team4.backend.exception.design.DesignNotShared;
 import com.capstone2025.team4.backend.exception.design.DesignSourceNotFound;
 import com.capstone2025.team4.backend.exception.file.FileIsEmpty;
 import com.capstone2025.team4.backend.repository.design.DesignRepository;
+import com.capstone2025.team4.backend.repository.element.ElementRepository;
 import com.capstone2025.team4.backend.service.UserService;
 import com.capstone2025.team4.backend.service.WorkspaceService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class DesignService {
     private final UserService userService;
     private final SlideService slideService;
     private final WorkspaceService workspaceService;
+    private final ElementService elementService;
 
     // 디자인을 만들때, 공유된걸 가지고 만든다면 공유 불가
     public Design createNewDesign(String designName, Long creatorId, Long sourceDesignId, boolean shared) {
@@ -85,13 +87,9 @@ public class DesignService {
 
         for (Slide sourceSlide : sourceSlideList) {
             ArrayList<Element> newSlideElementList = new ArrayList<>();
-            Slide newSlide = Slide.builder()
-                    .order(sourceSlide.getOrder())
-                    .design(newDesign)
-                    .slideElementList(newSlideElementList)
-                    .build();
+            Slide newSlide = slideService.createNewSlide(sourceSlide, newDesign, newSlideElementList);
             for (Element slideElement : sourceSlide.getSlideElementList()) {
-                slideElement.copy(newSlide);
+                elementService.copyAndSaveElement(slideElement, newSlide);
             }
             newSlideList.add(newSlide);
         }

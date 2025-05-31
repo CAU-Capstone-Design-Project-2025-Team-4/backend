@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -125,4 +126,15 @@ public class SlideService {
 
         return optionalSlide.get();
     }
+
+    public Slide createNewSlide(Slide sourceSlide, Design newDesign, ArrayList<Element> newSlideElementList) {
+        Slide newSlide = Slide.builder()
+                .order(sourceSlide.getOrder())
+                .design(newDesign)
+                .slideElementList(newSlideElementList)
+                .build();
+        slideRepository.save(newSlide);
+        return newSlide;
+    }
+
 }
