@@ -41,7 +41,11 @@ public class Model {
         copy.name = this.name;
         copy.url = this.url;
         copy.shader = this.shader;
-        copy.modelTransform = this.modelTransform.copy();
+        if (this.modelTransform == null) {
+            copy.modelTransform = null;
+        } else {
+            copy.modelTransform = this.modelTransform.copy();
+        }
         return copy;
     }
 

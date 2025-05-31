@@ -33,7 +33,7 @@ public class Design {
 
     private Boolean shared;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "source_id")
     private Design source;
 
