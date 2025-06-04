@@ -93,14 +93,14 @@ class DesignServiceTest {
         e1.addToSlide(s1);
         e2.addToSlide(s1);
 
-        em.persist(e1);
-        em.persist(e2);
         em.persist(srcUser);
         em.persist(destUser);
         em.persist(srcWorkspace);
         em.persist(destWorkspace);
-        em.persist(s1);
         em.persist(sourceDesign);
+        em.persist(e1);
+        em.persist(e2);
+        em.persist(s1);
 
         em.flush();
         em.clear();

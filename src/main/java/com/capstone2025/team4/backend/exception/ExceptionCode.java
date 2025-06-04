@@ -40,7 +40,9 @@ public enum ExceptionCode {
 
     POST_TITLE_EMPTY(HttpStatus.BAD_REQUEST, "제목이 비어있습니다"),
 
-    TEMPLATE_NOT_FOUND(HttpStatus.NOT_FOUND, "템필릿을 찾을 수 없습니다")
+    TEMPLATE_NOT_FOUND(HttpStatus.NOT_FOUND, "템필릿을 찾을 수 없습니다"),
+
+    ANIMATION_NOT_FOUND(HttpStatus.NOT_FOUND, "애니메이션을 찾을 수 없습니다"),
     ;
 
     private final HttpStatus httpStatus;

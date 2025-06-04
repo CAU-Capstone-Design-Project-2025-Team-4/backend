@@ -213,14 +213,18 @@ public class ElementService {
             long width, long height,
             double angle
     ) {
+        Element element = getElement(userId, elementId);
+        element.update(borderRef, x, y, z, width, height, angle);
+        return element;
+    }
+
+    public Element getElement(Long userId, Long elementId) {
         Optional<Element> optionalElement =  elementRepository.findElementById(elementId, userId);
         if (optionalElement.isEmpty()) {
             throw new ElementNotFound();
         }
 
-        Element element = optionalElement.get();
-        element.update(borderRef, x, y, z, width, height, angle);
-        return element;
+        return optionalElement.get();
     }
 
     @Transactional(readOnly = true)
@@ -231,11 +235,7 @@ public class ElementService {
     }
 
     public void delete(Long userId, Long elementId) {
-        Optional<Element> optionalElement = elementRepository.findElementById(elementId, userId);
-        if (optionalElement.isEmpty()) {
-            throw new ElementNotFound();
-        }
-        Element element = optionalElement.get();
+        Element element = getElement(userId, elementId);
         deleteS3(element);
         elementRepository.delete(element);
     }
@@ -254,9 +254,9 @@ public class ElementService {
         }
     }
 
-    public void copyAndSaveElement(Element slideElement, Slide newSlide) {
+    public Element copyAndSaveElement(Element slideElement, Slide newSlide) {
         Element copy = slideElement.copy(newSlide);
-        elementRepository.save(copy);
+        return elementRepository.save(copy);
     }
 
 }

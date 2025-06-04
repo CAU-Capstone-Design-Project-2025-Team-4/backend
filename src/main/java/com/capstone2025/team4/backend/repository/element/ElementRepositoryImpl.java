@@ -62,8 +62,8 @@ public class ElementRepositoryImpl implements ElementRepositoryCustom{
         QUser user = QUser.user;
 
         Element result = queryFactory.selectFrom(element)
-                .join(element.slide, slide).fetchJoin()
-                .join(slide.design, design).fetchJoin()
+                .join(element.slide, slide)
+                .join(slide.design, design)
                 .join(design.user, user)
                 .where(element.id.eq(id), user.id.eq(userId)).fetchOne();
 

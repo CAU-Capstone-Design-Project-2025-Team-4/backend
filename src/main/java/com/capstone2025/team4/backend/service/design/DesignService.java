@@ -12,6 +12,7 @@ import com.capstone2025.team4.backend.repository.design.DesignRepository;
 import com.capstone2025.team4.backend.repository.element.ElementRepository;
 import com.capstone2025.team4.backend.service.UserService;
 import com.capstone2025.team4.backend.service.WorkspaceService;
+import com.capstone2025.team4.backend.service.animation.AnimationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class DesignService {
     private final SlideService slideService;
     private final WorkspaceService workspaceService;
     private final ElementService elementService;
+    private final AnimationService animationService;
 
     // 디자인을 만들때, 공유된걸 가지고 만든다면 공유 불가
     public Design createNewDesign(String designName, Long creatorId, Long sourceDesignId, boolean shared) {
@@ -39,7 +41,7 @@ public class DesignService {
         Workspace workspace = workspaceService.getWorkspace(creator);
 
         if (sourceDesignId != null) {
-            Optional<Design> sourceDesignOptional = designRepository.findById(sourceDesignId);
+            Optional<Design> sourceDesignOptional = designRepository.findLongDesign(sourceDesignId);
             if (sourceDesignOptional.isEmpty()) {
                 throw new DesignSourceNotFound();
             }
@@ -82,6 +84,7 @@ public class DesignService {
                 .slideList(newSlideList)
                 .shared(false)
                 .build();
+        designRepository.save(newDesign);
 
         List<Slide> sourceSlideList = source.getSlideList();
 
@@ -89,12 +92,12 @@ public class DesignService {
             ArrayList<Element> newSlideElementList = new ArrayList<>();
             Slide newSlide = slideService.createNewSlide(sourceSlide, newDesign, newSlideElementList);
             for (Element slideElement : sourceSlide.getSlideElementList()) {
-                elementService.copyAndSaveElement(slideElement, newSlide);
+                Element destElement = elementService.copyAndSaveElement(slideElement, newSlide);
+                animationService.copyElementsAnimations(slideElement.getId(), destElement.getId(), creator.getId());
             }
             newSlideList.add(newSlide);
         }
 
-        designRepository.save(newDesign);
         return newDesign;
     }
 
