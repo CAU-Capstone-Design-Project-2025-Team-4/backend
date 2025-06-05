@@ -1,11 +1,14 @@
 package com.capstone2025.team4.backend.service.animation;
 
 import com.capstone2025.team4.backend.domain.animation.Animation;
+import com.capstone2025.team4.backend.domain.animation.Animation3d;
 import com.capstone2025.team4.backend.domain.animation.AnimationType;
 import com.capstone2025.team4.backend.domain.animation.AnimationTiming;
 import com.capstone2025.team4.backend.domain.element.Element;
+import com.capstone2025.team4.backend.domain.element.spatial.CameraTransform;
 import com.capstone2025.team4.backend.domain.element.spatial.Spatial;
 import com.capstone2025.team4.backend.exception.animation.AnimationNotFound;
+import com.capstone2025.team4.backend.exception.element.ElementNotSpatial;
 import com.capstone2025.team4.backend.repository.animation.AnimationRepository;
 import com.capstone2025.team4.backend.service.design.ElementService;
 import lombok.RequiredArgsConstructor;
@@ -22,19 +25,44 @@ public class AnimationService {
 
     private final AnimationRepository animationRepository;
     private final ElementService elementService;
-    private final Animation3dService animation3dService;
 
-    public Animation addAnimationToElement(Long userId, Long elementId, AnimationType type, Integer duration, AnimationTiming timing) {
+    public Animation addAnimationToElement(Long userId, Long elementId, AnimationType type, Integer duration, AnimationTiming timing, CameraTransform cameraTransform) {
         Element element = elementService.getElement(userId, elementId);
 
-        Animation animation = Animation.builder()
+        Animation animation;
+        if (cameraTransform == null) {
+            animation = createAnimation(type, duration, timing, element);
+        } else {
+            animation = create3dAnimation(type, duration, timing, cameraTransform, element);
+        }
+
+        return animationRepository.save(animation);
+    }
+
+    private Animation create3dAnimation(AnimationType type, Integer duration, AnimationTiming timing, CameraTransform cameraTransform, Element element) {
+        if (!(element instanceof Spatial)) {
+            throw new ElementNotSpatial();
+        }
+        Animation animation;
+        animation = Animation3d.builder()
                 .element(element)
-                .type(type)
+                .animationType(type)
+                .duration(duration)
+                .timing(timing)
+                .cameraTransform(cameraTransform)
+                .build();
+        return animation;
+    }
+
+    private Animation createAnimation(AnimationType type, Integer duration, AnimationTiming timing, Element element) {
+        Animation animation;
+        animation = Animation.builder()
+                .element(element)
+                .animationType(type)
                 .duration(duration)
                 .timing(timing)
                 .build();
-
-        return animationRepository.save(animation);
+        return animation;
     }
 
     public void deleteAnimationFromElement(Long animationId, Long elementId) {
@@ -53,10 +81,6 @@ public class AnimationService {
         for (Animation srcAnimation : srcElements) {
             Animation copy = srcAnimation.copy(destElement);
             animationRepository.save(copy);
-        }
-
-        if (destElement instanceof Spatial destSpatial) {
-            animation3dService.copyElementsAnimations(srcElementId, destSpatial);
         }
     }
 

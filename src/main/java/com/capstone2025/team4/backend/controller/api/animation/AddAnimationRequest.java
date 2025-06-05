@@ -2,6 +2,7 @@ package com.capstone2025.team4.backend.controller.api.animation;
 
 import com.capstone2025.team4.backend.domain.animation.AnimationTiming;
 import com.capstone2025.team4.backend.domain.animation.AnimationType;
+import com.capstone2025.team4.backend.domain.element.spatial.CameraTransform;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,4 +26,6 @@ public class AddAnimationRequest {
 
     @NotNull(message = "애니메이션 타이밍 정보는 필수입니다")
     private AnimationTiming timing;
+
+    private CameraTransform cameraTransform;
 }

@@ -26,6 +26,7 @@ public enum ExceptionCode {
     ELEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "없는 요소입니다"),
     ELEMENT_NOT_FILE(HttpStatus.BAD_REQUEST, "해당 요소 타입은 허용되지 않습니다 (허용 : 이미지, 모델)"),
     ELEMENT_NOT_TEXT(HttpStatus.BAD_REQUEST, "해당 요소 타입은 허용되지 않습니다 (허용 : 텍스트, svg)"),
+    ELEMENT_NOT_SPATIAL(HttpStatus.BAD_REQUEST, "해당 요소는 spatial type이 아닙니다"),
 
     FILE_IS_EMPTY(HttpStatus.BAD_REQUEST, "빈 파일입니다"),
 

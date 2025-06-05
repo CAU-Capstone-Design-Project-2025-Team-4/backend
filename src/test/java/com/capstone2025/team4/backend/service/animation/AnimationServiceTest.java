@@ -80,7 +80,7 @@ class AnimationServiceTest {
         if (needsAnimation) {
             Animation animation = Animation.builder()
                     .element(element)
-                    .type(ANIMATION_TYPE)
+                    .animationType(ANIMATION_TYPE)
                     .duration(ANIMATION_DURATION)
                     .timing(ANIMATION_TIMING)
                     .build();
@@ -101,12 +101,12 @@ class AnimationServiceTest {
 
         //when
         Animation animation = animationService.addAnimationToElement(userElementIds.user.getId(),
-                userElementIds.element.getId(), ANIMATION_TYPE, ANIMATION_DURATION, ANIMATION_TIMING);
+                userElementIds.element.getId(), ANIMATION_TYPE, ANIMATION_DURATION, ANIMATION_TIMING, null);
 
         //then
         assertThat(animation).isNotNull();
         assertThat(animation.getId()).isNotNull();
-        assertThat(animation.getType()).isEqualTo(ANIMATION_TYPE);
+        assertThat(animation.getAnimationType()).isEqualTo(ANIMATION_TYPE);
         assertThat(animation.getDuration()).isEqualTo(ANIMATION_DURATION);
         assertThat(animation.getTiming()).isEqualTo(ANIMATION_TIMING);
         assertThat(animation.getElement().getId()).isEqualTo(userElementIds.element.getId());
@@ -123,7 +123,7 @@ class AnimationServiceTest {
         AnimationTiming timing = AnimationTiming.ON_CLICK;
         Animation animation = Animation.builder()
                 .element(element)
-                .type(type)
+                .animationType(type)
                 .duration(duration)
                 .timing(timing).build();
 
@@ -158,7 +158,7 @@ class AnimationServiceTest {
         List<Animation> copied = animationRepository.findAllByElementId(dest.element.getId());
         assertThat( copied.size()).isEqualTo(1);
         assertThat(copied.getFirst().getId()).isNotEqualTo(src.animation.getId());
-        assertThat( copied.getFirst().getType()).isEqualTo(src.animation.getType());
+        assertThat( copied.getFirst().getAnimationType()).isEqualTo(src.animation.getAnimationType());
         assertThat( copied.getFirst().getDuration()).isEqualTo(src.animation.getDuration());
     }
 

@@ -1,5 +1,7 @@
 package com.capstone2025.team4.backend.domain.animation;
 
 public enum AnimationType {
-    APPEAR, DISAPPEAR
+    APPEAR, DISAPPEAR,
+
+    FRAME_TRANSITION
 }
