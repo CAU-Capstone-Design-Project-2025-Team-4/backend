@@ -151,7 +151,8 @@ class AnimationServiceTest {
         em.clear();
 
         // when
-        animationService.copyElementsAnimations(src.element.getId(), dest.element.getId(), dest.user.getId());
+        Element destElement = em.find(Element.class, dest.element.getId());
+        animationService.copyElementsAnimations(src.element.getId(), destElement);
 
         // then
         List<Animation> copied = animationRepository.findAllByElementId(dest.element.getId());

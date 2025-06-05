@@ -259,4 +259,12 @@ public class ElementService {
         return elementRepository.save(copy);
     }
 
+    public Spatial getSpatial(Long userId, Long elementId) {
+        Optional<Spatial> optionalSpatial = elementRepository.findSpatialById(elementId, userId);
+        if (optionalSpatial.isEmpty()) {
+            throw new ElementNotFound();
+        }
+
+        return optionalSpatial.get();
+    }
 }

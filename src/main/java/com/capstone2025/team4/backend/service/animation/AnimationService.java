@@ -4,6 +4,7 @@ import com.capstone2025.team4.backend.domain.animation.Animation;
 import com.capstone2025.team4.backend.domain.animation.AnimationType;
 import com.capstone2025.team4.backend.domain.animation.AnimationTiming;
 import com.capstone2025.team4.backend.domain.element.Element;
+import com.capstone2025.team4.backend.domain.element.spatial.Spatial;
 import com.capstone2025.team4.backend.exception.animation.AnimationNotFound;
 import com.capstone2025.team4.backend.repository.animation.AnimationRepository;
 import com.capstone2025.team4.backend.service.design.ElementService;
@@ -21,6 +22,7 @@ public class AnimationService {
 
     private final AnimationRepository animationRepository;
     private final ElementService elementService;
+    private final Animation3dService animation3dService;
 
     public Animation addAnimationToElement(Long userId, Long elementId, AnimationType type, Integer duration, AnimationTiming timing) {
         Element element = elementService.getElement(userId, elementId);
@@ -46,12 +48,15 @@ public class AnimationService {
 
 //    @Async
 //    @Transactional(propagation = Propagation.REQUIRES_NEW) // TODO ; 나중에 필요하면 추가
-    public void copyElementsAnimations(Long srcElementId, Long destElementId, Long userId) {
+    public void copyElementsAnimations(Long srcElementId, Element destElement) {
         List<Animation> srcElements = animationRepository.findAllByElementId(srcElementId);
-        Element destElement = elementService.getElement(userId, destElementId);
         for (Animation srcAnimation : srcElements) {
             Animation copy = srcAnimation.copy(destElement);
             animationRepository.save(copy);
+        }
+
+        if (destElement instanceof Spatial destSpatial) {
+            animation3dService.copyElementsAnimations(srcElementId, destSpatial);
         }
     }
 

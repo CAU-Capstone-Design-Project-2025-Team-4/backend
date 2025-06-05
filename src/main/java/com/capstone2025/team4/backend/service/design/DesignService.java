@@ -9,7 +9,6 @@ import com.capstone2025.team4.backend.exception.design.DesignNotShared;
 import com.capstone2025.team4.backend.exception.design.DesignSourceNotFound;
 import com.capstone2025.team4.backend.exception.file.FileIsEmpty;
 import com.capstone2025.team4.backend.repository.design.DesignRepository;
-import com.capstone2025.team4.backend.repository.element.ElementRepository;
 import com.capstone2025.team4.backend.service.UserService;
 import com.capstone2025.team4.backend.service.WorkspaceService;
 import com.capstone2025.team4.backend.service.animation.AnimationService;
@@ -93,7 +92,7 @@ public class DesignService {
             Slide newSlide = slideService.createNewSlide(sourceSlide, newDesign, newSlideElementList);
             for (Element slideElement : sourceSlide.getSlideElementList()) {
                 Element destElement = elementService.copyAndSaveElement(slideElement, newSlide);
-                animationService.copyElementsAnimations(slideElement.getId(), destElement.getId(), creator.getId());
+                animationService.copyElementsAnimations(slideElement.getId(), destElement);
             }
             newSlideList.add(newSlide);
         }
