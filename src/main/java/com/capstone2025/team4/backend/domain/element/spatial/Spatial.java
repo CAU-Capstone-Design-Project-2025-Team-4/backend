@@ -32,6 +32,9 @@ public class Spatial extends Element {
 
     private String backgroundColor;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "spatial", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Frame> frameList = new ArrayList<>();
+
     @Override
     protected Element createNewInstance() {
         return new Spatial();
@@ -46,18 +49,31 @@ public class Spatial extends Element {
         for (Model model : models) {
             spatialCopy.models.add(model.copy());
         }
+        for (Frame frame : frameList) {
+            spatialCopy.frameList.add(frame.copy(spatialCopy));
+        }
     }
 
     public void update(CameraMode cameraMode, CameraTransform cameraTransform, String backgroundColor) {
         this.cameraMode = cameraMode;
         this.cameraTransform = cameraTransform;
         this.backgroundColor = backgroundColor;
-        this.getSlide().getDesign().preUpdate();
+        updateDesign();
     }
 
     public void addModel(Model model) {
         this.models.add(model);
         model.setSpatial(this);
+        updateDesign();
+    }
+
+    public void addFrame(Frame frame) {
+        this.frameList.add(frame);
+        frame.setSpatial(this);
+        updateDesign();
+    }
+
+    private void updateDesign() {
         this.getSlide().getDesign().preUpdate();
     }
 }

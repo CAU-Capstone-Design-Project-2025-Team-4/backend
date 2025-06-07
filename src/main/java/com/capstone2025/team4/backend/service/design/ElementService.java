@@ -195,12 +195,7 @@ public class ElementService {
             CameraTransform cameraTransform,
             String backgroundColor
     ){
-        Optional<Spatial> optionalSpatial = elementRepository.findSpatialById(elementId, userId);
-        if (optionalSpatial.isEmpty()) {
-            throw new ElementNotFound();
-        }
-
-        Spatial spatial = optionalSpatial.get();
+        Spatial spatial = getSpatial(userId, elementId);
         spatial.update(cameraMode, cameraTransform, backgroundColor);
         return spatial;
     }

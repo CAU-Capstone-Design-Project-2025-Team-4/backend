@@ -44,6 +44,8 @@ public enum ExceptionCode {
     TEMPLATE_NOT_FOUND(HttpStatus.NOT_FOUND, "템필릿을 찾을 수 없습니다"),
 
     ANIMATION_NOT_FOUND(HttpStatus.NOT_FOUND, "애니메이션을 찾을 수 없습니다"),
+
+    FRAME_NOT_FOUND(HttpStatus.NOT_FOUND, "프레임을 찾을 수 없습니다"),
     ;
 
     private final HttpStatus httpStatus;

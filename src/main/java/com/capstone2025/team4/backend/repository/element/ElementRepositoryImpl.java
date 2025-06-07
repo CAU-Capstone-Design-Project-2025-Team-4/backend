@@ -4,7 +4,6 @@ import com.capstone2025.team4.backend.domain.QUser;
 import com.capstone2025.team4.backend.domain.design.QDesign;
 import com.capstone2025.team4.backend.domain.design.QSlide;
 import com.capstone2025.team4.backend.domain.element.*;
-import com.capstone2025.team4.backend.domain.element.border.BorderRef;
 import com.capstone2025.team4.backend.domain.element.spatial.QSpatial;
 import com.capstone2025.team4.backend.domain.element.spatial.Spatial;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -15,11 +14,9 @@ import java.util.Optional;
 public class ElementRepositoryImpl implements ElementRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;
-    private final EntityManager em;
 
     public ElementRepositoryImpl(EntityManager entityManager) {
         this.queryFactory = new JPAQueryFactory(entityManager);
-        this.em = entityManager;
     }
 
     @Override
