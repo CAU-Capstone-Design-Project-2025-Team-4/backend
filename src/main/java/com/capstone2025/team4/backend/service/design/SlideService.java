@@ -132,6 +132,7 @@ public class SlideService {
                 .order(sourceSlide.getOrder())
                 .design(newDesign)
                 .slideElementList(newSlideElementList)
+                .thumbnail(sourceSlide.getThumbnail())
                 .build();
         slideRepository.save(newSlide);
         return newSlide;
