@@ -34,7 +34,13 @@ public class Design {
     private Boolean shared;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "source_id")
+    @JoinColumn(
+            name = "source_id",
+            foreignKey = @ForeignKey(
+                    name = "fk_design_source",
+                    foreignKeyDefinition = "FOREIGN KEY (source_id) REFERENCES design(id) ON DELETE SET NULL"
+            )
+    )
     private Design source;
 
     private LocalDateTime createdAt;
