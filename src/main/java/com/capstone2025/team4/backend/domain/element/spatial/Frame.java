@@ -2,6 +2,8 @@ package com.capstone2025.team4.backend.domain.element.spatial;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,6 +18,7 @@ public class Frame {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "spatial_element_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @Setter
     private Spatial spatial;
 
