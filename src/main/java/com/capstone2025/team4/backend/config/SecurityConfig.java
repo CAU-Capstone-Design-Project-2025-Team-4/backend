@@ -42,6 +42,8 @@ public class SecurityConfig {
                         .requestMatchers("/user/login", "/user/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/post/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/design/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/frame/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/animation/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
