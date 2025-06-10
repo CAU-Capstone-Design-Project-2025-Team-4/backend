@@ -33,3 +33,6 @@ jwt:
 
 server:
   port: ${SERVER_PORT}
+
+ec2:
+  address: ${EC2_ADDRESS}

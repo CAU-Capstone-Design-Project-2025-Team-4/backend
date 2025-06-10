@@ -2,6 +2,7 @@ package com.capstone2025.team4.backend.config;
 
 import com.capstone2025.team4.backend.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,10 +22,15 @@ import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final String EC2_ADDRESS;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, @Value("${ec2.address}") String EC2_ADDRESS) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.EC2_ADDRESS = EC2_ADDRESS;
+    }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -57,6 +63,7 @@ public class SecurityConfig {
         //리소스를 허용할 URL 지정
         ArrayList<String> allowedOrigins = new ArrayList<>();
         allowedOrigins.add("http://localhost:5173");
+        allowedOrigins.add(EC2_ADDRESS);
 //        allowedOrigins.add("http://your-frontend-domain.com");
         configuration.setAllowedOrigins(allowedOrigins);
 
@@ -66,6 +73,7 @@ public class SecurityConfig {
         allowedHttpMethods.add("POST");
         allowedHttpMethods.add("PUT");
         allowedHttpMethods.add("DELETE");
+        allowedHttpMethods.add("PATCH");
         configuration.setAllowedMethods(allowedHttpMethods);
 
         configuration.setAllowedHeaders(Collections.singletonList("*"));
