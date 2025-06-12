@@ -18,9 +18,9 @@ public class UpdateTextBoxRequest {
     @NotNull(message = "텍스트 정보는 필수입니다")
     String text;
     @NotNull(message = "크기 정보는 필수입니다")
-    Long size;
+    Double size;
     @NotNull(message = "굵기 정보는 필수입니다")
-    Long weight;
+    Double weight;
     @NotNull(message = "폰트 패밀리 정보는 필수입니다")
     @NotBlank(message = "폰트 패밀리 정보가 비어 있습니다")
     String fontFamily;

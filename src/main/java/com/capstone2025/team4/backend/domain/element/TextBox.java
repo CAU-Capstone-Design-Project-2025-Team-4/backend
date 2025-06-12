@@ -16,9 +16,9 @@ public class TextBox extends Element {
     @Lob
     private String text;
 
-    private Long size;
+    private Double size;
 
-    private Long weight;
+    private Double weight;
 
     @Enumerated(value = EnumType.STRING)
     private TextAlign align;
@@ -39,7 +39,7 @@ public class TextBox extends Element {
         textBoxCopy.fontFamily = this.fontFamily;
     }
 
-    public void update(String text, Long size, Long weight, String fontFamily, TextAlign align) {
+    public void update(String text, Double size, Double weight, String fontFamily, TextAlign align) {
         this.text = text;
         this.size = size;
         this.weight = weight;

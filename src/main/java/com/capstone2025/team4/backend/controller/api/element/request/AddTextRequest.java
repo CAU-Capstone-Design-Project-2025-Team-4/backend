@@ -14,10 +14,10 @@ public class AddTextRequest extends ElementRequest {
     private String text;
 
     @NotNull(message = "텍스트 크기는 필수입니다")
-    private Long size;
+    private Double size;
 
     @NotNull(message = "굵기는 필수입니다")
-    private Long weight;
+    private Double weight;
 
     @NotNull(message = "폰트 패밀리 정보는 필수입니다")
     @NotBlank(message = "폰트 패밀리 정보가 비어 있습니다")

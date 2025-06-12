@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TextBoxResponse extends ElementResponse {
     private String text;
-    private Long size;
-    private Long weight;
+    private Double size;
+    private Double weight;
     private String fontFamily;
     private TextAlign textAlign;
     private final ElementType type = ElementType.TEXT_BOX;

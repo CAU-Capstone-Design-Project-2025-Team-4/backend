@@ -56,8 +56,8 @@ class DesignRepositoryTest {
                 .height(50.0)
                 .angle(30.0)
                 .text("testText")
-                .size(100L)
-                .weight(5L)
+                .size(100.0)
+                .weight(5.0)
                 .align(TextAlign.CENTER)
                 .build();
 

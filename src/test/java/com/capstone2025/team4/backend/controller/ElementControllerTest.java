@@ -154,7 +154,7 @@ class ElementControllerTest {
                 .thickness(1L)
                 .build();
         given(elementService.updateCommonFields(1L, 1L, borderRef, 0L, 0L, 0L, 1920L, 1080L, 3.14)).willReturn(element);
-        UpdateElementRequest request = new UpdateElementRequest(1L, 1L, borderRef.getBorderType(), borderRef.getColor(), borderRef.getThickness(), 0L, 0L, 0L, 3.14, 1920L, 1080L);
+        UpdateElementRequest request = new UpdateElementRequest(1L, 1L, borderRef.getBorderType(), borderRef.getColor(), borderRef.getThickness(), 0.0, 0.0, 0.0, 3.14, 1920.0, 1080.0);
         //when
         ResultActions resultActions = mockMvc.perform(
                 patch("/element")
@@ -178,7 +178,7 @@ class ElementControllerTest {
                 .thickness(1L)
                 .build();
         given(elementService.updateCommonFields(1L, 1L, borderRef, 0L, 0L, 0L, 1920L, 1080L, 3.14)).willReturn(element);
-        UpdateElementRequest request = new UpdateElementRequest(null, 1L, borderRef.getBorderType(), borderRef.getColor(), borderRef.getThickness(), 0L, 0L, 0L, 3.14, 1920L, 1080L);
+        UpdateElementRequest request = new UpdateElementRequest(null, 1L, borderRef.getBorderType(), borderRef.getColor(), borderRef.getThickness(), 0.0, 0.0, 0.0, 3.14, 1920.0, 1080.0);
 
         //when
         ResultActions resultActions = mockMvc.perform(

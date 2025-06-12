@@ -37,8 +37,8 @@ public class ElementService {
             Double angle,
             Double width, Double height,
             String text,
-            Long size,
-            Long weight,
+            Double size,
+            Double weight,
             TextAlign align,
             String fontFamily
     ) {
@@ -157,8 +157,8 @@ public class ElementService {
             Long userId,
             Long elementId,
             String text,
-            long size,
-            long weight,
+            Double size,
+            Double weight,
             String fontFamily,
             TextAlign textAlign
     ) {

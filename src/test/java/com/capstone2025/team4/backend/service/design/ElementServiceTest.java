@@ -58,7 +58,7 @@ class ElementServiceTest {
         em.clear();
 
         //when
-        TextBox textBox = elementService.addTextBoxElementToSlide(testUser.getId(), testSlide.getId(), borderRef, 0.0, 0.0, 0.0, 0.0, 10.0, 10.0, "testText", 100L, 100L, TextAlign.JUSTIFY, "tempFontFamily");
+        TextBox textBox = elementService.addTextBoxElementToSlide(testUser.getId(), testSlide.getId(), borderRef, 0.0, 0.0, 0.0, 0.0, 10.0, 10.0, "testText", 100.0, 100.0, TextAlign.JUSTIFY, "tempFontFamily");
 
         //then
         assertThat(textBox).isNotNull();
@@ -105,7 +105,7 @@ class ElementServiceTest {
         em.clear();
 
         //when
-        TextBox textBox = elementService.updateTextBox(testUser.getId(), e.getId(), "updated", 10L, 10L, "tempFontFamily", TextAlign.JUSTIFY);
+        TextBox textBox = elementService.updateTextBox(testUser.getId(), e.getId(), "updated", 10.0, 10.0, "tempFontFamily", TextAlign.JUSTIFY);
 
         // then
         assertThat(textBox).isNotNull();
