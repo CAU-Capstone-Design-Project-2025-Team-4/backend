@@ -17,11 +17,11 @@ public abstract class ElementResponse {
     @NotNull(message = "요소 아이디는 필수 값입니다")
     private Long id;
     private BorderRef borderRef;
-    private Long x;
-    private Long y;
-    private Long z;
-    private Long width;
-    private Long height;
+    private Double x;
+    private Double y;
+    private Double z;
+    private Double width;
+    private Double height;
     private Double angle;
 
     public static ElementResponse create(Element element) {

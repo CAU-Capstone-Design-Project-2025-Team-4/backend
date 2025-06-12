@@ -80,8 +80,8 @@ class ElementControllerTest {
         given(elementService.addImageElementToSlide(
                 anyLong(), anyLong(),
                 any(BorderRef.class),
-                anyLong(), anyLong(), anyLong(),
-                anyDouble(), anyLong(), anyLong(),
+                anyDouble(), anyDouble(), anyDouble(),
+                anyDouble(), anyDouble(), anyDouble(),
                 eq("tempUrl")          // 문자열은 eq(...)로
         )).willReturn((Image) slideElement);
 
@@ -117,8 +117,8 @@ class ElementControllerTest {
         given(elementService.addImageElementToSlide(
                 anyLong(), anyLong(),
                 any(BorderRef.class),
-                anyLong(), anyLong(), anyLong(),
-                anyDouble(), anyLong(), anyLong(),
+                anyDouble(), anyDouble(), anyDouble(),
+                anyDouble(), anyDouble(), anyDouble(),
                 eq("tempUrl")          // 문자열은 eq(...)로
         )).willReturn((Image) slideElement);
 

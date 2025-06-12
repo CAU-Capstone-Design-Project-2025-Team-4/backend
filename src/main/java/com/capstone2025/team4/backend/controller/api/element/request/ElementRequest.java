@@ -28,20 +28,20 @@ public abstract class ElementRequest {
     private Long borderThickness;
 
     @NotNull(message = "x 좌표는 필수입니다")
-    private Long x;
+    private Double x;
 
     @NotNull(message = "y 좌표는 필수입니다")
-    private Long y;
+    private Double y;
 
     @NotNull(message = "z 좌표는 필수입니다")
-    private Long z;
+    private Double z;
 
     @NotNull(message = "각도는 필수입니다")
     private Double angle;
 
     @NotNull(message = "width는 필수입니다")
-    private Long width;
+    private Double width;
 
     @NotNull(message = "height는 필수입니다")
-    private Long height;
+    private Double height;
 }

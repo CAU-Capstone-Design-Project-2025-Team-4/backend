@@ -58,7 +58,7 @@ class ElementServiceTest {
         em.clear();
 
         //when
-        TextBox textBox = elementService.addTextBoxElementToSlide(testUser.getId(), testSlide.getId(), borderRef, 0L, 0L, 0L, 0.0, 10L, 10L, "testText", 100L, 100L, TextAlign.JUSTIFY, "tempFontFamily");
+        TextBox textBox = elementService.addTextBoxElementToSlide(testUser.getId(), testSlide.getId(), borderRef, 0.0, 0.0, 0.0, 0.0, 10.0, 10.0, "testText", 100L, 100L, TextAlign.JUSTIFY, "tempFontFamily");
 
         //then
         assertThat(textBox).isNotNull();
@@ -87,10 +87,10 @@ class ElementServiceTest {
 
         TextBox e = TextBox.builder()
                 .slide(testSlide)
-                .x(0L)
-                .y(0L)
-                .width(0L)
-                .height(0L)
+                .x(0.0)
+                .y(0.0)
+                .width(0.0)
+                .height(0.0)
                 .angle(0.0)
                 .text("test").build();
 
@@ -146,7 +146,7 @@ class ElementServiceTest {
         em.clear();
 
         //when
-        Shape shape = elementService.addShapeElementToSlide(testUser.getId(), testSlide.getId(), borderRef, 10L, 10L, 10L, 0.0, 10L, 10L, "testPath", "testColor");
+        Shape shape = elementService.addShapeElementToSlide(testUser.getId(), testSlide.getId(), borderRef, 10.0, 10.0, 10.0, 0.0, 10.0, 10.0, "testPath", "testColor");
 
         //then
         assertThat(shape).isNotNull();
@@ -174,10 +174,10 @@ class ElementServiceTest {
 
         Shape e = Shape.builder()
                 .slide(testSlide)
-                .x(0L)
-                .y(0L)
-                .width(0L)
-                .height(0L)
+                .x(0.0)
+                .y(0.0)
+                .width(0.0)
+                .height(0.0)
                 .angle(0.0)
                 .path("testPath")
                 .color("testColor")
@@ -232,7 +232,7 @@ class ElementServiceTest {
         em.clear();
 
         //when
-        Image image = elementService.addImageElementToSlide(testUser.getId(), testSlide.getId(), borderRef, 10L, 10L, 10L, 0.0, 10L, 10L, "s3Url");
+        Image image = elementService.addImageElementToSlide(testUser.getId(), testSlide.getId(), borderRef, 10.0, 10.0, 10.0, 0.0, 10.0, 10.0, "s3Url");
 
         //then
         assertThat(image).isNotNull();
@@ -284,7 +284,7 @@ class ElementServiceTest {
                 testUser.getId(),
                 testSlide.getId(),
                 borderRef,
-                10L, 10L, 10L, 0.0, 100L, 200L,
+                10.0, 10.0, 10.0, 0.0, 100.0, 200.0,
                 CameraMode.FREE,
                 cameraTransform,
                 "3D content",
@@ -331,10 +331,10 @@ class ElementServiceTest {
 
         Spatial e = Spatial.builder()
                 .slide(testSlide)
-                .x(0L)
-                .y(0L)
-                .width(0L)
-                .height(0L)
+                .x(0.0)
+                .y(0.0)
+                .width(0.0)
+                .height(0.0)
                 .angle(0.0)
                 .cameraTransform(cameraTransform)
                 .cameraMode(CameraMode.FREE)
@@ -383,10 +383,10 @@ class ElementServiceTest {
 
         TextBox e = TextBox.builder()
                 .slide(testSlide)
-                .x(0L)
-                .y(0L)
-                .width(0L)
-                .height(0L)
+                .x(0.0)
+                .y(0.0)
+                .width(0.0)
+                .height(0.0)
                 .angle(0.0)
                 .text("test").build();
 
@@ -429,16 +429,16 @@ class ElementServiceTest {
 
         TextBox textBox = TextBox.builder()
                 .slide(testSlide)
-                .x(0L).y(0L).z(0L)
-                .width(100L).height(100L)
+                .x(0.0).y(0.0).z(0.0)
+                .width(100.0).height(100.0)
                 .angle(0.0)
                 .text("SampleText")
                 .build();
 
         Shape shape = Shape.builder()
                 .slide(testSlide)
-                .x(10L).y(10L).z(0L)
-                .width(50L).height(50L)
+                .x(10.0).y(10.0).z(0.0)
+                .width(50.0).height(50.0)
                 .angle(0.0)
                 .path("shapePath")
                 .color("blue")
@@ -446,8 +446,8 @@ class ElementServiceTest {
 
         Image image = Image.builder()
                 .slide(testSlide)
-                .x(20L).y(20L).z(0L)
-                .width(80L).height(80L)
+                .x(20.0).y(20.0).z(0.0)
+                .width(80.0).height(80.0)
                 .angle(0.0)
                 .url("imageUrl")
                 .build();
@@ -459,8 +459,8 @@ class ElementServiceTest {
         Model model = Model.builder().url(TEST_URL).build();
         Spatial spatial = Spatial.builder()
                 .slide(testSlide)
-                .x(30L).y(30L).z(0L)
-                .width(120L).height(120L)
+                .x(30.0).y(30.0).z(0.0)
+                .width(120.0).height(120.0)
                 .angle(0.0)
                 .cameraMode(CameraMode.FREE)
                 .cameraTransform(cameraTransform)

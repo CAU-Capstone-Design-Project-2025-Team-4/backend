@@ -27,15 +27,15 @@ public class Element {
     @Embedded
     private BorderRef borderRef;
 
-    private Long x;
+    private Double x;
 
-    private Long y;
+    private Double y;
 
-    private Long z;
+    private Double z;
 
-    private Long width;
+    private Double width;
 
-    private Long height;
+    private Double height;
 
     private Double angle;
 
@@ -84,7 +84,7 @@ public class Element {
     protected void copyElementFields(Element copy) {
         throw new RuntimeException();
     }
-    public void update(BorderRef borderRef, long x, long y, long z, long width, long height, double angle) {
+    public void update(BorderRef borderRef, double x, double y, double z, double width, double height, double angle) {
         this.borderRef = borderRef;
         this.x = x;
         this.y = y;

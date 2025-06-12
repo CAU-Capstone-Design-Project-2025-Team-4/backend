@@ -48,12 +48,12 @@ class DesignRepositoryTest {
 
         // Create an Element. Assuming the Type enum has a value DEFAULT.
         TextBox element = TextBox.builder()
-                .x(15L)
-                .y(25L)
-                .z(35L)
+                .x(15.0)
+                .y(25.0)
+                .z(35.0)
                 .slide(slide)
-                .width(50L)
-                .height(50L)
+                .width(50.0)
+                .height(50.0)
                 .angle(30.0)
                 .text("testText")
                 .size(100L)

@@ -33,9 +33,9 @@ public class ElementService {
             Long userId,
             Long slideId,
             BorderRef borderRef,
-            Long x, Long y, Long z,
+            Double x, Double y, Double z,
             Double angle,
-            Long width, Long height,
+            Double width, Double height,
             String text,
             Long size,
             Long weight,
@@ -67,9 +67,9 @@ public class ElementService {
             Long userId,
             Long slideId,
             BorderRef borderRef,
-            Long x, Long y, Long z,
+            Double x, Double y, Double z,
             Double angle,
-            Long width, Long height,
+            Double width, Double height,
             String path,
             String color
     ) {
@@ -95,9 +95,9 @@ public class ElementService {
             Long userId,
             Long slideId,
             BorderRef borderRef,
-            Long x, Long y, Long z,
+            Double x, Double y, Double z,
             Double angle,
-            Long width, Long height,
+            Double width, Double height,
             String s3Url
     ) {
         Slide slide = slideService.getSlide(userId, slideId);
@@ -121,9 +121,9 @@ public class ElementService {
             Long userId,
             Long slideId,
             BorderRef borderRef,
-            Long x, Long y, Long z,
+            Double x, Double y, Double z,
             Double angle,
-            Long width, Long height,
+            Double width, Double height,
             CameraMode cameraMode,
             CameraTransform cameraTransform,
             String content,
@@ -204,8 +204,10 @@ public class ElementService {
             Long userId,
             Long elementId,
             BorderRef borderRef,
-            long x, long y, long z,
-            long width, long height,
+//            long x, long y, long z,
+//            long width, long height,
+            double x, double y, double z,
+            double width, double height,
             double angle
     ) {
         Element element = getElement(userId, elementId);
