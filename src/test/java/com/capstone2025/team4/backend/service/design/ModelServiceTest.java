@@ -99,9 +99,9 @@ class ModelServiceTest {
         Spatial spatial = Spatial.builder()
                 .slide(slide)
                 .build();
-        Vector3 positionVectorInit = Vector3.builder().x(1).y(2).z(3).build();
-        Vector3 rotationVectorInit = Vector3.builder().x(0).y(90).z(0).build();
-        Vector3 scaleVectorInit = Vector3.builder().x(1).y(1).z(1).build();
+        Vector3 positionVectorInit = Vector3.builder().x(1.0).y(2.0).z(3.0).build();
+        Vector3 rotationVectorInit = Vector3.builder().x(0.0).y(90.0).z(0.0).build();
+        Vector3 scaleVectorInit = Vector3.builder().x(1.0).y(1.0).z(1.0).build();
         Model model = Model.builder()
                 .shader(ModelShader.HIGHLIGHT)
                 .name("initName")
@@ -130,9 +130,9 @@ class ModelServiceTest {
                 "UpdatedName",
                 ModelShader.NONE,
                 ModelTransform.builder()
-                        .position(Vector3.builder().x(10).y(20).z(30).build())
-                        .rotation(Vector3.builder().x(45).y(90).z(0).build())
-                        .scale(Vector3.builder().x(2).y(2).z(2).build())
+                        .position(Vector3.builder().x(10.0).y(20.0).z(30.0).build())
+                        .rotation(Vector3.builder().x(45.0).y(90.0).z(0.0).build())
+                        .scale(Vector3.builder().x(2.0).y(2.0).z(2.0).build())
                         .build()
         );
 

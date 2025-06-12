@@ -8,12 +8,12 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode
 public class Vector3 {
-    private int x;
-    private int y;
-    private int z;
+    private Double x;
+    private Double y;
+    private Double z;
 
     @Builder
-    public Vector3(int x, int y, int z) {
+    public Vector3(Double x, Double y, Double z) {
         this.x = x;
         this.y = y;
         this.z = z;
