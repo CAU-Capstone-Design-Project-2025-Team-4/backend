@@ -72,13 +72,11 @@ public class ElementRepositoryImpl implements ElementRepositoryCustom{
         QSpatial spatial = QSpatial.spatial;
         QSlide slide = QSlide.slide;
         QDesign design = QDesign.design;
-        QUser user = QUser.user;
 
         Spatial result = queryFactory.selectFrom(spatial)
                 .join(spatial.slide, slide).fetchJoin()
                 .join(slide.design, design).fetchJoin()
-                .join(design.user, user)
-                .where(spatial.id.eq(id), user.id.eq(userId)).fetchOne();
+                .where(spatial.id.eq(id)).fetchOne();
 
         return Optional.ofNullable(result);
     }

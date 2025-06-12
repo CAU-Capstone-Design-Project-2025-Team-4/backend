@@ -58,7 +58,7 @@ public class FrameController {
     }
 
     @GetMapping("/all")
-    public ApiResponse<List<FrameResponse>> findAllInSpatial(@RequestParam Long userId, @RequestParam Long spatialId) {
+    public ApiResponse<List<FrameResponse>> findAllInSpatial(@RequestParam(required = false) Long userId, @RequestParam Long spatialId) {
         Spatial spatial = elementService.getSpatial(userId, spatialId);
         List<FrameResponse> result = frameService.findAllInSpatial(spatial).stream()
                 .map(FrameResponse::new).toList();
