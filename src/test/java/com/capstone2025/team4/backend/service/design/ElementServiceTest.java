@@ -263,12 +263,12 @@ class ElementServiceTest {
                 .thickness(10L)
                 .color("red").build();
         CameraTransform cameraTransform = CameraTransform.builder()
-                .positionX(0L)
-                .positionY(0L)
-                .positionZ(0L)
-                .rotationX(0L)
-                .rotationY(0L)
-                .rotationZ(0L).build();
+                .positionX(0.0)
+                .positionY(0.0)
+                .positionZ(0.0)
+                .rotationX(0.0)
+                .rotationY(0.0)
+                .rotationZ(0.0).build();
 
         em.persist(testUser);
         em.persist(testWorkspace);
@@ -314,20 +314,20 @@ class ElementServiceTest {
                 .build();
         Slide testSlide = Slide.builder().order(0).design(testDesign).build();
         CameraTransform cameraTransform = CameraTransform.builder()
-                .positionX(0L)
-                .positionY(0L)
-                .positionZ(0L)
-                .rotationX(0L)
-                .rotationY(0L)
-                .rotationZ(0L).build();
+                .positionX(0.0)
+                .positionY(0.0)
+                .positionZ(0.0)
+                .rotationX(0.0)
+                .rotationY(0.0)
+                .rotationZ(0.0).build();
 
         CameraTransform cameraTransformUpdate = CameraTransform.builder()
-                .positionX(10L)
-                .positionY(10L)
-                .positionZ(10L)
-                .rotationX(10L)
-                .rotationY(10L)
-                .rotationZ(10L).build();
+                .positionX(10.0)
+                .positionY(10.0)
+                .positionZ(10.0)
+                .rotationX(10.0)
+                .rotationY(10.0)
+                .rotationZ(10.0).build();
 
         Spatial e = Spatial.builder()
                 .slide(testSlide)
@@ -453,9 +453,8 @@ class ElementServiceTest {
                 .build();
 
         CameraTransform cameraTransform = CameraTransform.builder()
-                .positionX(0L).positionY(0L).positionZ(0L)
-                .rotationX(0L).rotationY(0L).rotationZ(0L)
-                .build();
+                .positionX(0.0).positionY(0.0).positionZ(0.0)
+                .rotationX(0.0).rotationY(0.0).rotationZ(0.0)                .build();
 
         Model model = Model.builder().url(TEST_URL).build();
         Spatial spatial = Spatial.builder()

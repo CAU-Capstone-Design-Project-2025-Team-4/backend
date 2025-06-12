@@ -218,12 +218,12 @@ class ElementControllerTest {
     void updateSpatialSuccess() throws Exception {
         // given
         CameraTransform cameraTransform = CameraTransform.builder()
-                .positionX(0L)
-                .positionY(0L)
-                .positionZ(0L)
-                .rotationX(0L)
-                .rotationY(0L)
-                .rotationZ(0L)
+                .positionX(0.0)
+                .positionY(0.0)
+                .positionZ(0.0)
+                .rotationX(0.0)
+                .rotationY(0.0)
+                .rotationZ(0.0)
                 .build();
 
         Spatial spatial = mock(Spatial.class);
@@ -260,12 +260,12 @@ class ElementControllerTest {
     void updateSpatialBadArgs() throws Exception {
         // given
         CameraTransform cameraTransform = CameraTransform.builder()
-                .positionX(0L)
-                .positionY(0L)
-                .positionZ(0L)
-                .rotationX(0L)
-                .rotationY(0L)
-                .rotationZ(0L)
+                .positionX(0.0)
+                .positionY(0.0)
+                .positionZ(0.0)
+                .rotationX(0.0)
+                .rotationY(0.0)
+                .rotationZ(0.0)
                 .build();
 
         UpdateSpatialRequest request = new UpdateSpatialRequest();

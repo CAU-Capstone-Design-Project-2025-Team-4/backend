@@ -29,8 +29,8 @@ class FrameServiceTest {
     void addFrame_givenSpatial_whenAddFrame_thenFrameIsSaved() {
         // given
         CameraTransform transform = CameraTransform.builder()
-                .positionX(0L).positionY(0L).positionZ(0L)
-                .rotationX(0L).rotationY(0L).rotationZ(0L)
+                .positionX(0.0).positionY(0.0).positionZ(0.0)
+                .rotationX(0.0).rotationY(0.0).rotationZ(0.0)
                 .build();
         Spatial spatial = Spatial.builder()
                 .cameraMode(CameraMode.FREE)
@@ -56,9 +56,8 @@ class FrameServiceTest {
     void updateFrame_givenExistingFrame_whenUpdate_thenFrameIsUpdated() {
         // given
         CameraTransform original = CameraTransform.builder()
-                .positionX(0L).positionY(0L).positionZ(0L)
-                .rotationX(0L).rotationY(0L).rotationZ(0L)
-                .build();
+                .positionX(0.0).positionY(0.0).positionZ(0.0)
+                .rotationX(0.0).rotationY(0.0).rotationZ(0.0)                .build();
         Spatial spatial = Spatial.builder()
                 .cameraMode(CameraMode.FREE)
                 .cameraTransform(original)
@@ -72,8 +71,8 @@ class FrameServiceTest {
         em.clear();
 
         CameraTransform updatedTransform = CameraTransform.builder()
-                .positionX(1L).positionY(2L).positionZ(3L)
-                .rotationX(10L).rotationY(20L).rotationZ(30L)
+                .positionX(1.0).positionY(2.0).positionZ(3.0)
+                .rotationX(10.0).rotationY(20.0).rotationZ(30.0)
                 .build();
 
         // when
@@ -89,9 +88,8 @@ class FrameServiceTest {
     void deleteFrame_givenExistingFrame_whenDelete_thenFrameIsRemoved() {
         // given
         CameraTransform transform = CameraTransform.builder()
-                .positionX(0L).positionY(0L).positionZ(0L)
-                .rotationX(0L).rotationY(0L).rotationZ(0L)
-                .build();
+                .positionX(0.0).positionY(0.0).positionZ(0.0)
+                .rotationX(0.0).rotationY(0.0).rotationZ(0.0)                .build();
         Spatial spatial = Spatial.builder()
                 .cameraMode(CameraMode.FREE)
                 .cameraTransform(transform)
@@ -134,9 +132,8 @@ class FrameServiceTest {
     void findAllInSpatial_givenMultipleFrames_whenFindAll_thenReturnList() {
         // given
         CameraTransform transform = CameraTransform.builder()
-                .positionX(0L).positionY(0L).positionZ(0L)
-                .rotationX(0L).rotationY(0L).rotationZ(0L)
-                .build();
+                .positionX(0.0).positionY(0.0).positionZ(0.0)
+                .rotationX(0.0).rotationY(0.0).rotationZ(0.0)                .build();
         Spatial spatial = Spatial.builder()
                 .cameraMode(CameraMode.FREE)
                 .cameraTransform(transform)

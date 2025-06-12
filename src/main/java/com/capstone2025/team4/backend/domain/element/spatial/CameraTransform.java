@@ -10,20 +10,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class CameraTransform {
-    private Long positionX;
+    private Double positionX;
 
-    private Long positionY;
+    private Double positionY;
 
-    private Long positionZ;
+    private Double positionZ;
 
-    private Long rotationX;
+    private Double rotationX;
 
-    private Long rotationY;
+    private Double rotationY;
 
-    private Long rotationZ;
+    private Double rotationZ;
 
     @Builder
-    public CameraTransform(Long positionX, Long positionY, Long positionZ, Long rotationX, Long rotationY, Long rotationZ) {
+    public CameraTransform(Double positionX, Double positionY, Double positionZ, Double rotationX, Double rotationY, Double rotationZ) {
         this.positionX = positionX;
         this.positionY = positionY;
         this.positionZ = positionZ;
