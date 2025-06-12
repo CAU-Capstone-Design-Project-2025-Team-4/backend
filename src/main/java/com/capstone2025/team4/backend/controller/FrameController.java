@@ -29,7 +29,7 @@ public class FrameController {
     }
 
     @DeleteMapping
-    public ApiResponse<String> deleteFrame(@RequestParam Long userId,
+    public ApiResponse<String> deleteFrame(@RequestParam(required = false) Long userId,
                                            @RequestParam Long spatialId,
                                            @RequestParam Long frameId) {
         Spatial spatial = elementService.getSpatial(userId, spatialId);
@@ -49,7 +49,7 @@ public class FrameController {
     }
 
     @GetMapping
-    public ApiResponse<FrameResponse> getFrame(@RequestParam Long userId,
+    public ApiResponse<FrameResponse> getFrame(@RequestParam(required = false) Long userId,
                                                @RequestParam Long spatialId,
                                                @RequestParam Long frameId) {
         Spatial spatial = elementService.getSpatial(userId, spatialId);
