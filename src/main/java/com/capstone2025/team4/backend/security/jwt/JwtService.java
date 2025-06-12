@@ -20,7 +20,8 @@ public class JwtService {
 
     private final String SECRET_KEY;
     // 토큰 만료시간
-    public final long TOKEN_TIME = 30 * 60 * 1000L; // 30 분
+    //public final long TOKEN_TIME = 30 * 60 * 1000L; // 30 분
+    public final long TOKEN_TIME = 24 * 60 * 60 * 1000L; // 24 시간
     public final long REFRESH_TIME = 24 * 60 * 60 * 1000L; // 24시간 (밀리초 단위)
     private final UserRefreshTokenRepository userRefreshTokenRepository;
 
