@@ -20,6 +20,18 @@ public class SlideRepositoryImpl implements SlideRepositoryCustom{
     }
 
     @Override
+    public Optional<Slide> findWithDesign(Long userId, Long slideId) {
+        Slide result = queryFactory
+                .selectFrom(slide)
+                .join(slide.design, design).fetchJoin()
+                .where(slide.id.eq(slideId)
+                        .and(design.user.id.eq(userId))
+                )
+                .fetchOne();
+        return Optional.ofNullable(result);
+    }
+
+    @Override
     public Optional<Slide> findSlide(Long userId, Long slideId) {
         Slide result = queryFactory
                 .selectFrom(slide)

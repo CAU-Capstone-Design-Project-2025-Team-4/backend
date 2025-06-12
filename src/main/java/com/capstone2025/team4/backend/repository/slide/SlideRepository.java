@@ -2,6 +2,7 @@ package com.capstone2025.team4.backend.repository.slide;
 
 import com.capstone2025.team4.backend.domain.design.Slide;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -14,16 +15,10 @@ public interface SlideRepository extends JpaRepository<Slide, Long>, SlideReposi
 
     boolean existsByDesignIdAndOrder(Long designId, Integer order);
 
-    @Query("""
-            SELECT EXISTS(
-                SELECT 1
-                FROM Slide s
-                JOIN s.design d
-                WHERE s.id = :slideId AND d.user.id = :userId
-            )
-            """)
-    boolean exists(Long slideId, Long userId);
-
     @Query("SELECT s FROM Slide s JOIN s.design d WHERE s.id = :slideId AND d.id = :designId AND d.user.id = :userId")
     Optional<Slide> findByIdAndDesignIdAndUserId(Long slideId, Long designId, Long userId);
+
+    @Modifying
+    @Query("UPDATE Slide s SET s.order = s.order - 1 WHERE s.design.id = :designId AND s.order > :deletedOrder")
+    void reorderSlidesAfterDeletion(Long designId, int deletedOrder);
 }

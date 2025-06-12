@@ -84,13 +84,19 @@ public class SlideService {
     }
 
     public void delete(Long userId, Long slideId) {
-        boolean exists = slideRepository.exists(slideId, userId);
+        Optional<Slide> optionalSlide = slideRepository.findWithDesign(userId, slideId);
 
-        if (!exists) {
+        if (optionalSlide.isEmpty()) {
             throw new SlideNotFound();
         }
+        Slide slide = optionalSlide.get();
+        int deletedOrder = slide.getOrder();
+        Long designId = slide.getDesign().getId();
 
         slideRepository.deleteById(slideId);
+        slideRepository.flush();
+
+        slideRepository.reorderSlidesAfterDeletion(designId, deletedOrder);
     }
 
     public Slide changeThumbnail(Long userId, Long designId, Long slideId, byte[] image) {
