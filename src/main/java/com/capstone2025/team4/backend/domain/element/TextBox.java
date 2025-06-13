@@ -37,6 +37,7 @@ public class TextBox extends Element {
         textBoxCopy.size = this.size;
         textBoxCopy.weight = this.weight;
         textBoxCopy.fontFamily = this.fontFamily;
+        textBoxCopy.align = this.align;
     }
 
     public void update(String text, Double size, Double weight, String fontFamily, TextAlign align) {
