@@ -6,12 +6,16 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @DiscriminatorValue("ANIMATION_3D")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @SuperBuilder
+@PrimaryKeyJoinColumn(name = "id")
+@OnDelete(action = OnDeleteAction.CASCADE)
 public class Animation3d extends Animation{
 
     @Embedded
